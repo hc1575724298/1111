@@ -27,20 +27,20 @@
       <!-- 右侧 -->
       <div class="run-favorites-content-right">
         <div>
-          <div class="right-title">Infomation</div>
+          <div class="right-title">{{$t('language.information')}}</div>
           <el-row style="margin-bottom: 28px;">
             <el-col :span="8">
-              <span class="Infomation-title">Protocol name：</span>
+              <span class="Infomation-title">{{$t('language.protocol_name')}}：</span>
               <span class="Infomation-info">{{ thisOneProtocal.name }}</span>
             </el-col>
             <el-col :span="5">
-              <span class="Infomation-title">Pre-packaged：</span>
+              <span class="Infomation-title">{{$t('language.pre_packaged')}}：</span>
               <span class="Infomation-info">{{
                 thisOneProtocal.pre_packaged ? "yes" : "no"
               }}</span>
             </el-col>
             <el-col :span="6">
-              <span class="Infomation-title">Cartridge：</span>
+              <span class="Infomation-title">{{$t('language.cartridge')}}：</span>
               <span class="Infomation-info"
                 >{{ thisOneProtocal.cartridge }} well</span
               >
@@ -48,14 +48,14 @@
           </el-row>
           <el-row style="margin-bottom: 39px;">
             <el-col :span="10">
-              <span class="Infomation-title">Time：</span>
+              <span class="Infomation-title">{{$t('language.time')}}：</span>
               <span class="Infomation-info">{{
                 thisOneProtocal.updated_at
               }}</span>
             </el-col>
             <el-col :span="14">
               <span class="Infomation-title"
-                >Expected run time(hh:mm:ss)：</span
+                >{{$t('language.expected_run_time')}}：</span
               >
               <span class="Infomation-info">{{
                 thisOneProtocal.expected_run_time
@@ -64,11 +64,11 @@
           </el-row>
         </div>
         <div>
-          <div class="right-title">Remark(Optional)</div>
+          <div class="right-title">{{$t('language.remark')}}</div>
           <div style="height: 70px">{{thisOneProtocal.remark&&thisOneProtocal.remark}}</div>
         </div>
         <div>
-          <div class="right-title">labware</div>
+          <div class="right-title">{{$t('language.labware')}}</div>
           <div class="labware-pic">
             <img src="@/images/run/8well.png" v-if="thisOneProtocal.cartridge === 8">
             <img src="@/images/run/8well.png" v-if="thisOneProtocal.cartridge === 5">
@@ -131,9 +131,10 @@ export default {
   async created() {
     await this.getAllProtocol();
     this.handleupdatedTime();
-    this.isCheckId = this.protocolsList[0].id
-    this.chooseProtocal(this.isCheckId)
-  }
+    this.isCheckId = this.farvoritesList&&this.farvoritesList[0].id
+    this.chooseProtocal(this.isCheckId,this.farvoritesList[0].name)
+  },
+
 };
 </script>
 
@@ -155,8 +156,8 @@ export default {
   /* padding-top: 26px; */
 }
 /* 左侧 */
-.run-favorites-content-lef {
-  overflow: scroll;
+.run-favorites-content-left {
+  max-height: 876px;
 }
 .run-favorites-content-left > div {
   box-sizing: border-box;

@@ -2,7 +2,7 @@
   <div>
     <div class="system-head-info">
       <div class="back">
-        <div @click="backToParent()" class="back-div" >
+        <div @click="backToParent" class="back-div" >
           <img src="../images/system/back.png" class="back-img" />
         </div>
       </div>
@@ -12,6 +12,7 @@
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -20,7 +21,7 @@
     components: {
       TimeLight
     },
-    props: ['page_name', 'path_name',"path_router"],
+    props: ['page_name',"path_router"],
     data() {
       return {
 

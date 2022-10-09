@@ -20,29 +20,31 @@
         width="130"
         align="center"
       >
-      <template slot-scope="scope">
-          {{(scope.$index+1) < 10 ? '0'+(scope.$index+1):scope.$index+1}}
+        <template slot-scope="scope">
+          {{
+            scope.$index + 1 < 10 ? "0" + (scope.$index + 1) : scope.$index + 1
+          }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" :label="'Name(A-Z)'" align="center">
+      <el-table-column prop="name" :label="$t('language.name_A_Z')" align="center">
       </el-table-column>
       <el-table-column
         prop="cartridge"
-        :label="'Cartridge'"
+        :label="$t('language.cartridge')"
         align="center"
         :formatter="handleCartridge"
       >
       </el-table-column>
       <el-table-column
         prop="pre_packaged"
-        :label="'Pre-packaged'"
+        :label="$t('language.pre_packaged')"
         align="center"
         :formatter="handlePrePackaged"
       >
       </el-table-column>
       <el-table-column
         prop="creator_name"
-        :label="'User(A-Z)'"
+        :label="$t('language.user_A_Z')"
         align="center"
         class="operation"
       >
@@ -50,7 +52,7 @@
       <el-table-column
         prop="updated_at"
         align="center"
-        :label="'Time(New-Old)'"
+        :label="$t('language.timeNewToOld')"
       >
         <template slot="header">
           <div v-if="sort_code" class="time-sort">
@@ -72,7 +74,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <RunFooter :isDisabledRunBtn="isDisabledRunBtn"/>
+    <RunFooter :isDisabledRunBtn="isDisabledRunBtn" />
   </div>
 </template>
 
@@ -112,12 +114,16 @@ export default {
       );
     },
     //点击某一行
-    clickRow(row,column){
-      this.isDisabledRunBtn = false
-      this.$store.commit('protocols/changeprotocolsId',[row.id,'list',row.name])
+    clickRow(row, column) {
+      this.isDisabledRunBtn = false;
+      this.$store.commit("protocols/changeprotocolsId", [
+        row.id,
+        "list",
+        row.name
+      ]);
     },
     handleNo(index) {
-      return index>0 ? index : '0'+index
+      return index > 0 ? index : "0" + index;
     },
     handleCartridge(row) {
       return row.cartridge + " well";

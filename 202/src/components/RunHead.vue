@@ -6,7 +6,7 @@
     <div>
       <img src="../images/run/open-door.png" alt="">
     </div>
-    <div class="run-head-right-btn-text">Open door</div>
+    <div class="run-head-right-btn-text">{{$t("language.open_door")}}</div>
   </button>
 </div>
 </template>

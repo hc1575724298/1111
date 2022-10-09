@@ -4,13 +4,13 @@
     <div>
       <img src="../images/run/preview-btn.png" alt="">
     </div>
-    <div class="run-head-right-btn-text">View</div>
+    <div class="run-head-right-btn-text">{{$t("language.view")}}</div>
   </button>
     <button class="run-footer-run-btn" :disabled="isDisabledRunBtn" @click="clickRunBtn">
     <div>
       <img src="../images/run/runbtn.png" alt="">
     </div>
-    <div class="run-head-right-btn-text run-color">Run</div>
+    <div class="run-head-right-btn-text run-color">{{$t("language.run")}}</div>
     </button>
 </div>
 </template>

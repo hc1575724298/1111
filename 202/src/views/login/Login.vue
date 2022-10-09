@@ -99,7 +99,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .login-back {
     position: absolute;
     height: 100%;

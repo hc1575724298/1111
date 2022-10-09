@@ -93,6 +93,25 @@ export default new VueRouter({
     }, {
       path: '/system/run/protocols',
       name: 'runProtocols',
-      component: () => import('@/views/system/run//runProtocols')
+    component: () => import('@/views/system/run/runProtocols'),
+    redirect: "/system/run/protocols/sampleSettings",
+    children: [
+      {
+        path: 'sampleSettings',
+        name: 'sampleSettings',
+        component: () => import('@/views/system/run/SampleSettings'),
+      },
+      {
+        path: 'loadlabware',
+        name: 'loadlabware',
+        component: () => import('@/views/system/run/LoadLabware'),
+      },
+      {
+        path: 'runprogressthree',
+        name: 'runprogressthree',
+        component: () => import('@/views/system/run/RunProgressThree'),
+      }
+    ]
+
   }]
 })
