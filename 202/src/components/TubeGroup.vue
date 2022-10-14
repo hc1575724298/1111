@@ -2,15 +2,39 @@
   <div class="container-tube-group">
     <div class="sort">
       <div class="header flexClo">
-        <span class="headerFirst">1</span>
-        <div class="flexClo headerMiddle">
+        <template v-if="protocalInfo.cartridge === 7">
+          <span class="headerFirst">1</span>
+          <div class="flexClo headerMiddle">
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+          </div>
+          <span>7</span>
+        </template>
+        <template v-if="protocalInfo.cartridge === 5">
+          <span class="headerFirst">1</span>
           <span>2</span>
           <span>3</span>
           <span>4</span>
           <span>5</span>
-          <span>6</span>
-        </div>
-        <span>7</span>
+        </template>
+        <template v-if="protocalInfo.cartridge === 8">
+          <div class="flexClo headerFirst">
+            <span style="padding-top: 35px;">1</span>
+            <span style="padding-top: 25px;">2</span>
+          </div>
+
+          <div class="flexClo headerMiddle">
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span>7</span>
+          </div>
+          <span>8</span>
+        </template>
       </div>
       <div class="middle flexClo">
         <span>A</span>
@@ -31,80 +55,99 @@
       v-model="selectedList"
       @change="handleCheckedTubeChange"
     >
-      <!-- <el-checkbox v-for="(item, i) in selected" :label="item" :key="item"
-        ><TubeItem
-          :isGroup="(i + 1) % 8 == 0"
-          :selected="selectedList.includes(item)"
-        />{{ item }}</el-checkbox
-      > -->
-      <template >
+      <template>
         <div v-for="(item, i) in selected" :key="item">
           <TubeItem
-          v-bind="$attrs"
-          :isGroup="(i + 1) % 8 == 0"
-          :selected="selectedList.includes(item)"
-          :checked="checkedList.includes(item)"
-          @click.native="clickTubeItem(item)"
-        />
-        <div class="tubeNum">{{ item }}</div>
+            v-bind="$attrs"
+            :isGroup="(i + 1) % 8 == 0"
+            :selected="selectedList.includes(item)"
+            :checked="checkedList.includes(item)"
+            :tubeNum="protocalInfo.cartridge"
+            @click.native="clickTubeItem(item)"
+          />
+          <div class="tubeNum">{{ item }}</div>
 
-        <div class="checked-btn" @click="clickTubeItem(item)">
-          <img src="@/images/run/6.png" alt="" v-if="!selectedList.includes(item)&&!checkedList.length">
-          <img src="@/images/run/7.png" alt="" v-else-if="selectedList.includes(item)&!checkedList.length">
-          <img src="@/images/run/checkedTube.png" v-if="checkedList.includes(item)">
-        </div>
-        <!-- 多选框按钮 -->
-      <!-- <el-checkbox-button  :label="item" :disabled="isDisabled.includes(item)"
-       class="checkbox-btn"
-        >
-        {{''}}
-        </el-checkbox-button> -->
+          <div class="checked-btn" @click="clickTubeItem(item)">
+            <img
+              src="@/images/run/6.png"
+              alt=""
+              v-if="!selectedList.includes(item) && !checkedList.length"
+            />
+            <img
+              src="@/images/run/7.png"
+              alt=""
+              v-else-if="selectedList.includes(item) & !checkedList.length"
+            />
+            <img
+              src="@/images/run/checkedTube.png"
+              v-if="checkedList.includes(item)"
+            />
+          </div>
         </div>
       </template>
-
     </el-checkbox-group>
-
-      <!-- <el-checkbox
-      :indeterminate="isIndeterminate"
-      v-model="checkAll"
-      @change="handleCheckAllChange"
-      >全选</el-checkbox
-    > -->
   </div>
 </template>
 
 <script>
 import TubeItem from "@/components/TubeItem";
-import { I } from "caniuse-lite/data/agents";
+import { mapState as mapProtocolsState } from "vuex";
 export default {
   name: "home",
   components: { TubeItem },
   props: {
     // 是否能被点击
-    isDisabled:{
+    isDisabled: {
       type: Array,
-      default: ()=>[]
+      default: () => []
     },
     // 选中列表
     selectedList: {
       type: Array,
-      default: ()=>[]
+      default: () => []
     },
     //完成列表
-    checkedList:{
+    checkedList: {
       type: Array,
-      default: ()=>[]
+      default: () => []
     }
   },
   data() {
     return {
       checkAll: false,
-      selected: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10","11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"],
+      selected: [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24"
+      ],
       isIndeterminate: true,
       currentCheckedBtnList: [],
     };
   },
-  computed: {},
+  computed: {
+    ...mapProtocolsState("protocols", ["protocalInfo"])
+  },
   watch: {},
   created() {},
   mounted() {},
@@ -112,7 +155,32 @@ export default {
     handleCheckAllChange(val) {
       console.log(8, val);
       this.selectedList = val
-        ?  ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10","11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"]
+        ? [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24"
+          ]
         : [];
       this.isIndeterminate = false;
     },
@@ -124,19 +192,19 @@ export default {
         checkedCount > 0 && checkedCount < this.selected.length;
     },
     clickTubeItem(val) {
-      if(this.isDisabled.includes(val)){
-         return
-      }else {
-        if(this.selectedList.includes(val)) {
-      const index = this.selectedList.findIndex(item =>item===val)
-      this.selectedList.splice(index,1)
-      this.currentCheckedBtnList.splice(index,1)
-     }else {
-       this.selectedList.push(val)
-       this.currentCheckedBtnList.push(val)
-     }
+      console.log(val);
+      if (this.isDisabled.includes(val)) {
+        return;
+      } else {
+        if (this.selectedList.includes(val)) {
+          const index = this.selectedList.findIndex(item => item === val);
+          this.selectedList.splice(index, 1);
+          this.currentCheckedBtnList.splice(index, 1);
+        } else {
+          this.selectedList.push(val);
+          this.currentCheckedBtnList.push(val);
+        }
       }
-      this.$emit('changeSelectedNum', this.selectedList.length)
     }
   }
 };
@@ -162,7 +230,7 @@ export default {
 }
 
 .headerMiddle {
-  margin: -14px 0;
+  margin: -16px 0;
 }
 .header span,
 .middle span {
@@ -263,11 +331,11 @@ export default {
   height: 50px;
   border-radius: 50%;
 }
-.el-checkbox-button:last-child >>>.el-checkbox-button__inner {
+.el-checkbox-button:last-child >>> .el-checkbox-button__inner {
   width: 30px !important;
-    height: 35px;
-    border-radius: 50%;
-    border: solid 1px #5691d3;
+  height: 35px;
+  border-radius: 50%;
+  border: solid 1px #5691d3;
 }
 .tubeNum {
   width: 22px;
@@ -282,5 +350,4 @@ export default {
 .checked-btn {
   padding-left: 10px;
 }
-
 </style>

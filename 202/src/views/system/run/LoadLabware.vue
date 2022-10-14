@@ -8,11 +8,13 @@
         <div class="left">
           <div class="item">
             <div class="pic">
-              <img src="@/images/run/图像 73.png">
+              <img src="@/images/run/图像 73.png" v-if="protocalInfo.cartridge===7">
+              <img src="@/images/run/图像 73.png" v-if="protocalInfo.cartridge===8">
+              <img src="@/images/run/图像 73.png" v-if="protocalInfo.cartridge===5">
             </div>
             <div class="info">
-              <div>{{$t("language.cartridge_rack")}}:<span>7 well</span></div>
-              <div>{{$t("language.well")}}：1-7</div>
+              <div>{{$t("language.cartridge_rack")}}:<span>{{protocalInfo.cartridge}} well</span></div>
+              <div>{{$t("language.well")}}：1-{{protocalInfo.cartridge}}</div>
             </div>
           </div>
           <div class="item">
@@ -20,7 +22,7 @@
               <img src="@/images/run/试剂管2.png">
             </div>
             <div class="info">
-              <div>{{$t("language.reagent_tube")}}</div>
+              <div>{{protocalInfo.reagent_tube_info}}</div>
               <div>{{$t("language.well")}}：A</div>
             </div>
           </div>
@@ -29,7 +31,7 @@
               <img src="@/images/run/洗脱管2.png">
             </div>
             <div class="info">
-              <div>{{$t("language.Elution_tube")}}</div>
+              <div>{{protocalInfo.elution_tube_info}}</div>
               <div>{{$t("language.well")}}：B</div>
             </div>
           </div>
@@ -38,7 +40,7 @@
               <img src="@/images/run/图像 48.png">
             </div>
             <div class="info">
-              <div>{{$t('language.sample_5ml_tube')}}</div>
+              <div>{{protocalInfo.sample_tube_info}}</div>
               <div>{{$t("language.well")}}：C</div>
             </div>
           </div>
@@ -66,16 +68,16 @@
          <div class="container-bottom-right">
         <div class="title">
          <div>{{$t('language.place_the_labware_in_the_same_positions_with_list_and_click_Run_for_start')}}</div>
-         <div style="color: #666666;">{{$t('language.pre_packaged')}}：<span>No</span></div>
+         <div style="color: #666666;">{{$t('language.pre_packaged')}}：<span>{{$store.state.protocols.protocalInfo.pre_packaged ? 'Yes':'NO'}}</span></div>
         </div>
         <TubeGroup
         :isDisabled="isDisabled"
-        :checkedList="checkedList"
+        :checkedList="$store.state.protocols.selectedTubeList"
         />
         <div class="bottom">
           <div class="bottom-left">
             <div>
-              {{$t('language.selected')}}：<span>{{ $route.query.selectedList&&$route.query.selectedList.length }}</span>
+              {{$t('language.selected')}}：<span>{{ $store.state.protocols.selectedTubeList.length }}</span>
             </div>
           </div>
           <div class="bottom-right">
@@ -91,6 +93,9 @@
 <script>
 import TubeGroup from "@/components/TubeGroup.vue";
 import RunProgress from "@/components/RunProgress.vue";
+import utilsFunction from "@/utils/function";
+import { mapState as mapProtocolsState } from 'vuex'
+import { setRun } from '@/api/run'
 export default {
   components:{
     RunProgress,
@@ -99,22 +104,39 @@ export default {
   data () {
     return {
       isDisabled: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10","11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"],
-      checkedList: this.$route.query.selectedList,
     }
   },
   created () {
 
   },
+  computed:{
+      ...mapProtocolsState('protocols',['protocalInfo','start_step_id','selectedTubeList','sampleIdDataStore','run_step_ids'])
+    },
   methods: {
     clickBack() {
       this.$router.push('sampleSettings')
     },
-    clickRun() {
+    async clickRun() {
+      const res = await setRun({
+        protocol_id: this.protocalInfo.id,
+        start_step_id: this.start_step_id,
+        sample_number: this.selectedTubeList.length,
+        run_step_ids: this.run_step_ids,
+        sample_info: JSON.stringify(this.sampleIdDataStore)
+      })
+      console.log(res);
       this.$store.commit('protocols/changeGoBackName','loadlabware')
       this.$router.push({
-        name: 'runprogressthree'
+        name: 'runprogressthree',
+        query:{
+          runStartTime:utilsFunction.changeSecondsToSecondTime(
+           Date.now()/1000,
+            "en-US"
+          )
+        }
       })
-    }
+    },
+
   }
 }
 </script>

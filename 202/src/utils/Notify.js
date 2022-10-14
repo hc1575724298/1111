@@ -61,4 +61,7 @@ export default {
   CODE_RUN_DOOR_OPEN: 0x4006, //运行过程中门打开通知
   CODE_RUN_FATAL_ERROR: 0x4007, //运行过程中指令执行失败，不能继续往下执行 msg: 设备名称 data: 指令执行返回值
   CODE_RUN_POSITION_NOT_SET: 0x4008, //程序没有配置位置数据，程序异常，必须停止运行
+
+  CODE_FZB_DOOR_OPEN: 0x000C,//辅助版-门打开通知
+  CODE_FZB_DOOR_CLOSE: 0x000D,//辅助版-门关闭通知
 }

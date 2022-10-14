@@ -118,9 +118,8 @@ export default {
     // 右侧数据
     chooseProtocal(id,name) {
       this.thisOneProtocal = this.protocolsList.find(item => item.id === id);
+      this.$store.commit('protocols/updatedInfo',[this.thisOneProtocal,'run'])
       this.isCheckId = id;
-      this.$store.commit('protocols/changeprotocolsId',[id,'run',name])
-
     }
   },
   computed: {
@@ -132,7 +131,7 @@ export default {
     await this.getAllProtocol();
     this.handleupdatedTime();
     this.isCheckId = this.farvoritesList&&this.farvoritesList[0].id
-    this.chooseProtocal(this.isCheckId,this.farvoritesList[0].name)
+    this.chooseProtocal(this.isCheckId)
   },
 
 };

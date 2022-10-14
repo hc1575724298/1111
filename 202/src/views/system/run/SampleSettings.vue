@@ -6,48 +6,49 @@
       <!-- 左侧 -->
       <div class="container-bottom-left">
         <div class="title">{{$t("language.parameters")}}</div>
-        <div style="padding: 30px 0 0 26px;">
+        <!-- <div style="padding: 30px 0 0 26px;">
           <div class="volume-title">{{$t("language.elution_volume")}}：</div>
           <div class="volume-num">20</div>
-        </div>
-        <div style="padding: 30px 0 0 26px;">
+        </div> -->
+        <!-- <div style="padding: 30px 0 0 26px;">
           <div class="volume-title">{{$t("language.reagent_volume")}}：</div>
           <div class="volume-num grayBg">20</div>
-        </div>
+        </div> -->
         <div style="padding: 30px 0 0 26px;">
           <div class="volume-title">{{$t("language.sample_volume")}}：</div>
-          <div class="volume-num grayBg">800</div>
+          <div class="volume-num grayBg">{{$store.state.protocols.protocalInfo.sample_volume}}</div>
         </div>
       </div>
       <!-- 右侧 -->
       <div class="container-bottom-right">
         <div class="title">{{$t('language.worktable_select_sample_positions')}}</div>
         <TubeGroup
-          :selectedList="selectedList"
+          :selectedList="selectedTubeList"
           :isDisabled="isDisabledList"
-          @changeSelectedNum="changeSelectedNum"
         />
         <div class="bottom">
           <div class="bottom-left">
             <div>
-              {{$t('language.selected')}}：<span>{{ selectedNum }}</span>
+              {{$t('language.selected')}}：<span>{{ selectedTubeList.length }}</span>
             </div>
             <div class="select-all" @click="changeSelectAll">
               <span style="margin-right: 16px;">{{$t('language.select_all')}}:</span>
-              <img src="@/images/run/48全选开启.png" alt="" v-if="selectAll" />
+              <img src="@/images/run/48全选开启.png" alt="" v-if="selectAll||selectedTubeList.length===24" />
               <img src="@/images/run/47全选未开启.png" alt="" v-else />
             </div>
           </div>
           <div class="bottom-right">
             <button class="sampleId" @click="clickSampleId">{{$t('language.sampleID')}}</button>
-            <button class="next" @click="clickNext">{{$t('language.next')}}</button>
+            <button class="next" @click="clickNext" :disabled="isDisabledNextBtn">{{$t('language.next')}}</button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 弹框 -->
-    <SampleIdDialog :isShowSampleidDialog="isShowSampleidDialog" @close="isShowSampleidDialog=false"/>
+    <SampleIdDialog
+    :isShowSampleidDialog="isShowSampleidDialog"
+    @close="isShowSampleidDialog=false"/>
   </div>
 </template>
 
@@ -56,6 +57,7 @@ import TubeItem from "@/components/TubeItem";
 import TubeGroup from "@/components/TubeGroup.vue";
 import RunProgress from "@/components/RunProgress.vue";
 import SampleIdDialog from './components/SampleIdDialog.vue'
+import { mapState as mapProtocolsState } from 'vuex'
 export default {
   components: {
     TubeItem,
@@ -67,19 +69,17 @@ export default {
   data() {
     return {
       isDisabledList: [],
-      selectedNum: 0,
       selectAll: false,
       selectedList: [],
-      isShowSampleidDialog: false
+      isShowSampleidDialog: false,
+      isDisabledNextBtn: false,
     };
   },
   watch: {},
-  computed: {},
+  computed:{
+    ...mapProtocolsState('protocols',['selectedTubeList']),
+  },
   methods: {
-    //选中数量
-    changeSelectedNum(num) {
-      this.selectedNum = num;
-    },
     //全选按钮
     changeSelectAll() {
       this.selectAll = !this.selectAll;
@@ -110,27 +110,31 @@ export default {
           "23",
           "24"
         ];
-        this.selectedNum = this.selectedList.length;
+
       } else {
         this.selectedList = [];
-        this.selectedNum = 0;
       }
+      this.$store.commit('protocols/changeSelectedTubeList',this.selectedList)
     },
     clickSampleId() {
-      console.log("点击了SampleId");
       this.isShowSampleidDialog =!this.isShowSampleidDialog;
     },
     clickNext() {
-      this.$store.commit('protocols/changeGoBackName','sampleSettings')
-      this.$router.push({
+      if(this.selectedTubeList.length>0){
+        this.$router.push({
         name: 'loadlabware',
-        query:{
-          selectedList: this.selectedList
-        }
       })
+      this.$store.commit('protocols/changeGoBackName','sampleSettings')
+      }else {
+        this.isDisabledNextBtn = true
+        this.$message('Please select sample positions');
+      }
+      this.isDisabledNextBtn = false
     }
   },
-  created() {},
+  created() {
+
+  },
   mounted() {},
 
 };

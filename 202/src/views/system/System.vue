@@ -168,7 +168,8 @@
       getUserInfo() {
         this.info_code = !this.info_code ? 1 : 0;
       }
-    }
+    },
+ 
   }
 </script>
 

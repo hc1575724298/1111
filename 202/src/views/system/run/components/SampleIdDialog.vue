@@ -5,7 +5,7 @@
   width="1120px"
   :show-close="false"
   :visible="isShowSampleidDialog"
-   @close="handleClose">
+  @close="handleClose">
   <el-table
   class="el-table"
   :header-cell-style="{
@@ -17,11 +17,11 @@
     boxSizing: 'border-box',
   }"
   height="420px"
-  :data="gridData">
+  :data="sampleIdData">
     <el-table-column property="position" label="Position" width="245"></el-table-column>
-    <el-table-column property="sampleID" label="SampleID" width="350">
+    <el-table-column property="sample_id" label="SampleID" width="350">
       <template slot-scope="scope">
-        <el-input class="el-input" v-model="scope.row.SampleID"></el-input>
+        <el-input class="el-input" v-model="scope.row.sample_id"></el-input>
       </template>
     </el-table-column>
     <el-table-column property="note" label="note(optional)">
@@ -34,12 +34,13 @@
   <!-- 按钮 -->
   <span slot="footer" class="dialog-footer">
     <el-button @click="handleClose" class="cancel">Cancel</el-button>
-    <el-button class="ok">Ok</el-button>
+    <el-button class="ok" @click="clickOk">OK</el-button>
   </span>
 </el-dialog>
 </template>
 
 <script>
+import { mapState as mapProtocolsState,mapGetters as mapProtocolsGetters} from 'vuex'
 export default {
   props:{
     isShowSampleidDialog:{
@@ -47,116 +48,41 @@ export default {
       default: false
     }
   },
+  computed:{
+    ...mapProtocolsState('protocols',['selectedTubeList','sampleIdDataStore','showCountSampleidDialog']),
+    ...mapProtocolsGetters('protocols',['sampleIdInfo'])
+  },
   data () {
     return {
-      gridData: [{
-        position: 1,
-        SampleID: '',
-        note: '',
-        }, {
-          position:2,
-          SampleID: '',
-           note: '',
-        }, {
-          position:3,
-          SampleID: '',
-          note: '',
-        }, {
-          position: 4,
-          SampleID: '',
-          note: '',
-        },{
-          position: 5,
-          SampleID: '',
-          note: '',
-        },{
-          position: 6,
-          SampleID: '',
-          note: '',
-        },
-        {
-          position: 7,
-          SampleID: '',
-          note: '',
-        },{
-          position: 8,
-          SampleID: '',
-          note: '',
-        },{
-          position: 9,
-          SampleID: '',
-          note: '',
-        },{
-          position: 10,
-          SampleID: '',
-          note: '',
-        },{
-          position: 11,
-          SampleID: '',
-          note: '',
-        },{
-          position: 12,
-          SampleID: '',
-          note: '',
-        },{
-          position: 13,
-          SampleID: '',
-          note: '',
-        },{
-          position: 14,
-          SampleID: '',
-          note: '',
-        },{
-          position: 15,
-          SampleID: '',
-          note: '',
-        },{
-          position: 16,
-          SampleID: '',
-          note: '',
-        },{
-          position: 17,
-          SampleID: '',
-          note: '',
-        },{
-          position: 18,
-          SampleID: '',
-          note: '',
-        },{
-          position: 19,
-          SampleID: '',
-          note: '',
-        },{
-          position: 20,
-          SampleID: '',
-          note: '',
-        },{
-          position: 21,
-          SampleID: '',
-          note: '',
-        },{
-          position: 22,
-          SampleID: '',
-          note: '',
-        },{
-          position: 23,
-          SampleID: '',
-          note: '',
-        },{
-          position: 24,
-          SampleID: '',
-          note: '',
-        }],
+      sampleIdData: [],
+      showCount:0
     }
   },
 
-  created () {
-
+  watch:{
+    isShowSampleidDialog(){
+      if(this.sampleIdInfo[0]){
+        this.$store.commit('protocols/updatedShowCountSampleidDialog')
+      }
+      if(this.showCountSampleidDialog===1){
+        const data =JSON.parse(JSON.stringify(this.sampleIdInfo))
+        this.$store.commit('protocols/updatedSampleIdInfo',data)
+        const data2 =JSON.parse(JSON.stringify(this.sampleIdDataStore))
+        this.sampleIdData = data2
+        return
+      }else {
+        const data =JSON.parse(JSON.stringify(this.sampleIdDataStore))
+        this.sampleIdData = data
+      }
+    },
   },
-
   methods: {
     handleClose() {
       this.$emit('close');
+    },
+    clickOk() {
+       this.$store.commit('protocols/updatedSampleIdInfo',this.sampleIdData)
+       this.$emit('close');
     }
   }
 }

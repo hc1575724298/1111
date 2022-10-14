@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  
+
 </template>
 
 <script>
@@ -31,6 +31,9 @@
       backToParent() {
         this.$store.commit('setSystemMenu',1)
         this.$store.commit('setSystemHeadMenu',1)
+        if(this.path_router=='list'){
+          this.$store.commit('setSystemHeadMenu',2)
+        }
         this.$router.push({name:this.path_router})
       }
     }

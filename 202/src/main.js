@@ -15,6 +15,7 @@ import inputFilter from './utils/input';
 Vue.directive('inputFilter', inputFilter);
 //通过实例属性定义全局工具类
 import pub from "./utils/function.js"
+import notify from "./utils/Notify.js"
 Vue.prototype.pub = pub;
 
 Vue.config.productionTip = false;
@@ -23,13 +24,14 @@ Vue.use(VueI18n);
 Vue.use(EventBus);
 Vue.prototype.$store = store;
 Vue.prototype.EventBus = EventBus;
+Vue.prototype.Notify = notify;
 
 
 Vue.prototype.simulateRun = process.env.NODE_ENV == 'development';
 //接收来自c#的通知
 Vue.prototype.OnNotify = async function(notifyString) {
   //notifyString是包含Code：代码 Message：信息 Data：数据 三个属性的json字符串
-  console.log("main.js 接收到消息:" + notifyString);
+  // console.log("main.js 接收到消息:" + notifyString);
   try {
     let notify = JSON.parse(notifyString);
 
@@ -67,7 +69,7 @@ Vue.prototype.OnNotify = async function(notifyString) {
     //     // });
     // }
 
-    // EventBus.publish(notify.Code, notify);
+    EventBus.publish(notify.Code, notify);
 
     // if ([
     //         Notify.CODE_HARDWARE_USB_ERROR,
@@ -114,7 +116,7 @@ Vue.prototype.OnNotify = async function(notifyString) {
     //     store.commit("setLightOn", false);
     // }
 
-    console.log("main.js 发送事件 Code: 0x" + notify.Code.toString(16));
+    // console.log("main.js 发送事件 Code: 0x" + notify.Code.toString(16));
   } catch (e) {
     console.log(e)
   }
@@ -139,6 +141,6 @@ new Vue({
   render: h => h(App),
   mounted() {
     window.vue = this;
-    // Init(this);
+    Init(this);
   }
 })

@@ -2,6 +2,8 @@
   <div class="run-list">
     <RunHead />
     <el-table
+      ref="protocolsTable"
+      highlight-current-row
       @row-click="clickRow"
       :data="protocolsList"
       class="protocols-list"
@@ -21,12 +23,40 @@
         align="center"
       >
         <template slot-scope="scope">
-          {{
-            scope.$index + 1 < 10 ? "0" + (scope.$index + 1) : scope.$index + 1
-          }}
+          {{ scope.$index | handleNo }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" :label="$t('language.name_A_Z')" align="center">
+      <el-table-column
+        prop="name"
+        :label="$t('language.name_A_Z')"
+        align="center"
+      >
+        <template slot="header">
+          <div v-if="sort_name === 1">
+            {{ $t("language.name_A_Z") }}
+            <img
+              src="../../../images/users/sort_down.png"
+              @click="changeSort('name')"
+              class="sort-icon"
+            />
+          </div>
+          <div v-else-if="sort_name === 2">
+            {{ $t("language.name_Z_A") }}
+            <img
+              src="../../../images/users/sort_top.png"
+              @click="changeSort('name')"
+              class="sort-icon"
+            />
+          </div>
+          <div v-else-if="sort_name === 3">
+            {{ $t("language.name_A_Z") }}
+            <img
+              src="@/images/run/未选中.png"
+              @click="changeSort('name')"
+              class="sort-icon"
+            />
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="cartridge"
@@ -48,33 +78,68 @@
         align="center"
         class="operation"
       >
+      <template slot="header">
+          <div v-if="sort_user === 1">
+            {{ $t("language.user_A_Z") }}
+            <img
+              src="../../../images/users/sort_down.png"
+              @click="changeSort('user')"
+              class="sort-icon"
+            />
+          </div>
+          <div v-else-if="sort_user === 2">
+            {{ $t("language.user_Z_A") }}
+            <img
+              src="../../../images/users/sort_top.png"
+              @click="changeSort('user')"
+              class="sort-icon"
+            />
+          </div>
+          <div v-else-if="sort_user === 3">
+            {{ $t("language.user_A_Z") }}
+            <img
+              src="@/images/run/未选中.png"
+              @click="changeSort('user')"
+              class="sort-icon"
+            />
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="updated_at"
         align="center"
         :label="$t('language.timeNewToOld')"
+        :formatter="handleupdatedTime"
       >
         <template slot="header">
-          <div v-if="sort_code" class="time-sort">
+          <div v-if="sort_time === 1" class="time-sort">
             {{ $t("language.timeNewToOld") }}
             <img
               src="../../../images/users/sort_down.png"
-              @click="changeSort()"
+              @click="changeSort('time')"
               class="sort-icon"
             />
           </div>
-          <div v-else class="time-sort">
+          <div v-else-if="sort_time === 2" class="time-sort">
             {{ $t("language.timeOldToNew") }}
             <img
               src="../../../images/users/sort_top.png"
-              @click="changeSort()"
+              @click="changeSort('time')"
+              class="sort-icon"
+            />
+          </div>
+          <div v-else-if="sort_time === 3" class="time-sort">
+            {{ $t("language.timeNewToOld") }}
+            <img
+              src="@/images/run/未选中.png"
+              @click="changeSort('time')"
               class="sort-icon"
             />
           </div>
         </template>
       </el-table-column>
     </el-table>
-    <RunFooter :isDisabledRunBtn="isDisabledRunBtn" />
+    <RunFooter />
   </div>
 </template>
 
@@ -91,9 +156,17 @@ export default {
   data() {
     return {
       protocolsList: [],
-      sort_code: true,
-      isDisabledRunBtn: true
+      sort_time: 1, // 1:正序  2：倒叙  3：未选中
+      sort_name: 3,
+      sort_user: 3
     };
+  },
+  watch: {
+    protocolsList() {
+      this.$nextTick(() => {
+        this.$refs.protocolsTable.setCurrentRow(this.protocolsList[0]);
+      });
+    }
   },
   mounted() {},
   methods: {
@@ -103,27 +176,9 @@ export default {
       this.protocolsList = data;
       console.log(data);
     },
-    //处理时间
-    handleupdatedTime() {
-      this.protocolsList.forEach(
-        item =>
-          (item.updated_at = utilsFunction.changeSecondsToSecondTime(
-            item.updated_at,
-            "en-US"
-          ))
-      );
-    },
     //点击某一行
-    clickRow(row, column) {
-      this.isDisabledRunBtn = false;
-      this.$store.commit("protocols/changeprotocolsId", [
-        row.id,
-        "list",
-        row.name
-      ]);
-    },
-    handleNo(index) {
-      return index > 0 ? index : "0" + index;
+    clickRow(row) {
+      this.$store.commit("protocols/updatedInfo", [row, "list"]);
     },
     handleCartridge(row) {
       return row.cartridge + " well";
@@ -131,15 +186,69 @@ export default {
     handlePrePackaged(row) {
       return row.pre_packaged ? "yes" : "no";
     },
+    handleupdatedTime(row) {
+      return utilsFunction.changeSecondsToSecondTime(
+            row.updated_at,
+            "en-US"
+          )
+    },
     //时间反转
-    changeSort() {
-      this.sort_code = !this.sort_code;
-      this.protocolsList = this.protocolsList.reverse();
+    changeSort(val) {
+      if (val === "time") {
+        if(this.sort_time===1){
+          this.sort_time =2
+        }else if (this.sort_time===2|| this.sort_time===3) {
+          this.sort_time = 1
+        }
+        this.sort_name =this.sort_user=3;
+        this.protocolsList = this.protocolsList.reverse();
+      } else if (val === "name") {
+        const res=this.changeSortStatus(this.sort_name, this.protocolsList,'name')
+        this.sort_name = res[0]
+        this.protocolsList =res[1]
+        this.sort_time = this.sort_user =3;
+      }else {
+        const res=this.changeSortStatus(this.sort_user,this.protocolsList,'creator_name')
+        this.sort_user = res[0]
+        this.protocolsList =res[1]
+        this.sort_time = this.sort_name =3;
+      }
+    },
+    changeSortStatus(select,data,attr) {
+      if(select===1) {
+          select = 2
+          data.sort(function(a,b){
+            if (a[attr] > b[attr]) {
+              return -1
+            }
+            if (a[attr] < b[attr]) {
+              return 1
+            }
+            return 0
+          })
+        }else if (select===2||select===3) {
+          select = 1
+          data.sort(function(a,b){
+            if (a[attr] < b[attr]) {
+              return -1
+            }
+            if (a[attr] > b[attr]) {
+              return 1
+            }
+            return 0
+          })
+        }
+        return [select,data]
     }
   },
   async created() {
     await this.getAllProtocol();
-    this.handleupdatedTime();
+    this.clickRow(this.protocolsList[0]);
+  },
+  filters: {
+    handleNo(index) {
+      return index >= 9 ? index + 1 : "0" + (index + 1);
+    }
   }
 };
 </script>
@@ -161,11 +270,15 @@ export default {
   font-size: 24px;
   box-sizing: border-box;
 }
-.time-sort {
-  align-items: center;
-}
-
 .sort-icon {
   margin-left: 18px;
+}
+.el-table >>> .cell {
+  line-height: 30px;
+}
+</style>
+<style>
+.run-list .el-table__body tr.current-row > td.el-table__cell {
+  background-color: #cee1f5 !important;
 }
 </style>

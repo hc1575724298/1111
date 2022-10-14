@@ -113,6 +113,7 @@ let translate = {
   oem:"OEM",
   pn_number: "PN number",
   open_door: "Open door",
+  close_door: "Close door",
   view: 'View',
   information: "Information",
   protocol_name: "Protocol name",
@@ -121,6 +122,8 @@ let translate = {
   expected_run_time: 'Expected run time(hh:mm:ss)',
   remark: 'Remark(Optional)',
   name_A_Z: 'Name(A-Z)',
+  name_Z_A: 'Name(Z-A)',
+  user_Z_A: 'User(Z-A)',
   user_A_Z: 'User(A-Z)',
   sample_settings: 'Sample settings',
   load_labware: 'Load labware',
@@ -140,7 +143,7 @@ let translate = {
   sample_5ml_tube: '5ml_Sample tube',
   magnetic_sleeve: 'Magnetic sleeve',
   tip_1000ul: '1000ul_tip',
-  place_the_labware_in_the_same_positions_with_list_and_click_Run_for_start: '>Place the labware in the same positions with list and click “Run ” for start.',
+  place_the_labware_in_the_same_positions_with_list_and_click_Run_for_start: 'Place the labware in the same positions with list and click “Run ” for start.',
   back: 'Back',
 };
 

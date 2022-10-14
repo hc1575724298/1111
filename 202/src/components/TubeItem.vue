@@ -2,7 +2,25 @@
   <div :class="['container', 'flexClo',selected?'selected' :'']" :style="{
     marginRight:isGroup?'20px':0
   }">
-    <div :class="['header', 'flexClo',checked? 'checked' : '']">
+    <div :class="['header', 'flexClo']">
+       <div v-if="tubeNum===7">
+          <img src="@/images/run/组 8141.png" alt="" v-if="!selected&&!checked">
+          <img src="@/images/run/组 8144.png" alt="" v-if="selected&&!checked">
+          <img src="@/images/run/组 8147.png" alt="" v-if="checked">
+       </div>
+       <div v-if="tubeNum===5">
+          <img src="@/images/run/组 8140.png" alt="" v-if="!selected&&!checked">
+          <img src="@/images/run/组 8145.png" alt="" v-if="selected&&!checked">
+          <img src="@/images/run/组 8148.png" alt="" v-if="checked">
+       </div>
+       <div v-if="tubeNum===8">
+          <img src="@/images/run/组 8142.png" alt="" v-if="!selected&&!checked">
+          <img src="@/images/run/组 8143.png" alt="" v-if="selected&&!checked">
+          <img src="@/images/run/组 8146.png" alt="" v-if="checked">
+       </div>
+    </div>
+    <!-- css画 7孔  -->
+    <!-- <div :class="['header', 'flexClo',checked? 'checked' : '']">
       <span :class="['headerFirst',lighhightList.includes(1)?'bg':'',checked? 'checked-white' : '']"></span>
       <div class="flexClo headerMiddle">
         <span :class="[lighhightList.includes(2)?'bg':'',checked? 'checked-white' : '']"></span>
@@ -12,7 +30,7 @@
         <span :class="[lighhightList.includes(6)?'bg':'',checked? 'checked-white' : '']"></span>
       </div>
       <span :class="[lighhightList.includes(7)?'bg':'',checked? 'checked-white' : '']"></span>
-    </div>
+    </div> -->
     <div :class="['middle', 'flexClo',isGroup?'middleR':'']">
       <span :class="[lighhightList.includes('A')?'bg':'',checked? 'checked' : '']"></span>
       <span :class="[lighhightList.includes('B')?'bg':'',checked? 'checked' : '']"></span>
@@ -20,11 +38,11 @@
     <div class="footer flexClo">
       <span :class="[lighhightList.includes('C')?'bg':'',checked? 'checked' : '']"></span>
       <section class="flexClo">
-        <img src="@/images/run/5.png" v-if="!(!!lighhightList.length)&&selected&&!checked">
-        <img src="@/images/run/3.png" v-else-if="!(!!lighhightList.length)&&!selected&&!checked">
-        <img src="@/images/run/1.png" v-else-if="!!lighhightList.length &&lighhightList.includes('D')">
-        <img src="@/images/run/2.png" v-else-if="!!lighhightList.length &&lighhightList.includes('E')">
-        <img src="@/images/run/45磁棒套2.png" v-else-if="!(!!lighhightList.length)&&checked"/>
+        <img src="@/images/run/组 8065.png" v-if="!(!!lighhightList.length)&&selected&&!checked">
+        <img src="@/images/run/组 8135.png" v-else-if="!(!!lighhightList.length)&&!selected&&!checked">
+        <img src="@/images/run/8.png" v-else-if="!!lighhightList.length &&lighhightList.includes('D')">
+        <img src="@/images/run/9.png" v-else-if="!!lighhightList.length &&lighhightList.includes('E')">
+        <img src="@/images/run/组 8136.png" v-else-if="!(!!lighhightList.length)&&checked"/>
 
 
         <!-- css画 -->
@@ -55,6 +73,10 @@ export default {
     checked:{
       type:Boolean,
       default:false,
+    },
+    tubeNum:{
+      type: Number,
+      default: 7
     }
   },
   data() {
@@ -93,8 +115,8 @@ export default {
 .header {
   width: 40px;
   height: 360px;
-  border: 1px solid #666;
-  border-radius: 8px;
+  /* border: 1px solid #666; */
+  /* border-radius: 8px; */
   align-items: center;
   justify-content: center;
 }

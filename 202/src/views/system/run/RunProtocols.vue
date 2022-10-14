@@ -1,6 +1,6 @@
 <template>
   <div>
-  <UserHead :page_name="pageName" :path_router="pathName"/>
+  <UserHead :page_name="protocalInfo.name" :path_router="pathName"/>
   <router-view/>
   </div>
 </template>
@@ -19,25 +19,16 @@ export default {
     }
   },
   computed:{
-    ...mapProtocolsState('protocols',['protocolsId','pathName','pageName','initPathName'])
+    ...mapProtocolsState('protocols',['protocalInfo','pathName','initPathName'])
   },
   created () {
-   console.log(this.protocolsId);
+   console.log(this.protocalInfo.id);
    console.log(this.pathName);
   },
 
   methods: {
 
   },
-  watch:{
-    $route(to) {
-      if(to.path==='/system/run/protocols/sampleSettings') {
-        this.$store.commit('protocols/changeGoBackName',this.initPathName)
-      }else if(to.path==='/system/run/protocols/loadlabware') {
-        this.$store.commit('protocols/changeGoBackName', 'sampleSettings')
-      }
-    }
-  }
 }
 </script>
 

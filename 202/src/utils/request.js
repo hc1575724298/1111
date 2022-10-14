@@ -38,6 +38,7 @@ service.interceptors.request.use(
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
       config.headers['Authorization'] = store.getters.user.token;
+      config.headers['Simulate'] = 1;
     }
     // config.data = JSON.parse(config.data);
     if (config.method && config.method.toLowerCase() == 'post') {

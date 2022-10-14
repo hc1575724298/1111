@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AS.exe" size="714240">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AS.exe" size="744448">
       <assemblyIdentity name="AS" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>fkjDP/5Of6Ezan6qS6ekJ3hkn/favWX3s4+fagnH+6c=</dsig:DigestValue>
+        <dsig:DigestValue>qRrPSH+ffdSfjk6u37pzawLzmMfjcJz99DVA4v6LyA0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

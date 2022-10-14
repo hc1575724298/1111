@@ -6,7 +6,7 @@
     </div>
     <div class="run-head-right-btn-text">{{$t("language.view")}}</div>
   </button>
-    <button class="run-footer-run-btn" :disabled="isDisabledRunBtn" @click="clickRunBtn">
+    <button :class="{'bg': isDisabledRunBtn}" class="run-footer-run-btn" :disabled="isDisabledRunBtn" @click="clickRunBtn">
     <div>
       <img src="../images/run/runbtn.png" alt="">
     </div>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-
+import { getProtocolDetail } from "@/api/run";
 export default {
   name: 'RunFooter',
   components: {},
@@ -28,13 +28,14 @@ export default {
   },
   data() {
     return {
+      runStepIds: ''
     };
   },
   watch: {},
   computed: {},
   methods: {
     clickRunBtn(){
-      console.log('点击Run按钮');
+     this. getProtocolDetail()
       this.$router.push (
         {
           path: '/system/run/protocols',
@@ -42,14 +43,29 @@ export default {
       )
     },
     clickPreViewBtn(){
-      console.log('点击view按钮');
-    }
+      this.$router.push (
+        {
+          path: '/system/run/protocols/viewrunstep',
+        }
+      )
+    },
+    async getProtocolDetail() {
+      const {
+        data: { steps }
+      } = await getProtocolDetail(this.$store.state.protocols.protocalInfo.id);
+      this.runStepIds = steps.map(item=>item.id).join()
+      this.$store.commit('protocols/updatedStepIds',[steps[0].id,this.runStepIds])
+    },
   },
   created() {},
   mounted() {}
 };
 </script>
 <style scoped>
+.bg {
+  background-color: gray !important;
+  background-image: unset!important;
+}
 .run-footer {
   display: flex;
   align-items: center;
