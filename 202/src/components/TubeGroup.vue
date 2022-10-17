@@ -142,7 +142,7 @@ export default {
         "24"
       ],
       isIndeterminate: true,
-      currentCheckedBtnList: [],
+      currentCheckedBtnList: []
     };
   },
   computed: {
@@ -196,14 +196,17 @@ export default {
       if (this.isDisabled.includes(val)) {
         return;
       } else {
+        let newList = [];
         if (this.selectedList.includes(val)) {
-          const index = this.selectedList.findIndex(item => item === val);
-          this.selectedList.splice(index, 1);
-          this.currentCheckedBtnList.splice(index, 1);
+          newList = this.selectedList.filter(v => v != val);
         } else {
-          this.selectedList.push(val);
-          this.currentCheckedBtnList.push(val);
+          newList = [val, ...this.selectedList];
         }
+        this.currentCheckedBtnList = newList;
+        this.$store.commit(
+          "protocols/changeSelectedTubeList",
+          newList.sort((a, b) => a - b)
+        );
       }
     }
   }
