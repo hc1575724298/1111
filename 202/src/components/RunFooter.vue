@@ -1,6 +1,6 @@
 <template>
 <div class="run-footer">
-    <button class="run-footer-preview-btn" @click="clickPreViewBtn">
+    <button v-if="$store.state.user.group!=='user'" class="run-footer-preview-btn" @click="clickPreViewBtn">
     <div>
       <img src="../images/run/preview-btn.png" alt="">
     </div>
@@ -12,14 +12,18 @@
     </div>
     <div class="run-head-right-btn-text run-color">{{$t("language.run")}}</div>
     </button>
+
+    <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog"/>
 </div>
 </template>
 
 <script>
-import { getProtocolDetail } from "@/api/run";
+import { getProtocolDetail, openDoor } from "@/api/run";
+import OpenDoorDialog from './OpenDoorDialog.vue'
+import { mapState as mapProtocolsState } from "vuex";
 export default {
   name: 'RunFooter',
-  components: {},
+  components: { OpenDoorDialog },
   props: {
     isDisabledRunBtn:{
       type: Boolean,
@@ -28,26 +32,38 @@ export default {
   },
   data() {
     return {
-      runStepIds: ''
+      runStepIds: '',
+      isShowOpenDoorDialog: false,
     };
   },
   watch: {},
-  computed: {},
+  computed: {
+    ...mapProtocolsState("protocols", ["doorState"])
+  },
   methods: {
-    clickRunBtn(){
-     this. getProtocolDetail()
-      this.$router.push (
+   async clickRunBtn(){
+    if(this.doorState===0){
+      this.isShowOpenDoorDialog = true
+      this.openDoorApi()
+    }else {
+       this.$router.push (
         {
           path: '/system/run/protocols',
         }
       )
+    }
+      this. getProtocolDetail()
     },
     clickPreViewBtn(){
+      this.$store.commit('protocols/updatedInitPathName','viewrunstep')
       this.$router.push (
         {
           path: '/system/run/protocols/viewrunstep',
         }
       )
+    },
+    async openDoorApi(){
+      await openDoor()
     },
     async getProtocolDetail() {
       const {
@@ -58,7 +74,19 @@ export default {
     },
   },
   created() {},
-  mounted() {}
+  mounted() {
+    this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
+       if(notify.Code===0x000C){
+        this.isShowOpenDoorDialog=false
+        this.$store.commit('protocols/updatedDoorState',1)
+        this.$router.push (
+        {
+          path: '/system/run/protocols',
+        }
+      )
+       }
+      })
+  }
 };
 </script>
 <style scoped>

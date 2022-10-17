@@ -120,6 +120,8 @@ import { getDoorState } from '@/api/run'
     //   sample_id: '',
     //   note: '',
     // }]])
+      }else if (to.path==='/system/run/protocols/runprogressthree') {
+        this.$store.commit('protocols/changeGoBackName',this.initPathName)
       }
     }
   },

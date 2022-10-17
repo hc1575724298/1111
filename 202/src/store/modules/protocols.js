@@ -18,6 +18,9 @@ export default {
       state.pathName = playload[1];
       state.initPathName = playload[1]
     },
+    updatedInitPathName (state, playload) {
+      state.initPathName = playload
+    },
     changeGoBackName (state, name) {
       state.pathName = name
     },
@@ -30,6 +33,7 @@ export default {
     updatedStepIds (state, playload) {
       state.start_step_id = playload[0]
       state.run_step_ids = playload[1]
+      state.pathName = playload[2]
     },
     updatedDoorState (state, playload) {
       state.doorState = playload

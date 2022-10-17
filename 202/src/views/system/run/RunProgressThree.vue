@@ -16,7 +16,7 @@
                 <img src="@/images/run/37.timechecked.png" v-if="isShowtime" />
                 <img src="@/images/run/38时间显示未选中 (2).png" v-else />
               </div>
-              <div @click="clickList">
+              <div @click="clickList" v-if="$store.state.user.group!=='user'">
                 <img src="@/images/run/39列表选中.png" v-if="isShowList" />
                 <img src="@/images/run/40列表未选中.png" v-else />
               </div>
@@ -153,7 +153,9 @@ export default {
     };
   },
 
-  created() {},
+  created(){
+
+  },
 
   methods: {
     clickTime() {

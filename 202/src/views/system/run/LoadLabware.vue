@@ -117,14 +117,14 @@ export default {
       this.$router.push('sampleSettings')
     },
     async clickRun() {
-      const res = await setRun({
-        protocol_id: this.protocalInfo.id,
-        start_step_id: this.start_step_id,
-        sample_number: this.selectedTubeList.length,
-        run_step_ids: this.run_step_ids,
-        sample_info: JSON.stringify(this.sampleIdDataStore)
-      })
-      console.log(res);
+      // const res = await setRun({
+      //   protocol_id: this.protocalInfo.id,
+      //   start_step_id: this.start_step_id,
+      //   sample_number: this.selectedTubeList.length,
+      //   run_step_ids: this.run_step_ids,
+      //   sample_info: JSON.stringify(this.sampleIdDataStore)
+      // })
+      // console.log(res);
       this.$store.commit('protocols/changeGoBackName','loadlabware')
       this.$router.push({
         name: 'runprogressthree',

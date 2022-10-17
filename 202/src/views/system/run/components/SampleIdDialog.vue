@@ -48,6 +48,7 @@ export default {
       default: false
     }
   },
+
   computed:{
     ...mapProtocolsState('protocols',['selectedTubeList','sampleIdDataStore','showCountSampleidDialog']),
     ...mapProtocolsGetters('protocols',['sampleIdInfo'])

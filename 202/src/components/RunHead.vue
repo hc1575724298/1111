@@ -10,26 +10,17 @@
     <div class="run-head-right-btn-text" v-if="doorState===1">{{$t("language.close_door")}}</div>
   </button>
 
-  <el-dialog
-  top="500px"
-  custom-class="openDoorDialog"
-  width="600px"
-  :show-close="false"
-  :close-on-click-modal="false"
-  :visible.sync="isShowOpenDoorDialog">
-  <img src="@/images/run/wait.png" alt="">
-  <span>Opening the door, please wait...</span>
-</el-dialog>
-
+  <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog"/>
 </div>
 </template>
 
 <script>
 import { openDoor,closeDoor } from '../api/run'
 import { mapState as mapProtocolsState } from 'vuex'
+import OpenDoorDialog from './OpenDoorDialog.vue'
 export default {
   name: 'RunHead',
-  components: {},
+  components: { OpenDoorDialog },
   props: {},
   data() {
     return {
@@ -118,18 +109,4 @@ export default {
   box-sizing: border-box;
 }
 
-</style>
-<style>
-.run-head .openDoorDialog .el-dialog__header {
-  padding: 0 ;
-}
-.run-head .openDoorDialog .el-dialog__body {
-  padding: 47px 0 47px 60px;
-  font-size: 26px;
-  color: #333;
-}
-.run-head .openDoorDialog .el-dialog__body img{
-  margin-right: 25px;
-  vertical-align: middle;
-}
 </style>

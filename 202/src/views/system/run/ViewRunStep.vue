@@ -1,5 +1,6 @@
 <template>
   <div class="view-container">
+    <!-- 左侧 -->
     <div class="view-step">
       <div class="step">Step</div>
       <div class="every-step">
@@ -15,7 +16,7 @@
           <div class="pic">
             <img :src="require('@/images/run/' + step.type + '.png')" alt="" />
           </div>
-          <span>{{ step.type | toUpperCase }}</span>
+          <span>{{ step.name | toUpperCase }}</span>
         </div>
       </div>
       <div class="btn">
@@ -25,186 +26,193 @@
     </div>
     <!-- 右侧 -->
     <div class="view-info">
-      <div >
-      <div class="toggleBtn">
-        <button
-          :class="['whiteBtn', currentBtn === 1 ? 'buleBtn' : '']"
-          @click="clickBasicBtn"
-        >
-          Basic
-        </button>
-        <button
-          :class="['whiteBtn', currentBtn === 0 ? 'buleBtn' : '']"
-          @click="clickMageticBtn"
-        >
-          Magetic
-        </button>
+      <div>
+        <div class="toggleBtn">
+          <button
+            :class="['whiteBtn', currentBtn === 1 ? 'buleBtn' : '']"
+            @click="clickBasicBtn"
+          >
+            Basic
+          </button>
+          <button
+            :class="['whiteBtn', currentBtn === 0 ? 'buleBtn' : '']"
+            @click="clickMageticBtn"
+          >
+            Magetic
+          </button>
+        </div>
+        <div class="view-info-bottom">
+          <template v-if="currentBtn === 1">
+            <div class="info-item">
+              Step: <span>{{ activeStepInfo.type }}</span>
+            </div>
+            <div class="info-item" v-for="(item, i) in basicData" :key="i">
+              {{ item.name | toUpperCase }}:<span>{{ item.value }}</span>
+            </div>
+          </template>
+          <template v-if="currentBtn === 0">
+            <div class="info-item" v-for="(item, i) in mageticData" :key="i">
+              {{ item.name | toUpperCase }}:<span>{{ item.value }}</span>
+            </div>
+          </template>
+        </div>
       </div>
-      <div class="view-info-bottom">
-        <template v-if="currentBtn === 1">
-          <div class="info-item">
-            Step: <span>{{activeStepInfo.type }}</span>
-          </div>
-          <div class="info-item" v-for="(item, i) in basicData" :key="i">
-            {{ item.name |toUpperCase}}:<span>{{ item.value }}</span>
-          </div>
-        </template>
-        <template v-if="currentBtn === 0">
-          <div class="info-item" v-for="(item, i) in mageticData" :key="i">
-            {{ item.name |toUpperCase}}:<span>{{ item.value }}</span>
-          </div>
-        </template>
-      </div>
-    </div>
     </div>
   </div>
 </template>
 
 <script>
 import { getProtocolDetail } from "@/api/run";
+import { mapState as mapProtocolsState } from "vuex";
 export default {
   data() {
     return {
-      activeStepType: '',
+      activeStepType: "",
       activeStep: "",
       currentBtn: 1, // 1 ；Basic按钮  0： Magetic按钮
       steps: [],
-      runStepIds:'',
+      runStepIds: "",
       activeStepInfo: {},
       basicData: [],
-      mageticData:[],
-      commonArr:[
-          {
-            type:"incubator",
-            basickey:[
-              'source_well',
-              'incubator_temperature',
-              'incubator_time',
-              ],
-              magetickey:[]
-          },
-          {
-            type:"transfer",
-            basickey:[
-              'source_well',
-              'destination_well',
-              'volume',
-              'mix_number_before_aspirating',
-              'mix_speed',
-              'aspirate_position',
-              'dispense_position'
-              ],
-              magetickey:[]
-          },
-          {
-            type:"lysis",
-            basickey:[
-              'source_well',
-              'volume',
-              'mix_time',
-              'mix_speed',
-              'mix_height',
-              'mix_volume',
-              'temperature_on',
-              'temperature',
-              'pre_heating',
-              'pre_heating_seconds',
-              'pre_cooling',
-              ],
-              magetickey:[
-                'magnet_type',
-                'segments',
-                'segments',
-                'interval_stay_time',
-                'cycle',
-                'beat_speed',
-                'drying_time'
-              ]
-          },
-          {
-            type:"bind",
-            basickey:[
-              'source_well',
-              'volume',
-              'mix_time',
-              'mix_speed',
-              'mix_height',
-              'mix_volume',
-              'temperature_on',
-              'temperature',
-              'pre_heating',
-              'pre_heating_seconds',
-              'pre_cooling',
-              ],
-              magetickey:[
-                'magnet_type',
-                'segments',
-                'segments',
-                'interval_stay_time',
-                'cycle',
-                'beat_speed',
-                'drying_time'
-              ]
-          },
-          {
-            type:"elution",
-            basickey:[
-              'source_well',
-              'volume',
-              'mix_time',
-              'mix_speed',
-              'mix_height',
-              'mix_volume',
-              'temperature_on',
-              'temperature',
-              'pre_heating',
-              'pre_heating_seconds',
-              'pre_cooling',
-              ],
-              magetickey:[
-                'magnet_type',
-                'segments',
-                'segments',
-                'interval_stay_time',
-                'cycle',
-                'beat_speed',
-                'drying_time'
-              ]
-          },
-          {
-            type:"wash",
-            basickey:[
-              'source_well',
-              'volume',
-              'mix_time',
-              'mix_speed',
-              'mix_height',
-              'mix_volume'
-              ],
-              magetickey:[]
-          },
-          {
-            type:"discard",
-            basickey:[
-              'source_well',
-              'volume',
-              'mix_time',
-              'mix_speed',
-              'mix_height',
-              'mix_volume',
-              ],
-              magetickey:[]
-          },
-
+      mageticData: [],
+      commonArr: [
+        {
+          type: "incubator",
+          basickey: ["well", "incubator_temperature", "incubator_time"],
+          magetickey: []
+        },
+        {
+          type: "transfer",
+          basickey: [
+            "well",
+            "destination_well",
+            "volume",
+            "mix_number_before_aspirating",
+            "mix_speed",
+            "aspirate_position",
+            "dispense_position"
+          ],
+          magetickey: []
+        },
+        {
+          type: "lysis",
+          basickey: [
+            "well",
+            "volume",
+            "mix_time",
+            "mix_speed",
+            "mix_height",
+            "mix_volume",
+            "temperature_on",
+            "temperature",
+            "pre_heating",
+            "pre_heating_seconds",
+            "pre_cooling"
+          ],
+          magetickey: [
+            "magnet_on",
+            "magnet_type",
+            "segments",
+            "interval_stay_time",
+            "cycle",
+            "beat_speed",
+            "drying_time",
+            'expected_magnetic_total_time',
+            'magnetic_speed',
+            'liquid_level_magnetic_time',
+            'lowest_magnetic_position',
+            'drying_position',
+            'discard_mix_time',
+            'discard_mix_height',
+            'discard_mix_volume',
+          ]
+        },
+        {
+          type: "bind",
+          basickey: [
+            "well",
+            "volume",
+            "mix_time",
+            "mix_speed",
+            "mix_height",
+            "mix_volume",
+            "temperature_on",
+            "temperature",
+            "pre_heating",
+            "pre_heating_seconds",
+            "pre_cooling"
+          ],
+          magetickey: [
+            "magnet_on",
+            "magnet_type",
+            "segments",
+            "interval_stay_time",
+            "cycle",
+            'magnetic_speed',
+            "drying_time",
+            'expected_magnetic_total_time',
+          ]
+        },
+        {
+          type: "elution",
+          basickey: [
+            "well",
+            "volume",
+            "mix_time",
+            "mix_speed",
+            "mix_height",
+            "mix_volume",
+            "temperature_on",
+            "temperature",
+            "pre_heating",
+            "pre_heating_seconds",
+            "pre_cooling"
+          ],
+          magetickey: [
+            "magnet_type",
+            "segments",
+            "segments",
+            "interval_stay_time",
+            "cycle",
+            "beat_speed",
+            "drying_time"
+          ]
+        },
+        {
+          type: "wash",
+          basickey: [
+            "well",
+            "volume",
+            "mix_time",
+            "mix_speed",
+            "mix_height",
+            "mix_volume"
+          ],
+          magetickey: []
+        },
+        {
+          type: "discard",
+          basickey: [
+            "well",
+            "volume",
+            "mix_time",
+            "mix_speed",
+            "mix_height",
+            "mix_volume"
+          ],
+          magetickey: []
+        }
       ]
     };
   },
 
   async created() {
-   await this.getProtocolDetail();
-   this.clickEveryStep(0)
+    await this.getProtocolDetail();
+    this.clickEveryStep(0);
   },
-
+  computed: {
+    ...mapProtocolsState("protocols", ["initPathName"])
+  },
   methods: {
     //获取程序详情
     async getProtocolDetail() {
@@ -213,67 +221,167 @@ export default {
       } = await getProtocolDetail(this.$store.state.protocols.protocalInfo.id);
       this.steps = steps;
       console.log(this.steps);
+
+      // 处理左侧显示数据
+      const maps = new Map();
+      steps.forEach(item => (item.name = item.type));
+      const list = steps.filter(
+        val => !maps.has(val.name) && maps.set(val.name, 1)
+      );
+      let List = JSON.parse(JSON.stringify(list));
+      for (let i = 0; i < list.length; i++) {
+        let num = 0;
+        for (let j = 0; j < steps.length; j++) {
+          if (steps[j].name === list[i].name) {
+            num += 1;
+          }
+        }
+        if (num === 1) {
+          let index = List.findIndex(item => item.name === list[i].name);
+          List.splice(index, 1);
+        }
+      }
+      for (let i = 0; i < List.length; i++) {
+        let num = 0;
+        for (let j = 0; j < steps.length; j++) {
+          if (steps[j].name === List[i].name) {
+            num += 1;
+            steps[j].name = steps[j].name + num;
+          }
+        }
+      }
+      steps.push({
+        order: this.steps.length,
+        name: "unload labware",
+        type: "unload labware"
+      });
     },
     clickEveryStep(order) {
-      this.basicData = []
-      this.mageticData =[]
+      this.basicData = [];
+      this.mageticData = [];
       this.activeStep = order;
-      this.activeStepInfo = this.steps[order]
+      if (order === this.steps.length) return
+      this.activeStepInfo = this.steps[order];
 
-    //   for(let k in this.activeStepInfo) {
-    //       if(this.commonArr[order].basickey.indexOf(k)!=-1){
-    //         this.basicData.push({
-    //           name: k,
-    //           value: this.activeStepInfo[k]})
-    //  }
-    // }
+      //   for(let k in this.activeStepInfo) {
+      //       if(this.commonArr[order].basickey.indexOf(k)!=-1){
+      //         this.basicData.push({
+      //           name: k,
+      //           value: this.activeStepInfo[k]})
+      //  }
+      // }
 
-    const index = this.commonArr.findIndex(item=>item.type===this.activeStepInfo.type)
-    for(let k in this.activeStepInfo) {
-          if (this.commonArr[index].basickey.includes(k)){
-            this.basicData.push({
-              name: k,
-              value: this.activeStepInfo[k]})
-          }   else if (this.commonArr[index].magetickey.includes(k)){
-            this.mageticData.push({
-              name: k,
-              value: this.activeStepInfo[k]})
-          }
+      const index = this.commonArr.findIndex(
+        item => item.type === this.activeStepInfo.type
+      );
+      for (let k in this.activeStepInfo) {
+        if (this.commonArr[index]&&this.commonArr[index].basickey.includes(k)) {
+          this.basicData.push({
+            name: k,
+            value: this.activeStepInfo[k]
+          });
+        } else if (this.commonArr[index]&&this.commonArr[index].magetickey.includes(k)) {
+          this.mageticData.push({
+            name: k,
+            value: this.activeStepInfo[k]
+          });
         }
-   console.log(this.basicData);
-      if(this.activeStepInfo.type==='incubator'){
-        this.basicData[0].name = 'source_well(1/B)'
-      } else if ( this.activeStepInfo.type==='lysis'){
-         if (this.activeStepInfo.temperature_on) {
-          
-         }
       }
-
-
-    },
-    handleData(){
-      if(this.activeStep===0) {
-        if(!this.basicData[0]){
-          for(let k in this.activeStepInfo) {
-          if ( k ==='source_well'||k==='incubator_temperature'||k==='incubator_time'){
-            this.basicData.push({
-              name: k,
-              value: this.activeStepInfo[k]})
-          }
+      console.log(this.basicData);
+      if (this.activeStepInfo.type === "incubator") {
+        this.basicData[0].name = "well(1/A)";
+      }else if(this.activeStepInfo.type === "transfer"){
+        this.basicData[0].name = "source well(1-C)";
+      }
+       else if (this.activeStepInfo.type === "lysis") {
+        this.basicData[6].value
+          ? (this.basicData[6].value = "On")
+          : (this.basicData[6].value = "Off");
+        this.basicData[7].value
+          ? (this.basicData[7].value = "Preheating")
+          : (this.basicData[7].value = "Heating sync");
+        if (
+          this.activeStepInfo.temperature_on &&
+          this.activeStepInfo.pre_heating === 0
+        ) {
+          this.basicData.splice(9, 1);
         }
+        const index = this.basicData.findIndex(
+          item => item.name === "pre_cooling"
+        );
+        this.basicData[index].value
+          ? (this.basicData[index].value = "Precooling")
+          : (this.basicData[index].value = "Cooling sync");
+
+        if (this.mageticData[0].value) {
+          this.mageticData[0].value = "Yes";
+
+          if(this.activeStepInfo.magnet_type==='tip'){
+            let arr = ['magnet_on',"magnet_type",
+            "segments",
+            "interval_stay_time",
+            "cycle",
+            "beat_speed",
+            "drying_time",
+            'expected_magnetic_total_time',]
+            this.mageticData=this.mageticData.filter(item=>arr.includes(item.name))
+          }else if(this.activeStepInfo.magnet_type==='sleeve'){
+            const index = this.mageticData.findIndex(
+          item => item.name === "beat_speed"
+        );
+        const i= this.mageticData.findIndex(
+          item => item.name === "interval_stay_time"
+        );
+        this.mageticData.splice(index,1)
+        this.mageticData[i].name = "Every magnetic time(1-999s)";
+          }
+        } else {
+          this.mageticData[0].value = "No";
+          this.mageticData.splice(1,this.mageticData.length-1)
+        }
+    }
+    },
+    handleData() {
+      if (this.activeStep === 0) {
+        if (!this.basicData[0]) {
+          for (let k in this.activeStepInfo) {
+            if (
+              k === "source_well" ||
+              k === "incubator_temperature" ||
+              k === "incubator_time"
+            ) {
+              this.basicData.push({
+                name: k,
+                value: this.activeStepInfo[k]
+              });
+            }
+          }
         }
       }
     },
     clickRun() {
-      this.runStepIds =this.steps.map(item=>item.id).join()
-      this.$store.commit('protocols/updatedStepIds',[this.steps[0].id,this.runStepIds])
-      this.$router.push('/system/run/protocols/sampleSettings')
+      this.runStepIds = this.steps.map(item => item.id).join();
+      this.$store.commit("protocols/updatedStepIds", [
+        this.steps[0].id,
+        this.runStepIds,
+        this.initPathName
+      ]);
+      this.$router.push("/system/run/protocols/sampleSettings");
     },
     clickStepRun() {
-      const index = this.steps.findIndex(item=>item.order === this.activeStep)
-      this.runStepIds =this.steps.slice(index).map(item=>item.id).join()
-      this.$store.commit('protocols/updatedStepIds', [this.activeStepInfo.id,this.runStepIds])
-      this.$router.push('/system/run/protocols/sampleSettings')
+      const index = this.steps.findIndex(
+        item => item.order === this.activeStep
+      );
+      this.runStepIds = this.steps
+        .slice(index)
+        .map(item => item.id)
+        .join();
+      this.$store.commit("protocols/updatedStepIds", [
+        this.activeStepInfo.id,
+        this.runStepIds,
+        this.initPathName
+      ]);
+      this.$router.push("/system/run/protocols/sampleSettings");
     },
     clickBasicBtn() {
       this.currentBtn = 1;
@@ -286,84 +394,114 @@ export default {
     toUpperCase(val) {
       const first = val.charAt(0).toUpperCase();
       val = first + val.slice(1);
-      switch(val){
-        case 'Source_well':
-          val = 'Source well(1-C)'
+      switch (val) {
+        case "Well":
+          val = "Well(1-C)";
           break;
-          case 'Source_well(1/B)':
-          val = 'Source well(1/B)'
+        case "Well(1/A)":
+          val = "Well(1/A)";
           break;
-          case 'Incubator_temperature':
-          val = 'Temp.(10-110℃)'
+          case "Source well(1-C)":
+          val = "Source well(1-C)";
           break;
-          case 'Incubator_time':
-          val = 'Incubator time(0-999min)'
+        case "Incubator_temperature":
+          val = "Temp.(10-110℃)";
           break;
-          case 'Destination_well':
-          val = 'Destination well(1-C)'
+        case "Incubator_time":
+          val = "Incubator time(0-999min)";
           break;
-          case 'Volume':
-          val = 'Volume(5-1000uL)'
+        case "Destination_well":
+          val = "Destination well(1-C)";
           break;
-          case 'Mix_number_before_aspirating':
-          val = 'Mix number before aspirating(0-10)'
+        case "Volume":
+          val = "Volume(5-1000uL)";
           break;
-          case 'Mix_speed':
-          val = 'Mix speede(1-10)'
+        case "Mix_number_before_aspirating":
+          val = "Mix number before aspirating(0-10)";
           break;
-          case 'Aspirate_position':
-          val = 'Aspirate position(0-100)'
+        case "Mix_speed":
+          val = "Mix speed(1-10)";
           break;
-          case 'Dispense_position':
-          val = 'Dispense position(0-100)'
+        case "Aspirate_position":
+          val = "Aspirate position(0-100)";
           break;
-          case 'Mix_time':
-          val = 'Mix time(1-99min)'
+        case "Dispense_position":
+          val = "Dispense position(0-100)";
           break;
-          case 'Mix_height':
-          val = 'Mix height(0-50mm)'
+        case "Mix_time":
+          val = "Mix time(1-99min)";
           break;
-          case 'Mix_volume':
-          val = 'Mix volume(5-1000uL)'
+        case "Mix_height":
+          val = "Mix height(0-50mm)";
           break;
-          case 'Temperature_on':
-          val = 'Temperature switch'
+        case "Mix_volume":
+          val = "Mix volume(5-1000uL)";
           break;
-          case 'Temperature':
-          val = 'Temperature'
+        case "Temperature_on":
+          val = "Temperature switch";
           break;
-          case 'Pre_heating':
-          val = 'Heating setup'
+        case "Temperature":
+          val = "Temperature(10-110℃)";
           break;
-          case 'Pre_heating_seconds':
-          val = 'Elution well preheated advance seconds(1-999s)'
+        case "Pre_heating":
+          val = "Heating setup";
           break;
-          case 'Pre_cooling':
-          val = 'Cooling setup'
+        case "Pre_heating_seconds":
+          val = "Elution well preheated advance seconds(1-999s)";
           break;
-          case 'Magnet_on':
-          val = 'Heating setup'
+        case "Pre_cooling":
+          val = "Cooling setup";
           break;
-          case 'Magnet_type':
-          val = 'Magnet type:'
+        case "Magnet_on":
+          val = "Magnet";
           break;
-          case 'Interval_stay_time':
-          val = 'Interval stay time(1-999s)'
+        case "Magnet_type":
+          val = "Magnet type";
           break;
-          case 'Cycle':
-          val = 'Cycle(1-99)'
+        case "Interval_stay_time":
+          val = "Interval stay time(1-999s)";
           break;
-          case 'Beat_speed':
-          val = 'Beat speed(0-10)'
+        case "Cycle":
+          val = "Cycle(1-99)";
           break;
-          case 'Drying_time':
-          val = 'Drying time(0-99min)'
+        case "Beat_speed":
+          val = "Beat speed(0-10)";
           break;
-          case 'Segments':
-          val = 'Segments(1-5)'
+        case "Drying_time":
+          val = "Drying time(0-99min)";
+          break;
+        case "Segments":
+          val = "Segments(1-5)";
+          break;
+          case "Expected_magnetic_total_time":
+          val = "Expected magnetic total time(0-99999s)";
+          break;
+          case "Drying_position":
+          val = "Drying position(5-50mm)";
+          break;
+          case "Discard_mix_time":
+          val = "Mix time(1-99min)";
+          break;
+          case "Discard_mix_height":
+          val = "Mix height(0-40%)";
+          break;
+          case "Discard_mix_volume":
+          val = "Mix volume(0-100%)";
+          break;
+          case "Liquid_level_magnetic_time":
+          val = "Liquid level magnetic time(0-999s)";
+          break;
+          case "Magnetic_speed":
+          val = "Magnetic speed(1-10)";
+          break;
+          case "Every magnetic time(1-999s)":
+          val = "Every magnetic time(1-999s)";
+          break;
+          case "Lowest_magnetic_position":
+          val = "Lowest magnetic position(0-40%)";
           break;
       }
-      return val
+      return val;
     }
   }
 };
@@ -450,7 +588,7 @@ div {
   flex: 1;
   padding: 30px;
 }
-.view-info>div {
+.view-info > div {
   padding: 30px 30px 0;
   border-radius: 6px;
   border: solid 1px #c2cbda;

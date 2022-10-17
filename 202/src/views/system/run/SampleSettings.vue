@@ -57,7 +57,7 @@ import TubeItem from "@/components/TubeItem";
 import TubeGroup from "@/components/TubeGroup.vue";
 import RunProgress from "@/components/RunProgress.vue";
 import SampleIdDialog from './components/SampleIdDialog.vue'
-import { mapState as mapProtocolsState } from 'vuex'
+import { mapState as mapProtocolsState} from 'vuex'
 export default {
   components: {
     TubeItem,
@@ -75,7 +75,11 @@ export default {
       isDisabledNextBtn: false,
     };
   },
-  watch: {},
+  watch: {
+    selectedTubeList(){
+
+    }
+  },
   computed:{
     ...mapProtocolsState('protocols',['selectedTubeList']),
   },
