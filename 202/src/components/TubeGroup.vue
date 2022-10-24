@@ -142,7 +142,7 @@ export default {
         "24"
       ],
       isIndeterminate: true,
-      currentCheckedBtnList: [],
+      // currentCheckedBtnList: [],
     };
   },
   computed: {
@@ -153,7 +153,6 @@ export default {
   mounted() {},
   methods: {
     handleCheckAllChange(val) {
-      console.log(8, val);
       this.selectedList = val
         ? [
             "1",
@@ -185,25 +184,23 @@ export default {
       this.isIndeterminate = false;
     },
     handleCheckedTubeChange(value) {
-      console.log(7, value);
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.selected.length;
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.selected.length;
     },
     clickTubeItem(val) {
-      console.log(val);
       if (this.isDisabled.includes(val)) {
         return;
       } else {
-        if (this.selectedList.includes(val)) {
-          const index = this.selectedList.findIndex(item => item === val);
-          this.selectedList.splice(index, 1);
-          this.currentCheckedBtnList.splice(index, 1);
-        } else {
-          this.selectedList.push(val);
-          this.currentCheckedBtnList.push(val);
+        let newList =[]
+        if(this.selectedList.includes(val)){
+          newList = this.selectedList.filter(v=>v !=val)
+        }else {
+          newList = [val,...this.selectedList]
         }
+        // this.currentCheckedBtnList =newList
+        this.$store.commit('protocols/changeSelectedTubeList',newList.sort((a,b)=>a-b))
       }
     }
   }

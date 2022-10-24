@@ -76,12 +76,24 @@ export default {
     };
   },
   watch: {
-    selectedTubeList(){
-
+    selectedTubeList(v){
+       const oldList = this.sampleIdDataStore.map(v => v.position)
+       const newList = v.map(item=>{
+        if(oldList.includes(item)) {
+          return this.sampleIdDataStore.find(v=>v.position == item)
+        }else {
+          return {
+            position: item,
+            sample_id: '',
+            note: ''
+          }
+        }
+       })
+       this.$store.commit('protocols/updatedSampleIdInfo',newList)
     }
   },
   computed:{
-    ...mapProtocolsState('protocols',['selectedTubeList']),
+    ...mapProtocolsState('protocols',['selectedTubeList','sampleIdDataStore']),
   },
   methods: {
     //全选按钮
@@ -128,7 +140,6 @@ export default {
         this.$router.push({
         name: 'loadlabware',
       })
-      this.$store.commit('protocols/changeGoBackName','sampleSettings')
       }else {
         this.isDisabledNextBtn = true
         this.$message('Please select sample positions');
@@ -137,7 +148,6 @@ export default {
     }
   },
   created() {
-
   },
   mounted() {},
 
@@ -155,11 +165,10 @@ div {
 }
 .container-bottom {
   display: flex;
-  justify-content: space-between;
 }
 .container-bottom-left {
-  width: 404px;
-  height: 967px;
+  flex: 1;
+  margin-right: 30px;
   background-color: #ffffff;
   border-radius: 6px;
   border: solid 1px #c2cbda;
@@ -177,6 +186,7 @@ div {
   margin: 22px 0 19px 29px;
 }
 .bottom {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -198,7 +208,7 @@ div {
   height: 64px;
   background-image: linear-gradient(0deg, #ffffff 0%, #f2f7ff 100%);
   border: solid 1px #c2cbda;
-  margin: 0 26px 0 490px;
+  margin-right: 26px;
 }
 .next {
   float: right;

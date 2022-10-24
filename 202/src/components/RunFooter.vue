@@ -1,16 +1,13 @@
 <template>
 <div class="run-footer">
     <button v-if="$store.state.user.group!=='user'" class="run-footer-preview-btn" @click="clickPreViewBtn">
-    <div>
+
       <img src="../images/run/preview-btn.png" alt="">
-    </div>
-    <div class="run-head-right-btn-text">{{$t("language.view")}}</div>
+    <span>{{$t("language.view")}}</span>
   </button>
     <button :class="{'bg': isDisabledRunBtn}" class="run-footer-run-btn" :disabled="isDisabledRunBtn" @click="clickRunBtn">
-    <div>
       <img src="../images/run/runbtn.png" alt="">
-    </div>
-    <div class="run-head-right-btn-text run-color">{{$t("language.run")}}</div>
+    <span class="run-color">{{$t("language.run")}}</span>
     </button>
 
     <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog"/>
@@ -38,24 +35,24 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapProtocolsState("protocols", ["doorState"])
+    ...mapProtocolsState("protocols", ["doorState",'initPathName','pathName'])
   },
   methods: {
    async clickRunBtn(){
     if(this.doorState===0){
       this.isShowOpenDoorDialog = true
       this.openDoorApi()
-    }else {
+    }
+    else {
        this.$router.push (
         {
-          path: '/system/run/protocols',
+          path: '/system/run/protocols/sampleSettings',
         }
       )
     }
-      this. getProtocolDetail()
+    this. getProtocolDetail()
     },
     clickPreViewBtn(){
-      this.$store.commit('protocols/updatedInitPathName','viewrunstep')
       this.$router.push (
         {
           path: '/system/run/protocols/viewrunstep',
@@ -64,19 +61,8 @@ export default {
     },
     async openDoorApi(){
       await openDoor()
-    },
-    async getProtocolDetail() {
-      const {
-        data: { steps }
-      } = await getProtocolDetail(this.$store.state.protocols.protocalInfo.id);
-      this.runStepIds = steps.map(item=>item.id).join()
-      this.$store.commit('protocols/updatedStepIds',[steps[0].id,this.runStepIds])
-    },
-  },
-  created() {},
-  mounted() {
-    this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
-       if(notify.Code===0x000C){
+      this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
+       if(notify.Code===this.Notify.CODE_FZB_DOOR_OPEN){
         this.isShowOpenDoorDialog=false
         this.$store.commit('protocols/updatedDoorState',1)
         this.$router.push (
@@ -86,6 +72,24 @@ export default {
       )
        }
       })
+    },
+    async getProtocolDetail() {
+      const {
+        data: { steps }
+      } = await getProtocolDetail(this.$store.state.protocols.protocalInfo.id);
+      this.runStepIds = steps.map(item=>item.id).join()
+      this.$store.commit('protocols/updatedStepIds',[steps[0].id,this.runStepIds])
+    },
+  },
+  created() {
+
+  },
+  mounted() {
+
+  },
+  destroyed() {
+    this.EventBus.unregisterAllCallbacks();
+    // this.EventBus.unregisterCallbacksForEvent(this.Notify.CODE_FZB_DOOR_CLOSE)
   }
 };
 </script>
@@ -101,37 +105,33 @@ export default {
   margin-top: 26px;
   box-sizing: border-box;
 }
-.run-footer-preview-btn {
-   box-sizing: border-box;
-  padding: 20px 60px;
+button img {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+button {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
   width: 210px;
 	height: 70px;
+  border-radius: 6px;
+  font-size: 24px;
+}
+.run-footer-preview-btn {
 	background-image: linear-gradient(0deg,
 		#ffffff 0%,
 		#f2f7ff 100%);
 	border: solid 1px #496f9a;
   margin-right: 30px;
-  border-radius: 6px;
 }
 .run-footer-run-btn {
-  box-sizing: border-box;
-   padding: 20px 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 210px;
-	height: 70px;
 	background-image: linear-gradient(0deg,
 		#5792d5 0%,
 		#4c7cb2 100%);
 	border-radius: 6px;
   border: none;
-}
-.run-head-right-btn-text {
-   font-size: 24px;
 }
 .run-color {
   color: #fff;

@@ -31,7 +31,9 @@ Vue.prototype.simulateRun = process.env.NODE_ENV == 'development';
 //接收来自c#的通知
 Vue.prototype.OnNotify = async function(notifyString) {
   //notifyString是包含Code：代码 Message：信息 Data：数据 三个属性的json字符串
-  // console.log("main.js 接收到消息:" + notifyString);
+
+
+    // console.log("main.js 接收到消息:" + notifyString);
   try {
     let notify = JSON.parse(notifyString);
 
@@ -115,7 +117,9 @@ Vue.prototype.OnNotify = async function(notifyString) {
     //     //关闭照明灯
     //     store.commit("setLightOn", false);
     // }
-
+    if (notify.Code != 0x8010 && notify.Code != 0x3008 && notify.Code != 0x4020) {
+      console.log("main.js 接收到消息:" + notifyString);
+    }
     // console.log("main.js 发送事件 Code: 0x" + notify.Code.toString(16));
   } catch (e) {
     console.log(e)

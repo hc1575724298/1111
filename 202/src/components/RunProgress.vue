@@ -38,30 +38,30 @@ export default {
   color: #fff !important;
 }
 .container-top {
-  width: 100%;
+  width: 1259px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
 }
 .progress-one {
   position: absolute;
-  left: 450px;
+  left: 150px;
   top: 20px;
   font-size: 24px;
   color: #fff;
 }
 .progress-two {
   position: absolute;
-  left: 895px;
+  left: 595px;
   top: 20px;
   font-size: 24px;
   color: #333333;
 }
 .progress-three {
   position: absolute;
-  left: 1345px;
+  left: 1045px;
   top: 20px;
   font-size: 24px;
   color: #333333;

@@ -2,6 +2,7 @@
   <div class="run-list">
     <RunHead />
     <el-table
+      height="875"
       ref="protocolsTable"
       highlight-current-row
       @row-click="clickRow"
@@ -146,7 +147,7 @@
 <script>
 import RunHead from "@/components/RunHead";
 import RunFooter from "@/components/RunFooter";
-import { getAllProtocol } from "@/api/run";
+import { getAllProtocol ,sortProtocolsList} from "@/api/run";
 import utilsFunction from "@/utils/function";
 export default {
   components: {
@@ -174,7 +175,10 @@ export default {
     async getAllProtocol() {
       const { data } = await getAllProtocol();
       this.protocolsList = data;
-      console.log(data);
+    },
+    async sortProtocolsListApi(sort){
+      const { data } = await sortProtocolsList(sort)
+      this.protocolsList = data;
     },
     //点击某一行
     clickRow(row) {
@@ -195,50 +199,34 @@ export default {
     //时间反转
     changeSort(val) {
       if (val === "time") {
-        if(this.sort_time===1){
-          this.sort_time =2
-        }else if (this.sort_time===2|| this.sort_time===3) {
-          this.sort_time = 1
-        }
+        const res=this.changeSortStatus(this.sort_name,'updated_at')
+        this.sort_time = res
         this.sort_name =this.sort_user=3;
-        this.protocolsList = this.protocolsList.reverse();
       } else if (val === "name") {
-        const res=this.changeSortStatus(this.sort_name, this.protocolsList,'name')
-        this.sort_name = res[0]
-        this.protocolsList =res[1]
+        const res=this.changeSortStatus(this.sort_name,'protocol_name')
+        this.sort_name = res
         this.sort_time = this.sort_user =3;
       }else {
-        const res=this.changeSortStatus(this.sort_user,this.protocolsList,'creator_name')
-        this.sort_user = res[0]
-        this.protocolsList =res[1]
+        const res=this.changeSortStatus(this.sort_user,'creator_name')
+        this.sort_user = res
         this.sort_time = this.sort_name =3;
       }
     },
-    changeSortStatus(select,data,attr) {
+    changeSortStatus(select,which) {
       if(select===1) {
+         this.sortProtocolsListApi({
+            collation: which,
+            order: 0
+          })
           select = 2
-          data.sort(function(a,b){
-            if (a[attr] > b[attr]) {
-              return -1
-            }
-            if (a[attr] < b[attr]) {
-              return 1
-            }
-            return 0
-          })
         }else if (select===2||select===3) {
-          select = 1
-          data.sort(function(a,b){
-            if (a[attr] < b[attr]) {
-              return -1
-            }
-            if (a[attr] > b[attr]) {
-              return 1
-            }
-            return 0
+          this.sortProtocolsListApi({
+            collation: which,
+            order: 1
           })
+          select = 1
         }
-        return [select,data]
+        return select
     }
   },
   async created() {
@@ -261,14 +249,17 @@ export default {
   padding: 23px 35px 26px 40px;
 }
 .protocols-list {
-  width: 1676px;
-  height: 875px;
+  width: 1675px;
+  /* height: 875px; */
   background-color: #ffffff;
   border-radius: 10px;
   border: solid 1px #c2cbda;
   color: #333333;
   font-size: 24px;
   box-sizing: border-box;
+}
+.el-table .el-table__cell.gutter {
+  width: 0;
 }
 .sort-icon {
   margin-left: 18px;
@@ -281,4 +272,5 @@ export default {
 .run-list .el-table__body tr.current-row > td.el-table__cell {
   background-color: #cee1f5 !important;
 }
+
 </style>

@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    append-to-body
     top="500px"
     class="openDoorDialog"
     width="600px"
@@ -7,14 +8,9 @@
     :close-on-click-modal="false"
     :visible.sync="isShowOpenDoorDialog"
   >
-    <div v-if="doorState === 0">
-      <img src="@/images/run/wait.png" alt="" />
-      <span>Opening the door, please wait...</span>
-    </div>
-    <div v-if="doorState === 1">
-      <img src="@/images/run/wait.png" alt="" />
-      <span>Close the door, please wait...</span>
-    </div>
+    <img src="@/images/run/wait.png" alt="" />
+      <span  v-if="doorState === 0">{{$t('language.wait_open_door')}}</span>
+      <span v-if="doorState === 1">{{$t('language.wait_close_door')}}</span>
   </el-dialog>
 </template>
 
@@ -40,16 +36,16 @@ export default {
 };
 </script>
 
-<style>
-.openDoorDialog .el-dialog__header {
+<style scoped>
+.openDoorDialog >>>.el-dialog__header {
   padding: 0;
 }
-.openDoorDialog .el-dialog__body {
+.openDoorDialog >>>.el-dialog__body {
   padding: 47px 0 47px 60px;
   font-size: 26px;
   color: #333;
 }
-.openDoorDialog .el-dialog__body img {
+.openDoorDialog >>>.el-dialog__body img {
   margin-right: 25px;
   vertical-align: middle;
 }

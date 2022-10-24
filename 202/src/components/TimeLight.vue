@@ -19,18 +19,21 @@
 
     },
     mounted() {
-      this.timer = setInterval(() => {
-        this.getCurrentTime();
-      }, 1000);
+      // this.timer = setInterval(() => {
+      //   this.getCurrentTime();
+      // }, 1000);
+      this.EventBus.on(this.Notify.CODE_SYSTEM_TIME, (notify) => {
+         this.$store.commit('setSystemTime', notify.Data)
+      })
     },
     methods: {
-      getCurrentTime() {
-        getSystemTime().then((res) => {
-          this.time = res.data;
-          this.$store.commit('setSystemTime', this.time)
-        })
+      // getCurrentTime() {
+      //   getSystemTime().then((res) => {
+      //     this.time = res.data;
+      //     this.$store.commit('setSystemTime', this.time)
+      //   })
 
-      },
+      // },
     }
   }
 </script>

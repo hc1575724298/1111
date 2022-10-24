@@ -11,30 +11,68 @@
         <TimeLight></TimeLight>
       </div>
     </div>
+
+    <!-- 开门弹框 -->
+    <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog" />
   </div>
 
 </template>
 
 <script>
   import TimeLight from '@/components/TimeLight'
+  import { mapState as mapProtocolsState } from 'vuex'
+  import { closeDoor } from "@/api/run";
+  import OpenDoorDialog from "@/components/OpenDoorDialog.vue";
   export default {
     components: {
-      TimeLight
+      TimeLight,
+      OpenDoorDialog
     },
-    props: ['page_name',"path_router"],
-    data() {
-      return {
-
+    // props: ['page_name','path_router'],
+    props:{
+      page_name:{
+        type: String,
+      },
+      path_router:{
+        type: String,
+      },
+      isCloseDoor:{
+        type: Boolean,
+        default: false,
       }
     },
+    data() {
+      return {
+        isShowOpenDoorDialog: false
+      }
+    },
+    computed:{
+    ...mapProtocolsState('protocols',['doorState','initPathName','pathName'])
+  },
+    mounted(){
+
+    },
     methods: {
-      backToParent() {
+      async backToParent() {
         this.$store.commit('setSystemMenu',1)
         this.$store.commit('setSystemHeadMenu',1)
         if(this.path_router=='list'){
           this.$store.commit('setSystemHeadMenu',2)
         }
-        this.$router.push({name:this.path_router})
+
+        if(this.isCloseDoor && this.doorState &&(this.initPathName=='run'|| this.initPathName=='list'|| this.initPathName=='viewrunstep')&&this.pathName != 'viewrunstep'){
+          this.isShowOpenDoorDialog = true
+           await closeDoor()
+           this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE, (notify) => {
+       if(notify.Code===0x000D){
+        this.isShowOpenDoorDialog=false
+        this.$store.commit('protocols/updatedDoorState',0)
+        this.$router.push({name: this.path_router})
+       }
+      })
+        }else {
+          this.$router.push({name: this.path_router})
+        }
       }
     }
   }

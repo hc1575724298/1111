@@ -3,11 +3,14 @@
   <div class="run-head-left"></div>
   <div class="run-head-title">{{$t("language.protocols")}}</div>
   <button class="run-head-right-btn" @click="clickIsOpenDoorBtn">
-    <div>
-      <img src="../images/run/open-door.png" alt="">
-    </div>
-    <div class="run-head-right-btn-text" v-if="doorState===0">{{$t("language.open_door")}}</div>
-    <div class="run-head-right-btn-text" v-if="doorState===1">{{$t("language.close_door")}}</div>
+    <template v-if="doorState===0">
+      <img src="../images/run/open-door.png"  alt="">
+      <span>{{$t("language.open_door")}}</span>
+    </template>
+    <template v-if="doorState===1">
+      <img src="../images/run/close-door.png"  alt="">
+      <span>{{$t("language.close_door")}}</span>
+    </template>
   </button>
 
   <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog"/>
@@ -39,6 +42,12 @@ export default {
       }else{
         this.isShowOpenDoorDialog=true
         this.openDoorApi()
+        this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
+       if(notify.Code===this.Notify.CODE_FZB_DOOR_OPEN){
+        this.isShowOpenDoorDialog=false
+        this.$store.commit('protocols/updatedDoorState',1)
+       }
+      })
       }
 
     },
@@ -51,20 +60,17 @@ export default {
   },
   created() {},
   mounted() {
-    this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
-       if(notify.Code===0x000C){
-        this.isShowOpenDoorDialog=false
-        this.$store.commit('protocols/updatedDoorState',1)
-       }
-      })
       this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE, (notify) => {
-       if(notify.Code===0x000D){
+       if(notify.Code===this.Notify.CODE_FZB_DOOR_CLOSE){
         this.isShowOpenDoorDialog=false
         this.$store.commit('protocols/updatedDoorState',0)
        }
       })
+  },
+  destroyed() {
+    this.EventBus.unregisterAllCallbacks();
+    // this.EventBus.unregisterCallbacksForEvent(this.Notify.CODE_FZB_DOOR_CLOSE)
   }
-
 };
 </script>
 <style scoped>
@@ -88,7 +94,7 @@ export default {
 .run-head-right-btn {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
   width: 220px;
 	height: 64px;
 	background-image: linear-gradient(0deg,
@@ -98,7 +104,12 @@ export default {
   border-radius: 4px;
   box-sizing: border-box;
 }
-.run-head-right-btn-text {
+button img {
+  width: 43px;
+  height: 35px;
+  margin-right: 15px;
+}
+button {
   font-family: Arial;
 	font-size: 24px;
 	font-weight: normal;

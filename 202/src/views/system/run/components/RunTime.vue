@@ -9,11 +9,11 @@
 -->
 <template>
   <div class="progress-container">
-    <el-progress type="circle" :percentage="value" :show-text="false" color="#4c7cb2">
+    <el-progress type="circle" :percentage="progress" :show-text="false" color="#4c7cb2">
     </el-progress>
     <div class="content">
-      <p>Remaining time</p>
-      <p class="time">{{time | handleTime}}</p>
+      <p>{{$t('language.remaining_time')}}</p>
+      <p class="time">{{time}}</p>
     </div>
     <div class="line">
       <div class="lineContainer">
@@ -22,17 +22,20 @@
         }"></div>
       </div>
     </div>
-    <div class="status">Status：<span>{{status}}</span></div>
+    <div class="status">{{$t('language.status')}}：<span>{{status ? $t('language.finished') : $t('language.running')}}</span></div>
   </div>
 </template>
 
 <script>
-import utilsFunction from "@/utils/function";
 export default {
   name: 'runTime',
   components: {},
   props:{
     time:{
+      type: String,
+      default: 0
+    },
+    progress:{
       type: Number,
       default: 0
     }
@@ -40,43 +43,21 @@ export default {
   data() {
     return {
       value:0,
-      deg:0,
-      status: 'Running'
+      status: false // true 结束  false 运行中
     }
   },
-  computed: {},
-  watch: {
-    value() {
-      this.deg = this.value/100 * 360
+  computed: {
+    deg(){
+      if(this.progress===100){
+        this.status = true
+      }
+      return this.progress/100 * 360
+
     }
   },
   created() {
   },
-  filters:{
-    //处理时间
-    handleTime(time) {
-     return utilsFunction.secondsToTime(time)
-    },
-  },
-  mounted() {
-    this.countdowm()
-  },
   methods: {
-    countdowm(){
-      const part=100/this.time
-      console.log(this.time);
-				let timer = setInterval(()=>{
-					if(this.time){
-            this.$emit('countdown',1)
-            this.value += part
-					}else{
-						clearInterval(timer);
-						this.$emit('runEnd')
-            this.value = 100
-            this.status = 'Finished'
-					}
-				},1000);
-			}
   },
 }
 </script>

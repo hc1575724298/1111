@@ -64,4 +64,18 @@ export default {
 
   CODE_FZB_DOOR_OPEN: 0x000C,//辅助版-门打开通知
   CODE_FZB_DOOR_CLOSE: 0x000D,//辅助版-门关闭通知
+  CODE_SYSTEM_TIME: 0x8010, // 系统时间
+
+  CODE_RUN_COMMAND_START: 0x3003,//命令开始执行通知,data是步骤的[id,order]
+  CODE_RUN_COMMAND_COMPLETE: 0x3004,//命令执行完成通知,data是步骤的[id,order]
+  CODE_RUN_TIME: 0x3008,//程序运行剩余时间通知
+
+  CODE_RUN_COMMAND_ERROR: 0x4001,//程序运行指令执行失败错误
+  CODE_RUN_PARAMS_ERROR: 0x4002,//程序运行参数错误通知
+
+  CODE_RUN_DOOR_OPEN: 0x4006,//运行过程中门打开通知
+  CODE_RUN_FATAL_ERROR: 0x4007,//运行过程中指令执行失败，不能继续往下执行
+
+  CODE_RUNNING_TEMP: 0x4020,//运行中温度通知
+  CODE_RUN_PAUSE: 0x3006,//步骤暂停通知
 }

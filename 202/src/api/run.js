@@ -50,3 +50,39 @@ export function setRun (data) {
     data
   })
 }
+
+// 条件搜索程序
+export function sortProtocolsList (data) {
+  return request({
+    url: '/protocol/search',
+    method: 'GET',
+    params: data
+  })
+}
+
+//继续运行
+export function goOnRun () {
+  return request({
+    url: '/run/go-on',
+    method: 'POST',
+  })
+}
+
+/**
+ * 暂停程序
+ * @returns
+ */
+export function pauseRun () {
+  return request({
+    url: '/run/pause',
+    method: 'POST',
+  })
+}
+
+//停止运行
+export function stopRun () {
+  return request({
+    url: '/run/stop',
+    method: 'POST',
+  })
+}

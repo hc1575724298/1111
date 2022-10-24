@@ -16,7 +16,7 @@
           <div class="pic">
             <img :src="require('@/images/run/' + step.type + '.png')" alt="" />
           </div>
-          <span>{{ step.name | toUpperCase }}</span>
+          <span>{{ step.step_name }}</span>
         </div>
       </div>
       <div class="btn">
@@ -35,6 +35,13 @@
             Basic
           </button>
           <button
+            v-if="
+              activeStepInfo.type === 'custom' ||
+                activeStepInfo.type === 'wash' ||
+                activeStepInfo.type === 'lysis' ||
+                activeStepInfo.type === 'elution' ||
+                activeStepInfo.type === 'bind'
+            "
             :class="['whiteBtn', currentBtn === 0 ? 'buleBtn' : '']"
             @click="clickMageticBtn"
           >
@@ -42,28 +49,46 @@
           </button>
         </div>
         <div class="view-info-bottom">
-          <template v-if="currentBtn === 1">
-            <div class="info-item">
-              Step: <span>{{ activeStepInfo.type }}</span>
-            </div>
-            <div class="info-item" v-for="(item, i) in basicData" :key="i">
-              {{ item.name | toUpperCase }}:<span>{{ item.value }}</span>
-            </div>
-          </template>
-          <template v-if="currentBtn === 0">
-            <div class="info-item" v-for="(item, i) in mageticData" :key="i">
-              {{ item.name | toUpperCase }}:<span>{{ item.value }}</span>
-            </div>
-          </template>
+          <IncubatorInfo
+            :info="activeStepInfo"
+            v-if="activeStepInfo.type === 'incubator'"
+          />
+          <TransferInfo
+            :info="activeStepInfo"
+            v-else-if="activeStepInfo.type === 'transfer'"
+          />
+          <DiscardInfo
+            :info="activeStepInfo"
+            v-else-if="activeStepInfo.type === 'discard'"
+          />
+          <PauseInfo
+            :info="activeStepInfo"
+            v-else-if="activeStepInfo.type === 'pause'"
+          />
+          <div
+            v-else-if="activeStepInfo.type === 'unload_labware'"
+            class="info-item"
+          >
+            Step: <span>{{ activeStepInfo.step_name }}</span>
+          </div>
+          <LysisInfo :info="activeStepInfo" :isBasic="currentBtn" v-else />
         </div>
       </div>
     </div>
+
+    <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog" />
   </div>
 </template>
 
 <script>
-import { getProtocolDetail } from "@/api/run";
+import { getProtocolDetail, openDoor,closeDoor } from "@/api/run";
 import { mapState as mapProtocolsState } from "vuex";
+import IncubatorInfo from "./components/IncubatorInfo.vue";
+import TransferInfo from "./components/TransferInfo.vue";
+import LysisInfo from "./components/LysisInfo.vue";
+import DiscardInfo from "./components/DiscardInfo.vue";
+import PauseInfo from "./components/PauseInfo.vue";
+import OpenDoorDialog from "@/components/OpenDoorDialog.vue";
 export default {
   data() {
     return {
@@ -73,302 +98,98 @@ export default {
       steps: [],
       runStepIds: "",
       activeStepInfo: {},
-      basicData: [],
-      mageticData: [],
-      commonArr: [
-        {
-          type: "incubator",
-          basickey: ["well", "incubator_temperature", "incubator_time"],
-          magetickey: []
-        },
-        {
-          type: "transfer",
-          basickey: [
-            "well",
-            "destination_well",
-            "volume",
-            "mix_number_before_aspirating",
-            "mix_speed",
-            "aspirate_position",
-            "dispense_position"
-          ],
-          magetickey: []
-        },
-        {
-          type: "lysis",
-          basickey: [
-            "well",
-            "volume",
-            "mix_time",
-            "mix_speed",
-            "mix_height",
-            "mix_volume",
-            "temperature_on",
-            "temperature",
-            "pre_heating",
-            "pre_heating_seconds",
-            "pre_cooling"
-          ],
-          magetickey: [
-            "magnet_on",
-            "magnet_type",
-            "segments",
-            "interval_stay_time",
-            "cycle",
-            "beat_speed",
-            "drying_time",
-            'expected_magnetic_total_time',
-            'magnetic_speed',
-            'liquid_level_magnetic_time',
-            'lowest_magnetic_position',
-            'drying_position',
-            'discard_mix_time',
-            'discard_mix_height',
-            'discard_mix_volume',
-          ]
-        },
-        {
-          type: "bind",
-          basickey: [
-            "well",
-            "volume",
-            "mix_time",
-            "mix_speed",
-            "mix_height",
-            "mix_volume",
-            "temperature_on",
-            "temperature",
-            "pre_heating",
-            "pre_heating_seconds",
-            "pre_cooling"
-          ],
-          magetickey: [
-            "magnet_on",
-            "magnet_type",
-            "segments",
-            "interval_stay_time",
-            "cycle",
-            'magnetic_speed',
-            "drying_time",
-            'expected_magnetic_total_time',
-          ]
-        },
-        {
-          type: "elution",
-          basickey: [
-            "well",
-            "volume",
-            "mix_time",
-            "mix_speed",
-            "mix_height",
-            "mix_volume",
-            "temperature_on",
-            "temperature",
-            "pre_heating",
-            "pre_heating_seconds",
-            "pre_cooling"
-          ],
-          magetickey: [
-            "magnet_type",
-            "segments",
-            "segments",
-            "interval_stay_time",
-            "cycle",
-            "beat_speed",
-            "drying_time"
-          ]
-        },
-        {
-          type: "wash",
-          basickey: [
-            "well",
-            "volume",
-            "mix_time",
-            "mix_speed",
-            "mix_height",
-            "mix_volume"
-          ],
-          magetickey: []
-        },
-        {
-          type: "discard",
-          basickey: [
-            "well",
-            "volume",
-            "mix_time",
-            "mix_speed",
-            "mix_height",
-            "mix_volume"
-          ],
-          magetickey: []
-        }
-      ]
+      isShowOpenDoorDialog: false
     };
   },
-
+  components: {
+    IncubatorInfo,
+    TransferInfo,
+    LysisInfo,
+    DiscardInfo,
+    PauseInfo,
+    OpenDoorDialog
+  },
   async created() {
     await this.getProtocolDetail();
     this.clickEveryStep(0);
   },
   computed: {
-    ...mapProtocolsState("protocols", ["initPathName"])
+    ...mapProtocolsState("protocols", [
+      "initPathName",
+      "protocalInfo",
+      "doorState"
+    ])
   },
   methods: {
     //获取程序详情
     async getProtocolDetail() {
       const {
         data: { steps }
-      } = await getProtocolDetail(this.$store.state.protocols.protocalInfo.id);
+      } = await getProtocolDetail(this.protocalInfo.id);
+      console.log(steps);
       this.steps = steps;
-      console.log(this.steps);
-
+      //#endregion
       // 处理左侧显示数据
-      const maps = new Map();
-      steps.forEach(item => (item.name = item.type));
-      const list = steps.filter(
-        val => !maps.has(val.name) && maps.set(val.name, 1)
-      );
-      let List = JSON.parse(JSON.stringify(list));
-      for (let i = 0; i < list.length; i++) {
-        let num = 0;
-        for (let j = 0; j < steps.length; j++) {
-          if (steps[j].name === list[i].name) {
-            num += 1;
-          }
-        }
-        if (num === 1) {
-          let index = List.findIndex(item => item.name === list[i].name);
-          List.splice(index, 1);
-        }
-      }
-      for (let i = 0; i < List.length; i++) {
-        let num = 0;
-        for (let j = 0; j < steps.length; j++) {
-          if (steps[j].name === List[i].name) {
-            num += 1;
-            steps[j].name = steps[j].name + num;
-          }
-        }
-      }
-      steps.push({
-        order: this.steps.length,
-        name: "unload labware",
-        type: "unload labware"
-      });
+      // const maps = new Map();
+      // steps.forEach(item => {
+      //   item.name = item.type
+      //    item.name=item.name.charAt(0).toUpperCase() + item.name.slice(1)
+      // });
+      // const list = steps.filter(
+      //   val => !maps.has(val.name) && maps.set(val.name, 1)
+      // );
+      // let List = JSON.parse(JSON.stringify(list));
+      // for (let i = 0; i < list.length; i++) {
+      //   let num = 0;
+      //   for (let j = 0; j < steps.length; j++) {
+      //     if (steps[j].name === list[i].name) {
+      //       num += 1;
+      //     }
+      //   }
+      //   if (num === 1) {
+      //     let index = List.findIndex(item => item.name === list[i].name);
+      //     List.splice(index, 1);
+      //   }
+      // }
+      // for (let i = 0; i < List.length; i++) {
+      //   let num = 0;
+      //   for (let j = 0; j < steps.length; j++) {
+      //     if (steps[j].name === List[i].name) {
+      //       num += 1;
+      //       steps[j].name = steps[j].name + num;
+      //     }
+      //   }
+      // }
+      //#endregion
+      // 手动添加卸载耗材步骤
+      // steps.push({
+      //   order: this.steps.length,
+      //   step_name: "Unload labware",
+      //   type: "unload labware"
+      // });
     },
     clickEveryStep(order) {
-      this.basicData = [];
-      this.mageticData = [];
+      this.currentBtn = 1;
       this.activeStep = order;
-      if (order === this.steps.length) return
       this.activeStepInfo = this.steps[order];
-
-      //   for(let k in this.activeStepInfo) {
-      //       if(this.commonArr[order].basickey.indexOf(k)!=-1){
-      //         this.basicData.push({
-      //           name: k,
-      //           value: this.activeStepInfo[k]})
-      //  }
-      // }
-
-      const index = this.commonArr.findIndex(
-        item => item.type === this.activeStepInfo.type
-      );
-      for (let k in this.activeStepInfo) {
-        if (this.commonArr[index]&&this.commonArr[index].basickey.includes(k)) {
-          this.basicData.push({
-            name: k,
-            value: this.activeStepInfo[k]
-          });
-        } else if (this.commonArr[index]&&this.commonArr[index].magetickey.includes(k)) {
-          this.mageticData.push({
-            name: k,
-            value: this.activeStepInfo[k]
-          });
-        }
-      }
-      console.log(this.basicData);
-      if (this.activeStepInfo.type === "incubator") {
-        this.basicData[0].name = "well(1/A)";
-      }else if(this.activeStepInfo.type === "transfer"){
-        this.basicData[0].name = "source well(1-C)";
-      }
-       else if (this.activeStepInfo.type === "lysis") {
-        this.basicData[6].value
-          ? (this.basicData[6].value = "On")
-          : (this.basicData[6].value = "Off");
-        this.basicData[7].value
-          ? (this.basicData[7].value = "Preheating")
-          : (this.basicData[7].value = "Heating sync");
-        if (
-          this.activeStepInfo.temperature_on &&
-          this.activeStepInfo.pre_heating === 0
-        ) {
-          this.basicData.splice(9, 1);
-        }
-        const index = this.basicData.findIndex(
-          item => item.name === "pre_cooling"
-        );
-        this.basicData[index].value
-          ? (this.basicData[index].value = "Precooling")
-          : (this.basicData[index].value = "Cooling sync");
-
-        if (this.mageticData[0].value) {
-          this.mageticData[0].value = "Yes";
-
-          if(this.activeStepInfo.magnet_type==='tip'){
-            let arr = ['magnet_on',"magnet_type",
-            "segments",
-            "interval_stay_time",
-            "cycle",
-            "beat_speed",
-            "drying_time",
-            'expected_magnetic_total_time',]
-            this.mageticData=this.mageticData.filter(item=>arr.includes(item.name))
-          }else if(this.activeStepInfo.magnet_type==='sleeve'){
-            const index = this.mageticData.findIndex(
-          item => item.name === "beat_speed"
-        );
-        const i= this.mageticData.findIndex(
-          item => item.name === "interval_stay_time"
-        );
-        this.mageticData.splice(index,1)
-        this.mageticData[i].name = "Every magnetic time(1-999s)";
-          }
-        } else {
-          this.mageticData[0].value = "No";
-          this.mageticData.splice(1,this.mageticData.length-1)
-        }
-    }
     },
-    handleData() {
-      if (this.activeStep === 0) {
-        if (!this.basicData[0]) {
-          for (let k in this.activeStepInfo) {
-            if (
-              k === "source_well" ||
-              k === "incubator_temperature" ||
-              k === "incubator_time"
-            ) {
-              this.basicData.push({
-                name: k,
-                value: this.activeStepInfo[k]
-              });
-            }
-          }
-        }
-      }
-    },
-    clickRun() {
-      this.runStepIds = this.steps.map(item => item.id).join();
+    async clickRun() {
+      this.runStepIds = this.steps
+        .map(item => item.id)
+        .join()
       this.$store.commit("protocols/updatedStepIds", [
         this.steps[0].id,
-        this.runStepIds,
-        this.initPathName
+        this.runStepIds
       ]);
-      this.$router.push("/system/run/protocols/sampleSettings");
+      this.$store.commit("protocols/updatedInitPathName", "viewrunstep");
+      if(!this.doorState) {
+        this.isShowOpenDoorDialog = true;
+        await openDoor();
+      }else {
+        this.$router.push("/system/run/protocols/sampleSettings");
+      }
     },
-    clickStepRun() {
+    async clickStepRun() {
       const index = this.steps.findIndex(
         item => item.order === this.activeStep
       );
@@ -379,9 +200,15 @@ export default {
       this.$store.commit("protocols/updatedStepIds", [
         this.activeStepInfo.id,
         this.runStepIds,
-        this.initPathName
       ]);
-      this.$router.push("/system/run/protocols/sampleSettings");
+      this.$store.commit('protocols/updatedInitPathName','viewrunstep')
+      if (!this.doorState) {
+        this.isShowOpenDoorDialog = true;
+        await openDoor();
+      }else {
+        this.$router.push("/system/run/protocols/sampleSettings");
+      }
+
     },
     clickBasicBtn() {
       this.currentBtn = 1;
@@ -390,119 +217,17 @@ export default {
       this.currentBtn = 0;
     }
   },
-  filters: {
-    toUpperCase(val) {
-      const first = val.charAt(0).toUpperCase();
-      val = first + val.slice(1);
-      switch (val) {
-        case "Well":
-          val = "Well(1-C)";
-          break;
-        case "Well(1/A)":
-          val = "Well(1/A)";
-          break;
-          case "Source well(1-C)":
-          val = "Source well(1-C)";
-          break;
-        case "Incubator_temperature":
-          val = "Temp.(10-110℃)";
-          break;
-        case "Incubator_time":
-          val = "Incubator time(0-999min)";
-          break;
-        case "Destination_well":
-          val = "Destination well(1-C)";
-          break;
-        case "Volume":
-          val = "Volume(5-1000uL)";
-          break;
-        case "Mix_number_before_aspirating":
-          val = "Mix number before aspirating(0-10)";
-          break;
-        case "Mix_speed":
-          val = "Mix speed(1-10)";
-          break;
-        case "Aspirate_position":
-          val = "Aspirate position(0-100)";
-          break;
-        case "Dispense_position":
-          val = "Dispense position(0-100)";
-          break;
-        case "Mix_time":
-          val = "Mix time(1-99min)";
-          break;
-        case "Mix_height":
-          val = "Mix height(0-50mm)";
-          break;
-        case "Mix_volume":
-          val = "Mix volume(5-1000uL)";
-          break;
-        case "Temperature_on":
-          val = "Temperature switch";
-          break;
-        case "Temperature":
-          val = "Temperature(10-110℃)";
-          break;
-        case "Pre_heating":
-          val = "Heating setup";
-          break;
-        case "Pre_heating_seconds":
-          val = "Elution well preheated advance seconds(1-999s)";
-          break;
-        case "Pre_cooling":
-          val = "Cooling setup";
-          break;
-        case "Magnet_on":
-          val = "Magnet";
-          break;
-        case "Magnet_type":
-          val = "Magnet type";
-          break;
-        case "Interval_stay_time":
-          val = "Interval stay time(1-999s)";
-          break;
-        case "Cycle":
-          val = "Cycle(1-99)";
-          break;
-        case "Beat_speed":
-          val = "Beat speed(0-10)";
-          break;
-        case "Drying_time":
-          val = "Drying time(0-99min)";
-          break;
-        case "Segments":
-          val = "Segments(1-5)";
-          break;
-          case "Expected_magnetic_total_time":
-          val = "Expected magnetic total time(0-99999s)";
-          break;
-          case "Drying_position":
-          val = "Drying position(5-50mm)";
-          break;
-          case "Discard_mix_time":
-          val = "Mix time(1-99min)";
-          break;
-          case "Discard_mix_height":
-          val = "Mix height(0-40%)";
-          break;
-          case "Discard_mix_volume":
-          val = "Mix volume(0-100%)";
-          break;
-          case "Liquid_level_magnetic_time":
-          val = "Liquid level magnetic time(0-999s)";
-          break;
-          case "Magnetic_speed":
-          val = "Magnetic speed(1-10)";
-          break;
-          case "Every magnetic time(1-999s)":
-          val = "Every magnetic time(1-999s)";
-          break;
-          case "Lowest_magnetic_position":
-          val = "Lowest magnetic position(0-40%)";
-          break;
-      }
-      return val;
-    }
+  mounted () {
+    this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
+       if(notify.Code===0x000C){
+        this.isShowOpenDoorDialog=false
+        this.$store.commit('protocols/updatedDoorState',1)
+        this.$router.push("/system/run/protocols/sampleSettings");
+       }
+      })
+  },
+  destroyed() {
+    this.EventBus.unregisterCallbacksForEvent(this.Notify.CODE_FZB_DOOR_OPEN)
   }
 };
 </script>
@@ -549,13 +274,14 @@ div {
 }
 .pic {
   width: 45px;
-  height: 45px;
-  text-align: center;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0 22px 0 25px;
 }
 .pic img {
-  max-width: 45px;
-  max-height: 45px;
+  transform: scale(0.9);
 }
 .btn {
   display: flex;
@@ -609,7 +335,7 @@ div {
   margin-bottom: 70px;
   font-size: 26px;
 }
-.info-item:nth-child(9n) {
+.info-item:nth-child(8n) {
   margin-bottom: 30px;
 }
 .info-item span {

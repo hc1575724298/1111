@@ -37,7 +37,8 @@
           </div>
           <div class="item">
             <div class="pic">
-              <img src="@/images/run/图像 48.png">
+              <img src="@/images/run/图像 48.png" v-if="protocalInfo.sample_tube_info.substr(0,1)==5">
+              <img src="@/images/run/图像 48.png" v-else>
             </div>
             <div class="info">
               <div>{{protocalInfo.sample_tube_info}}</div>
@@ -82,11 +83,13 @@
           </div>
           <div class="bottom-right">
             <button class="sampleId" @click="clickBack">{{$t('language.back')}}</button>
-            <button class="next" @click="clickRun">{{$t('language.run')}}</button>
+            <button class="next" @click="clickRun" :disabled="isDisabledRun">{{$t('language.run')}}</button>
           </div>
         </div>
       </div>
     </div>
+
+    <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog"/>
   </div>
 </template>
 
@@ -94,15 +97,19 @@
 import TubeGroup from "@/components/TubeGroup.vue";
 import RunProgress from "@/components/RunProgress.vue";
 import utilsFunction from "@/utils/function";
+import OpenDoorDialog from '@/components/OpenDoorDialog.vue'
 import { mapState as mapProtocolsState } from 'vuex'
-import { setRun } from '@/api/run'
+import {closeDoor} from "@/api/run";
 export default {
   components:{
     RunProgress,
-    TubeGroup
+    TubeGroup,
+    OpenDoorDialog
   },
   data () {
     return {
+      isDisabledRun: false,
+      isShowOpenDoorDialog: false,
       isDisabled: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10","11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"],
     }
   },
@@ -110,23 +117,35 @@ export default {
 
   },
   computed:{
-      ...mapProtocolsState('protocols',['protocalInfo','start_step_id','selectedTubeList','sampleIdDataStore','run_step_ids'])
+      ...mapProtocolsState('protocols',['doorState','protocalInfo',])
     },
   methods: {
     clickBack() {
       this.$router.push('sampleSettings')
     },
     async clickRun() {
-      // const res = await setRun({
-      //   protocol_id: this.protocalInfo.id,
-      //   start_step_id: this.start_step_id,
-      //   sample_number: this.selectedTubeList.length,
-      //   run_step_ids: this.run_step_ids,
-      //   sample_info: JSON.stringify(this.sampleIdDataStore)
-      // })
-      // console.log(res);
-      this.$store.commit('protocols/changeGoBackName','loadlabware')
-      this.$router.push({
+      this.$store.commit("protocols/updatedStartRunTime", utilsFunction.changeSecondsToSecondTime(Date.now()/1000, "en-US"));
+      if(this.doorState){
+        this.isShowOpenDoorDialog=true
+        await this.closeDoorApi()
+      }else{
+        this.$router.push({
+        name: 'runprogressthree'
+      })
+    }
+    },
+    async closeDoorApi(){
+       await closeDoor()
+    },
+
+  },
+  mounted(){
+    this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE,async (notify) => {
+       if(notify.Code===0x000D){
+        this.isShowOpenDoorDialog=false
+        this.isDisabledRun =false
+        this.$store.commit('protocols/updatedDoorState',0)
+        this.$router.push({
         name: 'runprogressthree',
         query:{
           runStartTime:utilsFunction.changeSecondsToSecondTime(
@@ -135,8 +154,12 @@ export default {
           )
         }
       })
-    },
-
+       }
+    })
+  },
+  destroyed() {
+    // this.EventBus.unregisterAllCallbacks();
+    this.EventBus.unregisterCallbacksForEvent(this.Notify.CODE_FZB_DOOR_CLOSE)
   }
 }
 </script>
@@ -151,15 +174,16 @@ export default {
 }
 .container-bottom {
   display: flex;
-  justify-content: space-between;
 }
 .container-bottom-left {
-  width: 404px;
+  flex: 1;
+  margin-right: 30px;
   height: 967px;
   background-color: #ffffff;
   border-radius: 6px;
   border: solid 1px #c2cbda;
 }
+
 .container-bottom-right {
   width: 1418px;
   height: 967px;
@@ -192,7 +216,8 @@ export default {
   height: 64px;
   background-image: linear-gradient(0deg, #ffffff 0%, #f2f7ff 100%);
   border: solid 1px #c2cbda;
-  margin: 0 26px 0 490px;
+  border-radius: 6px;
+  margin-right: 25px;
 }
 .next {
   float: right;
