@@ -1,13 +1,19 @@
 <template>
   <el-dialog
+<<<<<<< HEAD
     :close-on-click-modal="false"
+=======
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
     class="dialog"
     title="SampleID"
     width="1120px"
     :show-close="false"
     :visible="isShowSampleidDialog"
     @close="handleClose"
+<<<<<<< HEAD
     append-to-body
+=======
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
   >
     <el-table
       class="el-table"
@@ -41,8 +47,13 @@
 
     <!-- 按钮 -->
     <span slot="footer" class="dialog-footer">
+<<<<<<< HEAD
       <el-button @click="handleClose" class="cancel">{{$t('language.cancel')}}</el-button>
       <el-button class="ok" @click="clickOk">{{$t('language.ok')}}</el-button>
+=======
+      <el-button @click="handleClose" class="cancel">Cancel</el-button>
+      <el-button class="ok" @click="clickOk">OK</el-button>
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
     </span>
   </el-dialog>
 </template>
@@ -70,14 +81,24 @@ export default {
   },
   data() {
     return {
+<<<<<<< HEAD
       sampleIdData: []
+=======
+      sampleIdData: [],
+      showCount: 0
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
     };
   },
 
   watch: {
     isShowSampleidDialog(n) {
       if (!n) return;
+<<<<<<< HEAD
       this.sampleIdData = this.selectedTubeList.map((item, index) => ({
+=======
+      console.log("sampleIdDataStore", this.sampleIdDataStore);
+      const data = this.selectedTubeList.map((item, index) => ({
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
         position: item,
         sample_id: this.sampleIdDataStore[index]
           ? this.sampleIdDataStore[index].sample_id
@@ -86,6 +107,10 @@ export default {
           ? this.sampleIdDataStore[index].note
           : ""
       }));
+<<<<<<< HEAD
+=======
+      this.sampleIdData = data;
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
     }
   },
   methods: {
@@ -171,11 +196,14 @@ div {
   font-size: 24px;
   color: #fff;
 }
+<<<<<<< HEAD
 .dialog .el-table >>> .el-table__cell.gutter {
   background-color: #8fb9e3 !important;
   background-color: transparent;
   border-bottom: 1px solid #ebeef5;
   border-bottom-width: 1px !important;
 }
+=======
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
 </style>
 <style></style>

@@ -142,7 +142,11 @@ export default {
         "24"
       ],
       isIndeterminate: true,
+<<<<<<< HEAD
       // currentCheckedBtnList: [],
+=======
+      currentCheckedBtnList: []
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
     };
   },
   computed: {
@@ -193,6 +197,7 @@ export default {
       if (this.isDisabled.includes(val)) {
         return;
       } else {
+<<<<<<< HEAD
         let newList =[]
         if(this.selectedList.includes(val)){
           newList = this.selectedList.filter(v=>v !=val)
@@ -201,6 +206,19 @@ export default {
         }
         // this.currentCheckedBtnList =newList
         this.$store.commit('protocols/changeSelectedTubeList',newList.sort((a,b)=>a-b))
+=======
+        let newList = [];
+        if (this.selectedList.includes(val)) {
+          newList = this.selectedList.filter(v => v != val);
+        } else {
+          newList = [val, ...this.selectedList];
+        }
+        this.currentCheckedBtnList = newList;
+        this.$store.commit(
+          "protocols/changeSelectedTubeList",
+          newList.sort((a, b) => a - b)
+        );
+>>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
       }
     }
   }
