@@ -5,7 +5,7 @@
         {{$t("language.user")}}
       </div>
       <div class="add-option-advanced-user" @click.stop="showAddUser('advanced_user')">
-         {{$t("language.advanced_user")}}
+        {{$t("language.advanced_user")}}
       </div>
     </div>
   </div>
@@ -14,8 +14,7 @@
 <script>
   export default {
     data() {
-      return {
-      }
+      return {}
     },
     mounted() {
 
@@ -25,7 +24,7 @@
         this.$emit('hide')
       },
       showAddUser(type) {
-        this.$emit('addUserinfo',type)
+        this.$emit('addUserinfo', type)
       }
     }
   }

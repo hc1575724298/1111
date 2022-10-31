@@ -1,5 +1,5 @@
 import store from "./store";
-import EventBus from 'eventing-bus';
+import EventBus, { publish } from 'eventing-bus';
 import {
   Init
 } from '@/message';
@@ -21,11 +21,20 @@ Vue.prototype.pub = pub;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(VueI18n);
-Vue.use(EventBus);
+// import notify from './utils/Notify.js';
 Vue.prototype.$store = store;
+Vue.prototype.$EventBus = new Vue();
 Vue.prototype.EventBus = EventBus;
 Vue.prototype.Notify = notify;
 
+// 全局过滤器
+Vue.filter('handleTime', function (val) {
+  if (store.state.languageCode) {
+    return pub.changeSecondsToSecondTime(val, "en-US")
+  } else {
+    return pub.changeSecondsToSecondTime(val, 'zh-CN')
+  }
+})
 
 Vue.prototype.simulateRun = process.env.NODE_ENV == 'development';
 //接收来自c#的通知
@@ -130,7 +139,7 @@ import locale from 'element-ui/lib/locale';
 import messages from './i18n';
 
 const i18n = new VueI18n({
-  locale: 'en-US', // 语言标识
+  locale: store.state.languageCode ? 'en-US' : 'zh-CN', // 语言标识
   messages,
   fallbackLocale: 'en-US', //没有英文的时候默认中文语言
   silentFallbackWarn: true, //抑制警告

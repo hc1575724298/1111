@@ -33,15 +33,16 @@
     },
     methods: {
       changePercentage() {
-        var seconds=Number(this.interval.hours)*3600+Number(this.interval.minutes)*60 ;
-        var current_seconds=Number(this.clear_time.hours)*3600+Number(this.clear_time.minutes)*60+Number(this.clear_time.second);
-        this.active_percentage=current_seconds/(seconds+0.0)*100;
+        var seconds = Number(this.interval.hours) * 3600 + Number(this.interval.minutes) * 60;
+        var current_seconds = Number(this.clear_time.hours) * 3600 + Number(this.clear_time.minutes) * 60 + Number(this
+          .clear_time.second);
+        this.active_percentage = current_seconds / (seconds + 0.0) * 100;
         if (this.clear_time.second == '59') {
           this.clear_time.second = '00';
           if (this.clear_time.minutes < '59') {
             this.clear_time.minutes++;
           } else {
-            this.clear_time.minutes= '00';
+            this.clear_time.minutes = '00';
             this.clear_time.hours++;
           }
           if (this.clear_time.minutes < 10 && this.clear_time.minutes > 0) {
@@ -70,6 +71,7 @@
   .interval-model {
     position: absolute;
     display: flex;
+    z-index: 1000;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -81,6 +83,8 @@
 
   .interval {
     position: relative;
+    margin-left: 170px;
+    margin-top: 173px;
     width: 254px;
     height: 254px;
   }

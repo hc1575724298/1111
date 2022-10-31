@@ -1,63 +1,66 @@
 <template>
-    <div>
-        <div class="password-info">
-          <div class="info-text">
-            {{$t("language.change_password")}}
-          </div>
-          <div class="deal-password">
-            <i class="el-icon-arrow-right" @click="openDialog()"></i>
-          </div>
-        </div>
-          <ChangeMyPassword @close='close' v-if="changePasswordVisible"></ChangeMyPassword>
+  <div>
+    <div class="password-info">
+      <div class="info-text">
+        {{$t("language.change_password")}}
+      </div>
+      <div class="deal-password">
+        <i class="el-icon-arrow-right" @click="openDialog()"></i>
+      </div>
     </div>
+    <ChangeMyPassword @close='close' v-if="changePasswordVisible"></ChangeMyPassword>
+  </div>
 </template>
 
 <script>
   import ChangeMyPassword from '@/components/ChangeMyPassword';
-  export default{
-  components:{
-    ChangeMyPassword
-  },
+  export default {
+    components: {
+      ChangeMyPassword
+    },
 
-    data(){
-      return{
-        changePasswordVisible:false,
+    data() {
+      return {
+        changePasswordVisible: false,
       }
     },
-    methods:{
-      openDialog(){
-        this.changePasswordVisible=true;
+    methods: {
+      openDialog() {
+        this.changePasswordVisible = true;
       },
-      close(){
-        this.changePasswordVisible=false;
+      close() {
+        this.changePasswordVisible = false;
       }
     }
   }
 </script>
 
 <style scoped="scoped">
-.password-info{
+  .password-info {
     width: 1533px;
     height: 90px;
     background-color: white;
     border-radius: 5px;
     border: 1px solid #C2CBDA;
-    margin:30px 0 0 34px ;
+    margin: 30px 0 0 34px;
     font-size: 24px;
     text-indent: 30px;
   }
-  .info-text{
+
+  .info-text {
     height: 100%;
     line-height: 90px;
     float: left;
   }
-  .deal-password{
+
+  .deal-password {
     float: right;
     display: flex;
     height: 100%;
     align-items: center;
   }
-  .el-icon-arrow-right{
+
+  .el-icon-arrow-right {
     font-size: 50px;
     margin-right: 15px;
     color: #666666;

@@ -11,11 +11,11 @@
       @close="handleClose"
     >
       <img src="@/images/run/pause-dialog.png" alt="" />
-      <div>{{$t('language.tips') }}</div>
+      <div>{{tips}}</div>
 
       <template slot="footer" class="dialog-footer">
         <el-button class="door" @click="clickDoorBtn">{{
-          doorState ? $('language.close_the_door') :$t('language.open_the_door')
+          doorState ? $t('language.close_the_door') :$t('language.open_the_door')
         }}</el-button>
         <el-button class="ok" @click="clickOk">{{$t('language.ok')}}</el-button>
       </template>
@@ -54,37 +54,35 @@ export default {
   created() {},
 
   methods: {
-    clickOk() {
+    async clickOk() {
       if (this.doorState) {
         this.isShowOpenDoorDialog = true;
-        this.closeDoorApi();
+        await closeDoor();
         this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE, notify => {
       if (notify.Code === this.Notify.CODE_FZB_DOOR_CLOSE) {
         this.isShowOpenDoorDialog = false;
-        this.$store.commit("protocols/updatedDoorState", 0);
-        this.handleClose();
-        this.goOnRunApi();
+        setTimeout(()=>{
+          this.handleClose();
+          this.goOnRunApi()
+        },100)
+
       }
     });
       }else {
         this.handleClose();
-        this.goOnRunApi();
+        this.goOnRunApi()
       }
 
     },
-    clickDoorBtn() {
+    async clickDoorBtn() {
+      const type = this.doorState ? 'CODE_FZB_DOOR_CLOSE':'CODE_FZB_DOOR_OPEN'
       this.isShowOpenDoorDialog = true;
-      if (this.doorState) {
-        this.closeDoorApi();
-        this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE, notify => {
-      if (notify.Code === this.Notify.CODE_FZB_DOOR_CLOSE) {
+      this.doorState ? await closeDoor() : await openDoor();
+      this.EventBus.on(this.Notify[type], notify => {
+      if (notify.Code === this.Notify[type]) {
         this.isShowOpenDoorDialog = false;
-        this.$store.commit("protocols/updatedDoorState", 0);
       }
-    });
-      } else {
-        this.openDoorApi();
-      }
+    })
     },
     //关闭弹窗
     handleClose() {
@@ -94,22 +92,9 @@ export default {
     async goOnRunApi() {
       await goOnRun();
     },
-    //关门接口
-    async closeDoorApi() {
-      await closeDoor();
-    },
-    //开门接口
-    async openDoorApi() {
-      await openDoor();
-    }
   },
   mounted() {
-    this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, notify => {
-      if (notify.Code === this.Notify.CODE_FZB_DOOR_OPEN) {
-        this.isShowOpenDoorDialog = false;
-        this.$store.commit("protocols/updatedDoorState", 1);
-      }
-    });
+
   },
   destroyed() {
     this.EventBus.unregisterAllCallbacks();

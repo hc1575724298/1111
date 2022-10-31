@@ -1,0 +1,267 @@
+﻿<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        letter-spacing: 1px;
+    }
+
+    .page_break { /* pdf 导出分页*/
+        page-break-before: left;
+    }
+
+    .header {
+		text-align: center;
+        font-size: 18px;
+    }
+
+    .header_time {
+        display: inline-block;
+        width: 40%;
+    }
+
+    .header_info {
+        display: inline-block;
+        width: 40%;
+        text-align: right;
+        position: absolute;
+        right: 0;
+    }
+
+    .header_line {
+        width: 100%;
+        height: 4px;
+        background: #000;
+    }
+
+    .header_line2 {
+        width: 100%;
+        height: 2px;
+        margin-top: 2px;
+        background: #000;
+    }
+
+    .footer {
+        font-size: 18px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .foot_user {
+		color: #ffffff;
+        display: inline-block;
+        width: 40%;
+    }
+
+    .foot_page {
+        display: inline-block;
+        width: 40%;
+        text-align: right;
+        position: absolute;
+        right: 0;
+    }
+
+    .content {
+    }
+
+    .info {
+        margin-top: 30px;
+        margin-left: 30px;
+    }
+
+    .info_title {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .info_content {
+        margin-top: 8px;
+        margin-left: 45px;
+        font-size: 20px;
+    }
+
+    
+</style>
+
+<body>
+    <div class="header">
+		</br>
+        <div>{{system_title}}</div>
+        </br>
+    </div>
+    <div class="content">
+        <div class="info">
+            <div class="info_title">{{page1_run_info}}</div>
+
+            <div class="info_content">
+                <span>{{page1_run_protocol_name}}</span>
+                :
+                <span>{{data_run_protocol_name}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_run_start_time}}</span>
+                :
+                <span>{{data_run_start_time}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_run_finished_time}}</span>
+                :
+                <span>{{data_run_finished_time}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_run_total_time}}</span>
+                :
+                <span>{{data_run_total_time}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_operator}}</span>
+                :
+                <span>{{data_operator}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_sample_number}}</span>
+                :
+                <span>{{data_sample_number}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_run_sample_id}}</span>
+                :
+                <span>{{data_run_sample_id}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_error_code}}</span>
+                :
+                <span>{{data_error_code}}</span>
+            </div>
+        </div>
+
+        <div class="info">
+            <div class="info_title">{{page1_protocol_summary}}</div>
+            <div class="info_content">
+                <span>{{page1_protocol_name}}</span>
+                :
+                <span>{{data_protocol_name}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_creator_name}}</span>
+                :
+                <span>{{data_creator_name}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_updated_time}}</span>
+                :
+                <span>{{data_updated_time}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_pre_packaged}}</span>
+                :
+                <span>{{data_pre_packaged}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_cartridge}}</span>
+                :
+                <span>{{data_cartridge}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_elution_tube}}</span>
+                :
+                <span>{{data_elution_tube}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_reagent_tube}}</span>
+                :
+                <span>{{data_reagent_tube}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_sample_tube}}</span>
+                :
+                <span>{{data_sample_tube}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_elution_volume}}</span>
+                :
+                <span>{{data_elution_volume}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_reagent_volume}}</span>
+                :
+                <span>{{data_reagent_volume}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_sample_volume}}</span>
+                :
+                <span>{{data_sample_volume}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_remark}}</span>
+                :
+                <span>{{data_remark}}</span>
+            </div>
+        </div>
+
+        <div class="info">
+            <div class="info_title">{{page1_instrument_info}}</div>
+            <div class="info_content">
+                <span>{{page1_instrument_name}}</span>
+                :
+                <span>{{data_instrument_name}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_instrument_type}}</span>
+                :
+                <span>{{data_instrument_type}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_instrument_pn_number}}</span>
+                :
+                <span>{{data_instrument_pn_number}}</span>
+            </div>
+
+            <div class="info_content">
+                <span>{{page1_instrument_ui}}</span>
+                :
+                <span>{{data_instrument_ui}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_instrument_mix_motion}}</span>
+                :
+                <span>{{data_instrument_mix_motion}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_instrument_temperature_control}}</span>
+                :
+                <span>{{data_instrument_temperature_control}}</span>
+            </div>
+			
+			<div class="info_content">
+                <span>{{page1_instrument_auxiliary}}</span>
+                :
+                <span>{{data_instrument_auxiliary}}</span>
+            </div>
+        </div>
+    </div>
+</body>

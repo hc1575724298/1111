@@ -12,13 +12,14 @@
         </div>
       </div>
     </div>
-
-
   </div>
 
 </template>
 
 <script>
+  import {
+    instrumentGet
+  } from '@/api/setting.js'
   export default {
     data() {
       return {
@@ -50,21 +51,29 @@
             id: 5,
             description: this.$t("language.reports"),
             src: require("../../../images/setting/reports.png"),
-            router: ""
+            router: "report"
           },
           {
             id: 6,
             description: this.$t("language.advanced"),
             src: require("../../../images/setting/advanced.png"),
-            router: ""
+            router: "advanced"
           }, {
             id: 7,
+            description: this.$t("language.clear_login"),
+            src: require("../../../images/setting/clearlogin.png"),
+            router: ""
+          },{
+            id: 8,
             description: this.$t("language.help"),
             src: require("../../../images/setting/help.png"),
-            router: ""
+            router: "help"
           }
         ]
       }
+    },
+    mounted() {
+      this. getInstrumentSetting()
     },
     methods: {
       ToRouter(item) {
@@ -74,15 +83,78 @@
         } else if (item.id == 2) {
           this.$store.commit('setSettingOption', this.$t("language.instrument"));
           this.$store.commit('setInstrumentSiderbar', 1);
-        } else if (item. id == 3){
+          this.$store.commit('setTemOption',null)
+        } else if (item.id == 3) {
           this.$store.commit('setSettingOption', this.$t("language.tools"));
           this.$store.commit('setSettingTools', 1);
-        }else if (item. id == 4){
+        } else if (item.id == 4) {
           this.$store.commit('setMaintenanceSiderbar', 1);
           this.$store.commit('setSettingOption', this.$t("language.maintenance"));
+        }else if (item.id == 5) {
+          this.$store.commit('setSettingOption', this.$t("language.reports"));
+        }else if (item.id == 6) {
+          this.$store.commit('setAdvancedSiderbar',1);
+          this.$store.commit('setSettingOption', this.$t("language.advanced"));
+        }else if (item.id == 8) {
+          this.$store.commit('setSettingOption', this.$t("language.help"));
         }
         this.$router.push({
           name: item.router
+        })
+      },
+      getInstrumentSetting(){
+        instrumentGet().then((res)=>{
+          this.$store.commit('setSetting',res.data)
+          let param =  [{
+          key: 'horizontal_speed',
+          value:res.data.parameters.horizontal_speed,
+        }, {
+          key: 'magnetic_rod_lifting_speed',
+          value: res.data.parameters.magnetic_rod_lifting_speed,
+        }, {
+          key: 'magnetic_rod_sleeve_lifting_speed',
+          value: res.data.parameters.magnetic_rod_sleeve_lifting_speed,
+        },{
+          key: 'aspirate_speed',
+          value: res.data.parameters.aspirate_speed,
+        }, {
+          key: 'aspirate_acceleration',
+          value: res.data.parameters.aspirate_acceleration,
+        }, {
+          key: 'aspirate_delay',
+          value: res.data.parameters.aspirate_delay,
+        }, {
+          key: 'dispense_speed',
+          value: res.data.parameters.dispense_speed,
+        }, {
+          key: 'dispense_acceleration',
+          value: res.data.parameters.dispense_acceleration,
+        }, {
+          key: 'dispense_delay',
+          value: res.data.parameters.dispense_delay,
+        }, {
+          key: 'blow_liquid',
+          value: res.data.parameters.blow_liquid,
+        }, {
+          key: 'air_gap',
+          value: res.data.parameters.air_gap,
+        }, {
+          key: 'pre_wetting_cycle',
+          value: res.data.parameters.pre_wetting_cycle,
+        },{
+          key: 'tip_aspirate_speed',
+          value: res.data.parameters.tip_aspirate_speed,
+        }, {
+          key: 'tip_dispense_speed',
+          value: res.data.parameters.tip_dispense_speed,
+        }, {
+          key: 'tip_dispense_delay',
+          value: res.data.parameters.tip_dispense_delay,
+        }, {
+          key: 'magnetic_speed',
+          value: res.data.parameters.magnetic_speed,
+        }]
+          this.$store.commit('setSaveParameters',param)
         })
       }
     }

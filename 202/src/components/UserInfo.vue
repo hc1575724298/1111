@@ -9,7 +9,7 @@
       <div @click="switchUser">
         <div class="switch">
           <img src="../images/system/switch.png">&nbsp;{{$t("language.switch")}}
-          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -18,16 +18,23 @@
 <script>
   export default {
     components: {},
+    data(){
+      return{
+        switch_status: true
+      }
+    },
     methods: {
       hide: function() {
         this.$emit('hide');
       },
       manage: function() {
-        this.$store.commit('setMenuIndex',1)
-        this.$router.push({name:'user'})
+        this.$store.commit('setMenuIndex', 1)
+        this.$router.push({
+          name: 'user'
+        })
       },
       switchUser: function() {
-        this.$router.push({name:'login'})
+        this.$emit('openSwitch', this.switch_status);
       }
     }
   }
@@ -64,10 +71,12 @@
     display: flex;
     align-items: center;
   }
-  img{
+
+  img {
     margin-left: 32px;
     margin-right: 22px;
   }
+
   .user-info-model {
     position: absolute;
     left: 0;

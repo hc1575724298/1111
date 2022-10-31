@@ -25,7 +25,17 @@ export default {
         this.$store.commit("protocols/clearRecord", []);
         this.$store.commit("protocols/updatedInitPathName", this.pathName);
       }
-    }
+    },
+    '$store.getters.languageCode':{
+        immediate:true,
+        handler(newval,oldval){
+          if (newval == 1) {
+            this.$i18n.locale = 'en-US'
+          } else if (newval == 0) {
+            this.$i18n.locale = 'zh-CN'
+          }
+        }
+      }
   },
   methods: {
     async getDoorState() {

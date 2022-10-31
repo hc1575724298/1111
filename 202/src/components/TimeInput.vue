@@ -98,9 +98,7 @@
           } else if (this.month > 12) {
             this.month = 12;
           }
-        }
-
-        else if (type == 'day') {
+        } else if (type == 'day') {
           if (!objRegExp1.test(this.day)) {
             return this.day = null;
           }
@@ -114,9 +112,7 @@
           } else if (this.day > 31) {
             this.day = 31;
           }
-        }
-
-        else if (type == 'year') {
+        } else if (type == 'year') {
           if (!objRegExp1.test(this.year)) {
             return this.year = null;
           }
@@ -126,9 +122,7 @@
           if (this.year.toString().length > 4) {
             return this.year = null;
           }
-        }
-
-        else if (type == 'hour') {
+        } else if (type == 'hour') {
           if (!objRegExp1.test(this.hour)) {
             return this.hour = null;
           }
@@ -146,9 +140,7 @@
             this.hour = 23;
           }
 
-        }
-
-        else if (type == 'minute') {
+        } else if (type == 'minute') {
           if (!objRegExp1.test(this.minute)) {
             return this.minute = null;
           }
@@ -165,9 +157,7 @@
           } else if (this.minute > 59) {
             this.minute = 59;
           }
-        } 
-        
-        else if (type == 'seconds') {
+        } else if (type == 'seconds') {
           if (!objRegExp1.test(this.seconds)) {
             return this.seconds = null;
           }
@@ -199,6 +189,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    z-index: 1000;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     top: 0%;

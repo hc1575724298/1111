@@ -1,6 +1,6 @@
 <template>
   <div class="system">
-    <UserInfo v-if="info_code" @hide="info_code=false"></UserInfo>
+    <UserInfo v-if="info_code" @hide="info_code=false" @openSwitch="SwitchOpen"></UserInfo>
     <div class="system-head">
       <div class="head-user" @click="getUserInfo">
         <div class="head-user-img"><img src="../../images/system/user.png" /></div>
@@ -34,18 +34,19 @@
         <router-view />
       </div>
     </div>
+    <AccountSwitch v-if="switch_code" @closeSwitch='switchClose'></AccountSwitch>
   </div>
 </template>
 
 <script>
   import UserInfo from '@/components/UserInfo'
   import TimeLight from '@/components/TimeLight'
-
+  import AccountSwitch from '@/components/AccountSwitch'
   export default {
-
     components: {
       UserInfo,
-      TimeLight
+      TimeLight,
+      AccountSwitch
     },
     data() {
       return {
@@ -67,7 +68,7 @@
           code: 0,
           src: require('../../images/system/clear.png'),
           selected_src: require('../../images/system/clearing.png'),
-          description: this.$t("language.clear")
+          description: this.$t("language.clean")
         }, {
           id: 4,
           code: 0,
@@ -106,7 +107,8 @@
           code: 0,
           description: this.$t("language.hepa"),
           router: 'hepaFilter',
-        }]
+        }],
+        switch_code: false
       }
     },
 
@@ -122,6 +124,12 @@
       }
     },
     methods: {
+      switchClose(){
+        this.switch_code=false
+      },
+      SwitchOpen(data){
+        this.switch_code = data
+      },
       selectOption(id) {
         let oldIndex = this.$store.getters.systemMenu;
         this.$store.commit('setSystemMenu', id)

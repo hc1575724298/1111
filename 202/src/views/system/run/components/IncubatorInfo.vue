@@ -45,7 +45,7 @@ export default {
   font-size: 26px;
 }
 .info-view div:nth-child(9n) {
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 .info-view div span:nth-child(2) {
   margin-left: 20px;

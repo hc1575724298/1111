@@ -8,7 +8,7 @@
       <div class="clear-time">
         <div class="clear-time-text">{{$t("language.clear_time_text")}}</div>
         <div class="clear-hours"><input type="number" class="clear-hours-input" v-model="interval_set.hours"
-            @blur="inputOnBlur($event,'hour')" oninput="if(value>23)value=23"  /></div>
+            @blur="inputOnBlur($event,'hour')" oninput="if(value>23)value=23" /></div>
         <div class="clear-icon">:</div>
         <div class="clear-minutes"><input type="number" class="clear-minutes-input" oninput="if(value>59)value=59"
             v-model="interval_set.minutes" @blur="inputOnBlur($event,'minute')" /></div>
@@ -28,7 +28,7 @@
         <div class="tube-first-circle"></div>
         <div class="tube-second-circle"></div>
         <div class="tube-third-circle"></div>
-        <div class="tube-fourth-circle"></div>
+        <div style="margin-left: 2px;"><img src="../../../images/setting/tubeDE.png"></div>
       </div>
     </div>
     <Interval v-if="interval_status" @intervalEnd="intervalEnd()" :interval="interval_set"></Interval>
@@ -162,14 +162,14 @@
           if (!objRegExp1.test(this.interval_set.hours)) {
             return this.interval_set.hours = '00';
           }
-          if (this.interval_set.hours == ''||this.interval_set.hours == 0) {
+          if (this.interval_set.hours == '' || this.interval_set.hours == 0) {
             return this.interval_set.hours = '00';
           }
           if (this.interval_set.hours < 10 && this.interval_set.hours > 0) {
             this.interval_set.hours = '0' + this.interval_set.hours;
           } else if (this.interval_set.hours >= 10 && this.interval_set.hours <= 23) {
             this.interval_set.hours = Number(this.interval_set.hours);
-          } 
+          }
         }
         if (type == "minute") {
           // if (value == '') {
@@ -178,7 +178,7 @@
           if (!objRegExp1.test(this.interval_set.minutes)) {
             return this.interval_set.minutes = '15';
           }
-          if (this.interval_set.minutes == ''||this.interval_set.minutes == 0) {
+          if (this.interval_set.minutes == '' || this.interval_set.minutes == 0) {
             return this.interval_set.minutes = '15';
           }
           if (this.interval_set.minutes < 10 && this.interval_set.minutes > 0) {
@@ -338,6 +338,7 @@
     border: solid 1px #688197;
     margin-bottom: 36px;
   }
+
   .tube-second-circle {
     width: 34px;
     height: 34px;
@@ -346,6 +347,7 @@
     border: solid 1px #688197;
     margin-bottom: 36px;
   }
+
   .tube-third-circle {
     width: 100%;
     height: 42px;
@@ -353,11 +355,11 @@
     border: solid 1px #688197;
     margin-bottom: 36px;
   }
+
   .tube-fourth-circle {
     width: 100%;
     height: 88px;
     border-radius: 18px;
     border: solid 1px #688197;
   }
-
 </style>

@@ -1,12 +1,13 @@
 <template>
 <div class="run-footer">
-    <button v-if="$store.state.user.group!=='user'" class="run-footer-preview-btn" @click="clickPreViewBtn">
+    <button :class="{'bg': isDisabledRunBtn}" :disabled="isDisabledRunBtn" v-if="$store.state.user.group!=='user'" class="run-footer-preview-btn" @click="clickPreViewBtn">
 
       <img src="../images/run/preview-btn.png" alt="">
     <span>{{$t("language.view")}}</span>
   </button>
     <button :class="{'bg': isDisabledRunBtn}" class="run-footer-run-btn" :disabled="isDisabledRunBtn" @click="clickRunBtn">
-      <img src="../images/run/runbtn.png" alt="">
+      <img src="../images/run/unRun.png" alt="" v-if="isDisabledRunBtn">
+      <img src="../images/run/runbtn.png" alt="" v-else>
     <span class="run-color">{{$t("language.run")}}</span>
     </button>
 
@@ -41,37 +42,23 @@ export default {
    async clickRunBtn(){
     if(this.doorState===0){
       this.isShowOpenDoorDialog = true
-      this.openDoorApi()
+      await openDoor()
+       this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
+       if(notify.Code===this.Notify.CODE_FZB_DOOR_OPEN){
+        this.isShowOpenDoorDialog=false
+        setTimeout(()=>{
+          this.$router.push ('/system/run/protocols/sampleSettings')}
+        ,400)
+       }
+      })
     }
     else {
-       this.$router.push (
-        {
-          path: '/system/run/protocols/sampleSettings',
-        }
-      )
+       this.$router.push ('/system/run/protocols/sampleSettings')
     }
     this. getProtocolDetail()
     },
     clickPreViewBtn(){
-      this.$router.push (
-        {
-          path: '/system/run/protocols/viewrunstep',
-        }
-      )
-    },
-    async openDoorApi(){
-      await openDoor()
-      this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
-       if(notify.Code===this.Notify.CODE_FZB_DOOR_OPEN){
-        this.isShowOpenDoorDialog=false
-        this.$store.commit('protocols/updatedDoorState',1)
-        this.$router.push (
-        {
-          path: '/system/run/protocols',
-        }
-      )
-       }
-      })
+      this.$router.push ('/system/run/protocols/viewrunstep')
     },
     async getProtocolDetail() {
       const {
@@ -88,15 +75,22 @@ export default {
 
   },
   destroyed() {
-    this.EventBus.unregisterAllCallbacks();
-    // this.EventBus.unregisterCallbacksForEvent(this.Notify.CODE_FZB_DOOR_CLOSE)
+    // this.EventBus.unregisterAllCallbacks();
+    this.EventBus.unregisterCallbacksForEvent(this.Notify.CODE_FZB_DOOR_CLOSE)
   }
 };
 </script>
 <style scoped>
 .bg {
-  background-color: gray !important;
+  background-color: #d2d2d2 !important;
   background-image: unset!important;
+  border: none !important;
+}
+.bg span {
+  color: #000 !important;
+}
+.bg img{
+  filter: grayscale(100%) !important;
 }
 .run-footer {
   display: flex;

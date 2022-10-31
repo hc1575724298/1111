@@ -29,7 +29,7 @@
               class="protocol-time"
               :class="{ check: isCheckId === item.id }"
             >
-              {{ item.updated_at }}
+              {{ item.updated_at | handleTime }}
             </div>
           </div>
         </div>
@@ -41,16 +41,21 @@
           <el-row style="margin-bottom: 28px;">
             <el-col :span="10">
               <span class="Infomation-title"
-                >{{$t('language.protocol_name')}}：</span
+                >{{ $t("language.protocol_name") }}：</span
               >
-              <span class="Infomation-info more">{{thisOneProtocal.name}}</span>
+              <span class="Infomation-info more">{{
+                thisOneProtocal && thisOneProtocal.name
+              }}</span>
             </el-col>
             <el-col :span="6">
               <span class="Infomation-title"
                 >{{ $t("language.pre_packaged") }}：</span
               >
               <span class="Infomation-info">{{
-                thisOneProtocal.pre_packaged ? "yes" : "no"
+                thisOneProtocal &&
+                  (thisOneProtocal.pre_packaged
+                    ? $t("language.yes")
+                    : $t("language.no"))
               }}</span>
             </el-col>
             <el-col :span="6">
@@ -58,23 +63,27 @@
                 >{{ $t("language.cartridge") }}：</span
               >
               <span class="Infomation-info"
-                >{{ thisOneProtocal.cartridge }} well</span
-              >
+                >{{
+                  (thisOneProtocal ? thisOneProtocal.cartridge : "") +"&ensp;"+
+                    $t("language.well_other")
+                }}
+              </span>
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 39px;">
             <el-col :span="10">
               <span class="Infomation-title">{{ $t("language.time") }}：</span>
-              <span class="Infomation-info">{{
-                thisOneProtocal.updated_at
+              <span class="Infomation-info" v-if="thisOneProtocal">{{
+                thisOneProtocal && thisOneProtocal.updated_at | handleTime
               }}</span>
+              <span class="Infomation-info" v-else> </span>
             </el-col>
             <el-col :span="8">
               <span class="Infomation-title"
                 >{{ $t("language.expected_run_time") }}：</span
               >
               <span class="Infomation-info">{{
-                thisOneProtocal.expected_run_time
+                thisOneProtocal && thisOneProtocal.expected_run_time
               }}</span>
             </el-col>
           </el-row>
@@ -82,7 +91,11 @@
         <div>
           <div class="right-title">{{ $t("language.remark") }}</div>
           <div class="remark">
-            {{ thisOneProtocal.remark && thisOneProtocal.remark }}
+            {{
+              thisOneProtocal &&
+                thisOneProtocal.remark &&
+                thisOneProtocal.remark
+            }}
           </div>
         </div>
         <div>
@@ -90,22 +103,31 @@
           <div class="labware-pic">
             <img
               src="@/images/run/8well.png"
-              v-if="thisOneProtocal.cartridge === 8"
+              v-if="thisOneProtocal && thisOneProtocal.cartridge === 8"
             />
             <img
               src="@/images/run/5well.png"
-              v-if="thisOneProtocal.cartridge === 5"
+              v-if="thisOneProtocal && thisOneProtocal.cartridge === 5"
             />
             <img
               src="@/images/run/7well.png"
-              v-if="thisOneProtocal.cartridge === 7"
+              v-if="thisOneProtocal && thisOneProtocal.cartridge === 7"
             />
+            <p>
+              {{
+                $t("language.cartridge_rack") +
+                  "：" +
+                  (thisOneProtocal ? thisOneProtocal.cartridge : "") +
+                  "&ensp;" +
+                  $t("language.well_other")
+              }}
+            </p>
           </div>
         </div>
       </div>
     </div>
     <!-- 底部按钮 -->
-    <RunFooter />
+    <RunFooter :isDisabledRunBtn ="isDisabledRunFooterBtn"/>
   </div>
 </template>
 
@@ -113,7 +135,6 @@
 import RunHead from "@/components/RunHead";
 import RunFooter from "@/components/RunFooter";
 import { getAllProtocol } from "@/api/run";
-import utilsFunction from "@/utils/function";
 export default {
   components: {
     RunHead,
@@ -123,7 +144,8 @@ export default {
     return {
       protocolsList: [],
       thisOneProtocal: {},
-      isCheckId: ""
+      isCheckId: "",
+      isDisabledRunFooterBtn: false
     };
   },
   methods: {
@@ -131,16 +153,6 @@ export default {
     async getAllProtocol() {
       const { data } = await getAllProtocol();
       this.protocolsList = data;
-    },
-    //处理时间
-    handleupdatedTime() {
-      this.protocolsList.forEach(
-        item =>
-          (item.updated_at = utilsFunction.changeSecondsToSecondTime(
-            item.updated_at,
-            "en-US"
-          ))
-      );
     },
     // 右侧数据
     chooseProtocal(id, name) {
@@ -156,9 +168,14 @@ export default {
   },
   async created() {
     await this.getAllProtocol();
-    this.handleupdatedTime();
-    this.isCheckId = this.farvoritesList && this.farvoritesList[0].id;
+    this.isCheckId =
+      this.farvoritesList &&
+      this.farvoritesList[0] &&
+      this.farvoritesList[0].id;
     this.chooseProtocal(this.isCheckId, "run");
+    if(!this.farvoritesList.length){
+       this.isDisabledRunFooterBtn = true;
+    }
   }
 };
 </script>
@@ -250,8 +267,10 @@ div {
 
 .labware-pic {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+
   width: 1141px;
   height: 454px;
   background-color: #ffffff;
@@ -260,6 +279,11 @@ div {
 .labware-pic > img {
   width: 465px;
   height: 150px;
+}
+.labware-pic p {
+  margin-top: 30px;
+  color: #333333;
+  font-size: 24px;
 }
 .Infomation-title {
   font-family: Arial;

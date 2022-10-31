@@ -3,18 +3,20 @@
     <div class="deal-password-info">
       <div class="password-info-title">
         <div class="password-info-title-text">
-           {{$t("language.change_password")}}
+          {{$t("language.change_password")}}
         </div>
       </div>
       <div class="password-rows">
         <div class="input-row">
-          <div class="row-text">{{$t("language.original_password")}}</div> <input type="password" v-model="passwordObject.original_password"/>
+          <div class="row-text">{{$t("language.original_password")}}</div> <input type="password"
+            v-model="passwordObject.original_password" />
         </div>
         <div class="input-row">
-          <div class="row-text">{{$t("language.new_password")}}</div> <input type="password" v-model="passwordObject.new_password"/>
+          <div class="row-text">{{$t("language.new_password")}}</div> <input type="password"
+            v-model="passwordObject.new_password" />
         </div>
         <div class="input-row">
-          <div class="row-text">{{$t("language.input_again")}}</div> <input type="password" v-model="password_again"/>
+          <div class="row-text">{{$t("language.input_again")}}</div> <input type="password" v-model="password_again" />
         </div>
       </div>
       <div class="buttons">
@@ -26,31 +28,55 @@
 </template>
 
 <script>
-  import {changePassword} from '../api/user.js'
-  
-  export default{
-    data(){
-      return{
-        passwordObject:{
-          original_password:null,
-          new_password:null,
+  import {
+    changePassword
+  } from '../api/user.js'
+
+  export default {
+    data() {
+      return {
+        passwordObject: {
+          original_password: null,
+          new_password: null,
         },
-        password_again:null
+        password_again: null
       }
     },
-    mounted(){
+    mounted() {
 
     },
-    methods:{
-      backToParent(){
+    methods: {
+      backToParent() {
         this.$emit('close');
       },
-      changePasswordOk(){
-        if(this.passwordObject.new_password!=this.password_again){
-          alert("前后输入不一致")
-        }else{
-          changePassword(this.passwordObject).then((res)=>{
-            alert("修改成功")
+      changePasswordOk() {
+        if (this.passwordObject.new_password != this.password_again) {
+          if (this.$store.getters.languageCode == 1) {
+            this.$message({
+              message: 'Entered password differ!',
+              type: 'error'
+            })
+          } else if (this.$store.getters.languageCode == 0) {
+            this.$message({
+              message: '两次密码输入不一致！',
+              type: 'error'
+            })
+          }
+        } else {
+          changePassword(this.passwordObject).then((res) => {
+            if (res.code == 0) {
+              if (this.$store.getters.languageCode == 1) {
+                this.$message({
+                  message: 'Change password successful!',
+                  type: 'success'
+                })
+              } else if (this.$store.getters.languageCode == 0) {
+                this.$message({
+                  message: '密码修改成功！',
+                  type: 'success'
+                })
+              }
+            }
             this.$emit('close')
           })
         }
@@ -62,6 +88,7 @@
 <style scoped="scoped">
   .deal-password-model {
     position: absolute;
+    z-index: 1000;
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5);
@@ -101,6 +128,7 @@
   }
 
   .input-row {
+    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
@@ -142,17 +170,26 @@
     height: 58px;
     margin-right: 30px;
     line-height: 58px;
-     flex-shrink: 0;
+    flex-shrink: 0;
     border-radius: 8px;
     text-align: center;
 
   }
-    .cancel{
-      border: 2px solid #93ADE2;
-      color: black;
-    }
-     .ok{
-      background-image: linear-gradient(to bottom, #588DCF,#4D7DB4);
-      color: white;
-     }
+
+  .cancel {
+    border: 2px solid #93ADE2;
+    color: black;
+  }
+
+  .ok {
+    background-image: linear-gradient(to bottom, #588DCF, #4D7DB4);
+    color: white;
+  }
+
+  .enter-password-differ {
+    margin-left: 280px;
+    margin-top: 15px;
+    font-size: 20px;
+    color: #ff0000;
+  }
 </style>

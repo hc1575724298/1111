@@ -44,12 +44,17 @@
         this.userinfo.user_id = this.userid;
         editName(this.userinfo).then((res) => {
           if (res.code == 0) {
-            this.$message({
-              message: '修改成功',
-              type: 'success'
-            });
-          } else {
-            alert("修改失敗")
+            if (this.$store.getters.languageCode == 1) {
+              this.$message({
+                message: 'Modified successful!',
+                type: 'success'
+              })
+            } else if (this.$store.getters.languageCode == 0) {
+              this.$message({
+                message: '修改成功！',
+                type: 'success'
+              })
+            }
           }
           this.$emit('closeModified')
         })
@@ -62,6 +67,7 @@
   .modified-username-model {
     position: absolute;
     display: flex;
+    z-index: 1000;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -117,9 +123,9 @@
     height: 64px;
     width: 649px;
     font-size: 20px;
-    float: right;
+    float: left;
     margin-top: 44px;
-    margin-right: 118px;
+    margin-left: 40px;
     color: rgba(249, 86, 86, 1);
   }
 
@@ -154,5 +160,4 @@
     float: right;
 
   }
-
 </style>

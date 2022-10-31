@@ -63,11 +63,12 @@
         if(this.isCloseDoor && this.doorState &&(this.initPathName=='run'|| this.initPathName=='list'|| this.initPathName=='viewrunstep')&&this.pathName != 'viewrunstep'){
           this.isShowOpenDoorDialog = true
            await closeDoor()
-           this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE, (notify) => {
-       if(notify.Code===0x000D){
+           this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE, async (notify) => {
+       if(notify.Code===this.Notify.CODE_FZB_DOOR_CLOSE){
         this.isShowOpenDoorDialog=false
-        this.$store.commit('protocols/updatedDoorState',0)
-        this.$router.push({name: this.path_router})
+        setTimeout(()=>{
+          this.$router.push({name: this.path_router})
+        },400)
        }
       })
         }else {

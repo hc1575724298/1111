@@ -34,6 +34,7 @@
   .interval-start-model {
     position: absolute;
     display: flex;
+    z-index: 1000;
     justify-content: center;
     align-items: center;
     width: 1682px;

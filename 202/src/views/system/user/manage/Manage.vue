@@ -5,15 +5,15 @@
       <div class="manage-list-text">{{$t("language.list")}}</div>
     </div>
     <el-table :data="user_lists" :default-sort="{prop: 'date', order: 'descending'}" class="user-all"
-      :header-cell-style="{ background: '#4C7CB2', color: '#ffffff'}" height="894">
+      :header-cell-style="{ background: '#4C7CB2', color: '#ffffff'}" max-height="894" >
       <el-table-column prop="sort_id" :label="$t('language.no')" width="130" align="center">
         <template slot-scope="scope">
           {{(scope.$index+1)<10 ? '0'+(scope.$index+1):scope.$index+1}}
         </template>
       </el-table-column>
-      <el-table-column prop="group" :label="$t('language.group')" width="270" align="center">
-      </el-table-column>
       <el-table-column prop="username" :label="$t('language.table_username')" width="380" align="center">
+      </el-table-column>
+      <el-table-column prop="group" :label="$t('language.group')" width="270" align="center">
       </el-table-column>
       <el-table-column prop="updated_at" width="320" align="center">
         <template slot="header">
@@ -46,7 +46,7 @@
     <DeleteUser :deleteUserName='delete_name' v-if="delete_code" @closeDelete="closeDelete()" :user_id='userId'>
     </DeleteUser>
     <ModifiedUserName v-if="modified_code" @closeModified="closeModifiedUser()" :userid='userId'></ModifiedUserName>
-    <ChangePassword v-if="show_change_password" @closeChangePassword="closeChangePassword()" :userPasswordId='userId'>
+    <ChangePassword v-if="show_change_password" @closeChangePassword="closeChangePassword()" :userPasswordId='userObject'>
     </ChangePassword>
     <AddUser v-if="show_add_code" @closeAddUser="show_add_code=0,getAll();" :add_type='selectedGroup'></AddUser>
   </div>
@@ -75,7 +75,7 @@
     data() {
       return {
         group: "",
-        userId: null,
+        userObject: null,
         selectedGroup: null,
         show_change_password: 0,
         modified_code: 0,
@@ -84,11 +84,7 @@
         add_option_code: 0,
         show_add_code: 0,
         sort_code: true,
-        user_lists: [{
-          group: "",
-          username: "",
-          updated_at: null,
-        }]
+        user_lists:null
       }
     },
     mounted() {
@@ -113,7 +109,7 @@
         this.modified_code = 1;
       },
       changeUsersPassword(index, row) {
-        this.userId = row.id;
+        this.userObject = row;
         this.show_change_password = 1;
       },
       deleteUser(index, row) {

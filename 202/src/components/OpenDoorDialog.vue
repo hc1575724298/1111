@@ -6,11 +6,12 @@
     width="600px"
     :show-close="false"
     :close-on-click-modal="false"
-    :visible.sync="isShowOpenDoorDialog"
+    :visible="isShowOpenDoorDialog"
+    @closed="closeAfter"
   >
     <img src="@/images/run/wait.png" alt="" />
       <span  v-if="doorState === 0">{{$t('language.wait_open_door')}}</span>
-      <span v-if="doorState === 1">{{$t('language.wait_close_door')}}</span>
+      <span v-else-if="doorState === 1">{{$t('language.wait_close_door')}}</span>
   </el-dialog>
 </template>
 
@@ -32,7 +33,11 @@ export default {
 
   created() {},
 
-  methods: {}
+  methods: {
+    closeAfter(){
+      this.$store.commit("protocols/updatedDoorState", this.doorState==1? 0 : 1);
+    }
+  }
 };
 </script>
 

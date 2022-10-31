@@ -1,35 +1,35 @@
 <template>
-<div>
-<SettingHead></SettingHead>
-<div class="setting-content">
-  <router-view></router-view>
-</div>
-</div>
+  <div>
+    <SettingHead></SettingHead>
+    <div class="setting-content">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <script>
   import SettingHead from "@/components/SettingHead"
-	export default {
-    components:{
+  export default {
+    components: {
       SettingHead
     },
-		data() {
-			return {
+    data() {
+      return {
 
-			}
-		},
-		mounted() {
+      }
+    },
+    mounted() {
 
-		},
-		methods: {
+    },
+    methods: {
 
-		}
-	}
+    }
+  }
 </script>
 
 <style scoped="scoped">
-.setting-content{
-  height: 1108px;
-  width: 100%;
-}
+  .setting-content {
+    height: 1108px;
+    width: 100%;
+  }
 </style>

@@ -1,15 +1,26 @@
 <template>
   <div class="head-right">
-    <div class="right-img"><img src="../images/system/light.png" class="light"></div>
+    <div class="right-img">
+      <img src="../images/system/light.png" class="light" @click="changeLight(1)" v-if="$store.getters.lightstatus==1">
+      <img src="../images/system/unlight.png" class="light" @click="changeLight(0)"
+        v-if="$store.getters.lightstatus==0">
+    </div>
     <div class="line"></div>
     <div class="system-time">{{$store.getters.systemTime}}</div>
   </div>
 </template>
 
 <script>
+  import moment from "moment"
   import {
     getSystemTime
   } from '@/api/setting.js'
+  import {
+    closeLight
+  } from '@/api/system.js'
+  import {
+    openLight
+  } from '@/api/system.js'
   export default {
     data() {
       return {
@@ -19,21 +30,30 @@
 
     },
     mounted() {
-      // this.timer = setInterval(() => {
-      //   this.getCurrentTime();
-      // }, 1000);
       this.EventBus.on(this.Notify.CODE_SYSTEM_TIME, (notify) => {
-         this.$store.commit('setSystemTime', notify.Data)
+        // if(this.$store.getters.languageCode == 1){
+        //  this.time=moment(notify.Data*1000).format('MM/DD/YYYY HH:mm:ss');
+        // }
+        this.time = moment(notify.Data * 1000).format('MM/DD/YYYY HH:mm:ss');
+        this.$store.commit('setSystemTime', this.time)
       })
     },
     methods: {
-      // getCurrentTime() {
-      //   getSystemTime().then((res) => {
-      //     this.time = res.data;
-      //     this.$store.commit('setSystemTime', this.time)
-      //   })
-
-      // },
+      changeLight(type) {
+        if (type == 1) {
+          closeLight().then((res) => {
+            if (res.code == 0) {
+              this.$store.commit('setLightstatus', 0)
+            }
+          })
+        } else if (type == 0) {
+          closeLight().then((res) => {
+            if (res.code == 0) {
+              this.$store.commit('setLightstatus', 1)
+            }
+          })
+        }
+      }
     }
   }
 </script>

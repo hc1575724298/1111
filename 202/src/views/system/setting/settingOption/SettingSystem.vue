@@ -15,7 +15,7 @@
 
 <script>
   import ChangeLanguage from '@/components/ChangeLanguage';
-   import ChangeTime from '@/components/ChangeTime';
+  import ChangeTime from '@/components/ChangeTime';
   export default {
     components: {
       ChangeLanguage,
@@ -32,6 +32,22 @@
             description: this.$t("language.time")
           }
         ]
+      }
+    },
+    watch: {
+      '$store.getters.languageCode': {
+        immediate: true,
+        handler(newval, oldval) {
+          this.siderbar_lists = [{
+              id: 1,
+              description: this.$t("language.lan")
+            },
+            {
+              id: 2,
+              description: this.$t("language.time")
+            }
+          ]
+        }
       }
     },
     mounted() {
@@ -79,10 +95,10 @@
 
   .setting-system-content {
     width: 1528px;
-     height: 100%;
+    height: 100%;
   }
 
-/*  .time-change {
+  /*  .time-change {
     width: 100%;
      height: 100%;
   } */

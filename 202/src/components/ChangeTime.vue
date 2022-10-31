@@ -13,32 +13,25 @@
 <script>
   import TimeInput from '@/components/TimeInput'
   export default {
-    components:{
+    components: {
       TimeInput
     },
     data() {
       return {
         current_time: null,
-        time_input_status :false
+        time_input_status: false
       }
     },
     mounted() {},
     methods: {
       changSysTime() {
         this.time_input_status = true;
-        // let system_time = 1663911627;
-        // updateSystem({
-        //   'system_time': system_time
-        // }).then((res) => {
-        //   this.$store.commit('setSystemTime',res.data)
-        // })
       }
     }
   }
 </script>
 
 <style scoped="scoped">
-
   .language-div {
     width: 1466px;
     height: 90px;
@@ -65,5 +58,4 @@
     float: right;
     align-items: center;
   }
-
 </style>

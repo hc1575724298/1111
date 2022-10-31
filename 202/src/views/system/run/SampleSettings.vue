@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <RunProgress :progressNum="1" />
+    <RunProgress :progressNum="1"/>
 
     <div class="container-bottom">
       <!-- 左侧 -->
       <div class="container-bottom-left">
-        <div class="title">{{ $t("language.parameters") }}</div>
+        <div class="title">{{$t("language.parameters")}}</div>
         <!-- <div style="padding: 30px 0 0 26px;">
           <div class="volume-title">{{$t("language.elution_volume")}}：</div>
           <div class="volume-num">20</div>
@@ -14,18 +14,14 @@
           <div class="volume-title">{{$t("language.reagent_volume")}}：</div>
           <div class="volume-num grayBg">20</div>
         </div> -->
-        <div style="padding: 30px 0 0 26px;">
-          <div class="volume-title">{{ $t("language.sample_volume") }}：</div>
-          <div class="volume-num grayBg">
-            {{ $store.state.protocols.protocalInfo.sample_volume }}
-          </div>
+        <div style="padding: 30px 26px 0;">
+          <div class="volume-title">{{$t("language.sample_volume")}}：</div>
+          <div class="volume-num grayBg">{{$store.state.protocols.protocalInfo.sample_volume}}</div>
         </div>
       </div>
       <!-- 右侧 -->
       <div class="container-bottom-right">
-        <div class="title">
-          {{ $t("language.worktable_select_sample_positions") }}
-        </div>
+        <div class="title">{{$t('language.worktable_select_sample_positions')}}</div>
         <TubeGroup
           :selectedList="selectedTubeList"
           :isDisabled="isDisabledList"
@@ -33,33 +29,17 @@
         <div class="bottom">
           <div class="bottom-left">
             <div>
-              {{ $t("language.selected") }}：<span>{{
-                selectedTubeList.length
-              }}</span>
+              {{$t('language.selected')}}：<span>{{ selectedTubeList.length }}</span>
             </div>
             <div class="select-all" @click="changeSelectAll">
-              <span style="margin-right: 16px;"
-                >{{ $t("language.select_all") }}:</span
-              >
-              <img
-                src="@/images/run/48全选开启.png"
-                alt=""
-                v-if="selectAll || selectedTubeList.length === 24"
-              />
+              <span style="margin-right: 16px;">{{$t('language.select_all')}}:</span>
+              <img src="@/images/run/48全选开启.png" alt="" v-if="selectAll||selectedTubeList.length===24" />
               <img src="@/images/run/47全选未开启.png" alt="" v-else />
             </div>
           </div>
           <div class="bottom-right">
-            <button class="sampleId" @click="clickSampleId">
-              {{ $t("language.sampleID") }}
-            </button>
-            <button
-              class="next"
-              @click="clickNext"
-              :disabled="isDisabledNextBtn"
-            >
-              {{ $t("language.next") }}
-            </button>
+            <button class="sampleId" @click="clickSampleId">{{$t('language.sampleID')}}</button>
+            <button class="next" @click="clickNext" :disabled="isDisabledNextBtn">{{$t('language.next')}}</button>
           </div>
         </div>
       </div>
@@ -67,9 +47,9 @@
 
     <!-- 弹框 -->
     <SampleIdDialog
-      :isShowSampleidDialog="isShowSampleidDialog"
-      @close="isShowSampleidDialog = false"
-    />
+    :isShowSampleidDialog="isShowSampleidDialog"
+    @close="isShowSampleidDialog=false"/>
+
   </div>
 </template>
 
@@ -77,14 +57,15 @@
 import TubeItem from "@/components/TubeItem";
 import TubeGroup from "@/components/TubeGroup.vue";
 import RunProgress from "@/components/RunProgress.vue";
-import SampleIdDialog from "./components/SampleIdDialog.vue";
-import { mapState as mapProtocolsState } from "vuex";
+import SampleIdDialog from './components/SampleIdDialog.vue';
+import { mapState as mapProtocolsState} from 'vuex'
 export default {
   components: {
     TubeItem,
     TubeGroup,
     RunProgress,
-    SampleIdDialog
+    SampleIdDialog,
+
   },
   props: {},
   data() {
@@ -93,11 +74,11 @@ export default {
       selectAll: false,
       selectedList: [],
       isShowSampleidDialog: false,
-      isDisabledNextBtn: false
+      isDisabledNextBtn: false,
+
     };
   },
   watch: {
-<<<<<<< HEAD
     selectedTubeList(v){
        const oldList = this.sampleIdDataStore.map(v => v.position)
        const newList = v.map(item=>{
@@ -115,27 +96,7 @@ export default {
     }
   },
   computed:{
-    ...mapProtocolsState('protocols',['selectedTubeList','sampleIdDataStore']),
-=======
-    selectedTubeList(v) {
-      const oldList = this.sampleIdDataStore.map(v => v.position);
-      const res = v.map(item => {
-        if (oldList.includes(item)) {
-          return this.sampleIdDataStore.find(v => v.position == item);
-        } else {
-          return {
-            position: item,
-            sample_id: "",
-            note: ""
-          };
-        }
-      });
-      this.$store.commit("protocols/updatedSampleIdInfo", res);
-    }
-  },
-  computed: {
-    ...mapProtocolsState("protocols", ["selectedTubeList", "sampleIdDataStore"])
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
+    ...mapProtocolsState('protocols',['selectedTubeList','sampleIdDataStore','languageCode']),
   },
   methods: {
     //全选按钮
@@ -168,44 +129,35 @@ export default {
           "23",
           "24"
         ];
+
       } else {
         this.selectedList = [];
       }
-      this.$store.commit("protocols/changeSelectedTubeList", this.selectedList);
+      this.$store.commit('protocols/changeSelectedTubeList',this.selectedList)
     },
     clickSampleId() {
-      this.isShowSampleidDialog = !this.isShowSampleidDialog;
+      this.isShowSampleidDialog =!this.isShowSampleidDialog;
     },
     clickNext() {
-      if (this.selectedTubeList.length > 0) {
+      if(this.selectedTubeList.length>0){
         this.$router.push({
-<<<<<<< HEAD
         name: 'loadlabware',
       })
       }else {
         this.isDisabledNextBtn = true
-        this.$message('Please select sample positions');
-=======
-          name: "loadlabware"
+        this.$message({
+          message:this.languageCode?'Please select sample positions':'请选择样本位置',
+          type: 'warning'
         });
-        this.$store.commit("protocols/changeGoBackName", "sampleSettings");
-      } else {
-        this.isDisabledNextBtn = true;
-        this.$message("Please select sample positions");
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
       }
-      this.isDisabledNextBtn = false;
-    }
+      this.isDisabledNextBtn = false
+    },
+
   },
-<<<<<<< HEAD
   created() {
   },
   mounted() {},
 
-=======
-  created() {},
-  mounted() {}
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
 };
 </script>
 <style scoped>
@@ -284,7 +236,8 @@ div {
   margin-top: 27px;
   font-size: 24px;
   color: #333;
-  width: 350px;
+  /* width: 350px; */
+  width: 100%;
   height: 66px;
   line-height: 66px;
   text-align: center;
@@ -295,4 +248,6 @@ div {
 .grayBg {
   background-color: #f3f3f3;
 }
+
 </style>
+

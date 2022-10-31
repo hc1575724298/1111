@@ -86,3 +86,25 @@ export function stopRun () {
     method: 'POST',
   })
 }
+
+// 跳过孵育
+export function skipIncubator (step_id) {
+  return request({
+    url: '/run/skip',
+    method: 'POST',
+    data: {
+      step_id
+    }
+  })
+}
+
+//导出运行记录为pdf
+export function getRunReport (run_ids) {
+  return request({
+    url: '/run/report-export',
+    method: 'POST',
+    data: {
+      run_ids
+    }
+  })
+}

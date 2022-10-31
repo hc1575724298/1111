@@ -56,7 +56,7 @@
       </div>
       <template v-if="info.magnet_on">
         <div>
-          <span>{{$t('language.magnet_type')}}:</span> <span>{{ info.magnet_type }}</span>
+          <span>{{$t('language.magnet_type')}}:</span> <span>{{ info.magnet_type==='tip'? $t('language.magnet_type_tip') :$t('language.magnet_type_sleeve')  }}</span>
         </div>
         <div>
           <span>{{$t('language.segments')}}(1-5):</span>  <span>{{ info.segments }}</span>
@@ -114,10 +114,10 @@
             <span>{{$t('language.mix_time')}}(1-99min):</span>  <span>{{ info.mix_time }}</span>
           </div>
           <div>
-            <span>{{$t('language.mix_height')}}(0-40%):</span>  <span>{{ info.mix_height }}</span>
+            <span>{{$t('language.mix_height')}}(0-50mm):</span>  <span>{{ info.mix_height }}</span>
           </div>
           <div>
-            <span> {{$t('language.mix_volume')}}(0-100%):</span> <span>{{ info.mix_volume }}</span>
+            <span> {{$t('language.mix_volume')}}(5-1000μl):</span> <span>{{ info.mix_volume }}</span>
           </div>
         </template>
       </template>
@@ -164,7 +164,7 @@ export default {
   font-size: 26px;
 }
 .info-view div:nth-child(9n) {
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 .info-view div span:nth-child(2) {
   margin-left: 20px;

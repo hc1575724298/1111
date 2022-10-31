@@ -4,20 +4,22 @@
       <div class="hepa-icon"></div>
       <div class="hepa-text">{{$t("language.hepa")}}</div>
     </div>
-    <div class="hepa-setting-div">
+    <div class="hepa-setting-div" @click="isHepa(1)">
       <div class="hepa-setting">{{$t("language.hepa_setting")}}</div>
       <div class="hepa-end-options">
         <img src="../../../images/system/drop_down.png" />
       </div>
       <div class="hepa-setting-options">{{hepa_filter}}</div>
     </div>
-    <div v-if="this.switch_code==3||this.switch_code==4" class="hepa-setting-div" style="margin-top: 22px;">
-       {{switch_run}}
+    <div v-if="this.switch_code==3||this.switch_code==4" class="hepa-setting-div" style="margin-top: 22px;"
+      @click="isHepa(2)">
+      {{switch_run}}
       <div class="hepa-end-options">
         <img src="../../../images/system/drop_down.png" />
       </div>
       <div class="hepa-setting-options">{{switch_off_after}}</div>
     </div>
+    <HepaSetting :optionType="optionType" :option="hepa_option" @close='closeHepa' v-if="hepa_status"></HepaSetting>
   </div>
 </template>
 
@@ -25,7 +27,11 @@
   import {
     searchSetting
   } from "@/api/setting"
+  import HepaSetting from '@/components/HepaSetting'
   export default {
+    components: {
+      HepaSetting
+    },
     data() {
       return {
         hepa_filter: null,
@@ -35,8 +41,11 @@
         switch_during: this.$t("language.switch_during"),
         switch_during_immediately: this.$t("language.switch_during_immediately"),
         switch_during_open: this.$t("language.switch_during_open"),
-        switch_run:this.$t("language.switch_run"),
-        switch_code:0,
+        switch_run: this.$t("language.switch_run"),
+        switch_code: 0,
+        optionType: null,
+        hepa_option: null,
+        hepa_status:false
       }
     },
     mounted() {
@@ -47,19 +56,33 @@
         searchSetting().then((res) => {
           this.hepa_filter = res.data.hepa_filter;
           if (this.hepa_filter == 1) {
+            this.switch_code = 0;
             this.hepa_filter = this.switch_on;
+            this.hepa_option = 2
           } else if (this.hepa_filter == 2) {
+            this.switch_code = 0;
             this.hepa_filter = this.switch_off;
+            this.hepa_option = 3
           } else if (this.hepa_filter == 3) {
-            this.switch_code=3;
+            this.switch_code = 3;
             this.hepa_filter = this.switch_during;
             this.switch_off_after = this.switch_during_immediately;
+            this.hepa_option = 1
           } else if (this.hepa_filter == 4) {
-            this.switch_code=4;
-             this.hepa_filter = this.switch_during;
+            this.switch_code = 4;
+            this.hepa_filter = this.switch_during;
             this.switch_off_after = this.switch_during_open;
+            this.hepa_option = 1
           }
         })
+      },
+      isHepa(type) {
+        this.hepa_status = true
+        this.optionType = type;
+      },
+      closeHepa(){
+        this.hepa_status = false
+        this.getHepaFilter()
       }
     }
   }
@@ -115,12 +138,13 @@
     float: right;
     color: #282828;
   }
-  .hepa-end-options{
+
+  .hepa-end-options {
     height: 100%;
     float: right;
     width: fit-content;
     display: flex;
     align-items: center;
     margin-right: 34px
-     }
+  }
 </style>

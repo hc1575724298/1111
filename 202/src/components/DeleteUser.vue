@@ -15,9 +15,11 @@
 </template>
 
 <script>
-  import {deleteSelectedUser} from '@/api/user'
+  import {
+    deleteSelectedUser
+  } from '@/api/user'
   export default {
-    props: ['deleteUserName','user_id'],
+    props: ['deleteUserName', 'user_id'],
     data() {
       return {
 
@@ -30,9 +32,24 @@
       backToManage() {
         this.$emit('closeDelete');
       },
-      deleteUserOk(){
-        deleteSelectedUser({'user_id':this.user_id}).then((res)=>{
-        this.$emit('closeDelete')
+      deleteUserOk() {
+        deleteSelectedUser({
+          'user_id': this.user_id
+        }).then((res) => {
+          if (res.code == 0) {
+            if (this.$store.getters.languageCode == 1) {
+              this.$message({
+                message: 'Delete successfully!',
+                type: 'success'
+              })
+            } else if (this.$store.getters.languageCode == 0) {
+              this.$message({
+                message: '删除成功！',
+                type: 'success'
+              })
+            }
+          }
+          this.$emit('closeDelete')
         })
       }
     }
@@ -43,6 +60,7 @@
   .delete-user-model {
     position: absolute;
     display: flex;
+    z-index: 1000;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -57,6 +75,7 @@
     height: 421px;
     background-color: rgba(255, 255, 255, 1);
     border-radius: 8px;
+    z-index: 1000;
   }
 
   .delete-description {

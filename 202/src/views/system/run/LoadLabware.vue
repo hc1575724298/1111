@@ -13,7 +13,7 @@
               <img src="@/images/run/图像 73.png" v-if="protocalInfo.cartridge===5">
             </div>
             <div class="info">
-              <div>{{$t("language.cartridge_rack")}}:<span>{{protocalInfo.cartridge}} well</span></div>
+              <div>{{$t("language.cartridge_rack")}}:<span>{{protocalInfo.cartridge + $t('language.well_other')}} </span></div>
               <div>{{$t("language.well")}}：1-{{protocalInfo.cartridge}}</div>
             </div>
           </div>
@@ -69,7 +69,7 @@
          <div class="container-bottom-right">
         <div class="title">
          <div>{{$t('language.place_the_labware_in_the_same_positions_with_list_and_click_Run_for_start')}}</div>
-         <div style="color: #666666;">{{$t('language.pre_packaged')}}：<span>{{$store.state.protocols.protocalInfo.pre_packaged ? 'Yes':'NO'}}</span></div>
+         <div style="color: #666666;">{{$t('language.pre_packaged')}}：<span>{{$store.state.protocols.protocalInfo.pre_packaged ? $t('language.yes'):$t('language.no')}}</span></div>
         </div>
         <TubeGroup
         :isDisabled="isDisabled"
@@ -83,7 +83,7 @@
           </div>
           <div class="bottom-right">
             <button class="sampleId" @click="clickBack">{{$t('language.back')}}</button>
-            <button class="next" @click="clickRun" :disabled="isDisabledRun">{{$t('language.run')}}</button>
+            <button class="next" @click="clickRun">{{$t('language.run')}}</button>
           </div>
         </div>
       </div>
@@ -96,7 +96,6 @@
 <script>
 import TubeGroup from "@/components/TubeGroup.vue";
 import RunProgress from "@/components/RunProgress.vue";
-import utilsFunction from "@/utils/function";
 import OpenDoorDialog from '@/components/OpenDoorDialog.vue'
 import { mapState as mapProtocolsState } from 'vuex'
 import {closeDoor} from "@/api/run";
@@ -108,7 +107,6 @@ export default {
   },
   data () {
     return {
-      isDisabledRun: false,
       isShowOpenDoorDialog: false,
       isDisabled: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10","11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"],
     }
@@ -124,38 +122,25 @@ export default {
       this.$router.push('sampleSettings')
     },
     async clickRun() {
-      this.$store.commit("protocols/updatedStartRunTime", utilsFunction.changeSecondsToSecondTime(Date.now()/1000, "en-US"));
+      this.$store.commit("protocols/updatedStartRunTime", Date.now()/1000);
       if(this.doorState){
         this.isShowOpenDoorDialog=true
-        await this.closeDoorApi()
-      }else{
-        this.$router.push({
-        name: 'runprogressthree'
-      })
-    }
-    },
-    async closeDoorApi(){
-       await closeDoor()
-    },
-
-  },
-  mounted(){
-    this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE,async (notify) => {
-       if(notify.Code===0x000D){
+        await closeDoor()
+        this.EventBus.on(this.Notify.CODE_FZB_DOOR_CLOSE,async (notify) => {
+       if(notify.Code===this.Notify.CODE_FZB_DOOR_CLOSE){
         this.isShowOpenDoorDialog=false
-        this.isDisabledRun =false
-        this.$store.commit('protocols/updatedDoorState',0)
-        this.$router.push({
-        name: 'runprogressthree',
-        query:{
-          runStartTime:utilsFunction.changeSecondsToSecondTime(
-           Date.now()/1000,
-            "en-US"
-          )
-        }
-      })
+        setTimeout(()=>{
+          this.$router.push('runprogressthree')
+        },400)
        }
     })
+       }else {
+        this.$router.push('runprogressthree')
+       }
+    },
+  },
+  mounted(){
+
   },
   destroyed() {
     // this.EventBus.unregisterAllCallbacks();
@@ -242,7 +227,9 @@ export default {
 }
  .item {
   display:flex;
-  width: 354px;
+  /* width: 354px;
+   */
+   width: 100%;
 	height: 110px;
 	background-color: #ffffff;
 	border-radius: 4px;

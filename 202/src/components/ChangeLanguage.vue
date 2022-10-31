@@ -13,7 +13,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -36,11 +35,11 @@
         if (code == 1) {
           this.setting[0].value = 1;
           this.$store.commit('setLanguageCode', 1);
-          this.$i18n.locale = 'en-US'
+           this.$i18n.locale = 'en-US'
         } else if (code == 0) {
           this.setting[0].value = 0;
           this.$store.commit('setLanguageCode', 0);
-          this.$i18n.locale = 'zh-CN'
+           this.$i18n.locale = 'zh-CN'
         }
         saveSetting({
           setting: JSON.stringify(this.setting)

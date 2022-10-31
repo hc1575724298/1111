@@ -1,6 +1,89 @@
 import enLocale from 'element-ui/lib/locale/lang/en';
 
 let translate = {
+  protocol: "Protocol", // 程序
+  parameters: "Parameters", //参数
+  run_started_at: "Run started at", //开始时间
+  sample_number: "Sample number", //样本数
+  skip_incubator: "Skip Incubator", //跳过孵育
+  abort: "Abort", // 终止
+  continue: "Continue", // 继续
+  mix_time: "Mix time", // 混合时间
+  mix_speed: "Mix speed", //混合速度
+  mix_height: "Mix height", //混合高度
+  mix_volume: "Mix volume", //混合体积
+  temperature_switch: "Temperature switch", //温度开关
+  heating_setup: "Heating setup", //升温设置
+  heating_sync: "Heating sync", //升温动作同步
+  preheating: "Preheating", //先升温后动作
+  elution_well_preheated_advance_seconds: "Elution well preheated advance seconds", //洗脱孔提前加热时间
+  cooling_setup: "Cooling setup", //降温设置
+  precooling: "Precooling", //先降温后动作
+  cooling_sync: "Cooling sync", //降温动作同步
+  magnet_type: "Magnet type", //吸磁方式
+  yes: "Yes", // 是
+  segments: "Segments", //段数
+  interval_stay_time: "Interval stay time", //每段停留时间
+  cycle: "Cycle", // 循环次数
+  beat_speed: "Beat speed", //吹打速度
+  drying_time: "Drying time", //晾干时间
+  expected_magnetic_total_time: "Expected magnetic total time", //预计吸磁总时间
+  every_magnetic_time: "Every magnetic time", //每段吸磁时间
+  liquid_level_magnetic_time: "Liquid level magnetic time", //液面吸磁时间
+  magnetic_speed: "Magnetic speed", //吸磁速度
+  lowest_magnetic_position: "Lowest magnetic position", //吸磁最低位
+  drying_position: "Drying position", //晾干位置
+  discard_beads: "Discard beads", //弃磁
+  remaining_time: "Remaining time", //剩余时间
+  status: "Status", //状态
+  running: "Running", // 运行中
+  finished_run: "Finished", // 运行结束
+  source_well: "Source well", //源孔位
+  destination_well: "Destination well", //目标孔位
+  mix_before_aspirating: "Mix before aspirating", //吸液前混合
+  aspirate_position: "Aspirate position", //吸液位置
+  dispense_position: "Dispense position", //注液位置
+  abort_protocol: "Do you want to abort the protocol?", //是否终止运行程序？
+  wait_open_door: "Open the door, please wait...", //开门中请等待……
+  wait_close_door: "Closing the door, please wait...", //关门中请等待……
+  close_the_door: 'Close the door', // 关门
+  open_the_door: 'Open the door', // 开门
+  step_run: "Step Run", //步骤运行
+  no_num: 'No.', //序号
+  open_door: "Open door", // 开门
+  close_door: "Close door", // 关门
+  view: 'View',
+  information: "Information",
+  protocol_name: "Protocol name", //程序名称
+  pre_packaged: "Pre-packaged", //预封装
+  cartridge: 'Cartridge', //试剂条
+  expected_run_time: 'Expected run time(hh:mm:ss)', //预计运行时间(hh:mm:ss)
+  remark: 'Remark(Optional)', //备注（可选）
+  name_A_Z: 'Name(A-Z)', //名称(A-Z)
+  name_Z_A: 'Name(Z-A)', //名称(Z-A)
+  user_Z_A: 'User(Z-A)', //用户(Z-A)
+  user_A_Z: 'User(A-Z)', //用户(A-Z)
+  sample_settings: 'Sample settings', //样本设置
+  load_labware: 'Load labware', //装载耗材
+  elution_volume: 'Elution volume(μl)', //洗脱体积(μl)
+  reagent_volume: 'Reagent volume(μl)', //试剂体积(μl)
+  sample_volume: 'Sample volume(μl)', //样本体积(μl)
+  worktable_select_sample_positions: 'Worktable：select sample positions', //选择样本位置
+  selected: 'Selected', //已选择
+  select_all: 'Select all', //全选
+  sampleID: 'SampleID', //样本ID
+  next: 'Next', //下一步
+  labware_list: 'Labware list', //耗材列表
+  cartridge_rack: 'Cartridge rack', //试剂条
+  well: 'Well', //孔位
+  reagent_tube: '1.5ml_Reagent tube', // 1.5ml试剂管
+  Elution_tube: '1.5ml_Elution tube', // 1.5ml洗脱管
+  sample_5ml_tube: '5ml_Sample tube', // 5ml样本管信息
+  magnetic_sleeve: 'Magnetic sleeve', //磁棒套
+  tip_1000ul: '1000ul_tip', //1000ul_吸头
+  place_the_labware_in_the_same_positions_with_list_and_click_Run_for_start: 'Place the labware in the same positions with list and click “Run ” for start.', //将耗材按照列表放在对应位置，并点击“运行”。
+  back: 'Back', //上一步
+  note_optional: "note(optional)", //说明（可选）
   username_placeholder: "Username",
   password_placeholder: "Password",
   password: "password",
@@ -12,12 +95,12 @@ let translate = {
   modified_user_warning_sentence: "Warning:The user's local folder name will also be modified after the user name has been modified!",
   cancel: 'Cancel',//取消
   ok: 'OK',// 确定
-  run: "Run",
-  protocols: "Protocols",
+  run: "Run",// 运行
+  protocols: "Protocols",// 程序
   clear: "Clear",
   setting: "Setting",
   loT: "loT",
-  favorites: "Farvorites",
+  favorites: "Favorites",//收藏
   list: "List",
   manage: "Manage",
   switch: "Switch user",
@@ -104,54 +187,18 @@ let translate = {
   side_mangnetic: "side_mangnetic",
   locker: "Locker&door aging",
   machine: "Machine aging",
-  cycles:"Cycles：",
-  labware:"Labware",
-  parameters:"Paramters",
-  calibration_temperture:"Calibration temperature",
-  transfer_liquid_calibration:"Transfer liquid calibration",
-  worktable_calibration:"Worktable calibration",
-  oem:"OEM",
+  cycles: "Cycles：",
+  labware: "Labware",
+  calibration_temperture: "Temperature calibration",
+  transfer_liquid_calibration: "Transfer liquid calibration",
+  worktable_calibration: "Worktable calibration",
+  oem: "OEM",
   pn_number: "PN number",
-  // hc
-  open_door: "Open door",
-  close_door: "Close door",
-  view: 'View',
-  information: "Information",
-  protocol_name: "Protocol name",
-  pre_packaged: "Pre-packaged",
-  cartridge: 'Cartridge',
-  expected_run_time: 'Expected run time(hh:mm:ss)',
-  remark: 'Remark(Optional)',
-  name_A_Z: 'Name(A-Z)',
-  name_Z_A: 'Name(Z-A)',
-  user_Z_A: 'User(Z-A)',
-  user_A_Z: 'User(A-Z)',
-  sample_settings: 'Sample settings',
-  load_labware: 'Load labware',
-  elution_volume: 'Elution volume(μl)',
-  reagent_volume: 'Reagent volume(μl)',
-  sample_volume: 'Sample volume(μl)',
-  worktable_select_sample_positions: 'Worktable：select sample positions',
-  selected: 'Selected',
-  select_all: 'Select all',
-  sampleID: 'SampleID',
-  next: 'Next',
-  labware_list: 'Labware list',
-  cartridge_rack: 'Cartridge rack',
-  well: 'Well',//孔位
-  reagent_tube: '1.5ml_Reagent tube',
-  Elution_tube: '1.5ml_Elution tube',
-  sample_5ml_tube: '5ml_Sample tube',
-  magnetic_sleeve: 'Magnetic sleeve',
-  tip_1000ul: '1000ul_tip',
-  place_the_labware_in_the_same_positions_with_list_and_click_Run_for_start: 'Place the labware in the same positions with list and click “Run ” for start.',
-  back: 'Back',
-  // hc end
   elution_tube: "Elution tube",
   reagent_tube: "Reagent tube",
   sample_tube: "Sample tube",
   brand: "Brand",
-  volume: "Volume", //体积
+  volume: "Volume",
   volume_ml: "Volume(ml)",
   ml: "(ml)",
   mm: "(mm)",
@@ -164,13 +211,13 @@ let translate = {
   inner_height_mm: "Inner height(mm)",
   caps_height_mm: "Cap height(mm)",
   total: "Total：",
-  selected: "Selected",
+  selected: "Selected：",
   save: "Save",
   factory: "Factory",
   new: "New",
   motion: "Montion",
   transfer: "Transfer",
-  magnet: "Magnet",//吸磁
+  magnet: "Magnet",
   horizontal_speed: "Horizontal speed(5-50)mm/s",
   magnetic_lifting_speed: "Magnetic rod lifting speed(5-50)mm/s",
   magnetic_sleeve_speed: "Magnetic rod sleeve lifting speed(5-50)mm/s",
@@ -189,7 +236,7 @@ let translate = {
   magnet_dispense_speed: "Dispense speed(10-100μl/s)",
   magnet_dispense_delay: "Dispense delay(0.1-10ms)",
   magnet_speed: "Magnetic speed(1-15mm/s)",
-  temperature: "Temperature",
+  temperature: "Temp.",
   start_cali: "Start Cali.",
   edit: "Edit",
   aspirate_ul: "Aspirate(μl)",
@@ -207,9 +254,9 @@ let translate = {
   cartridege_rack_sleeve: "Cartridge rack-Sleeve",
   cartridege_rack_rod: "Cartridege-rack-rod",
   cartridege_rack: "Cartridege rack",
-  well5: "Protocol 5 well",
-  well7: "Protocol 7 well",
-  well8: "Protocol 8 well",
+  well5: "Cartridge 5 well",
+  well7: "Cartridge 7 well",
+  well8: "Cartridge 8 well",
   reagent_worktable: "1.5ml_Reagent tube",
   elution_worktable: "1.5ml_Elution tube",
   allsheng: "allsheng",
@@ -222,8 +269,6 @@ let translate = {
   name_za: "Name(Z-A)",
   user_A_Z: "User(A-Z)",
   user_Z_A: "User(Z-A)",
-  cartridge: "Cartridge",
-  pre_packaged: "Pre-packaged",
   finished: "Finished time",
   load: "Load",
   unload: "Unload",
@@ -233,6 +278,8 @@ let translate = {
   compensation: "Compensation",
   return_calibration: "Return calibration",
   position: "Position:",
+  tip_position:"Tip Position:",
+  sleeve_position:"Sleeve Position:",
   Magnetic_rod_postion: "Magnetic Rod Postion:",
   sample_tube_10: "10ml_Sample tube",
   stop_cali: "Stop Cali.",
@@ -255,21 +302,35 @@ let translate = {
   basic: "Basic",
   step: "Step",
   basic_information: "Basic information",
-  cartridge: "Cartridge",
   cartridege_8: "Cartridge rack：8 well",
   cartridege_7: "Cartridge rack：7 well",
   cartridege_5: "Cartridge rack：5 well",
   reagent_volume: "Reagent volume(10-1500μl)",
-  sample_volume: "Sample volume(100-5000μl)",
+  sample_volume_5000: "Sample volume(100-5000μl)",
   sample_volume_10: "Sample volume(100-10000μl)",
   remark_optional: "Remark(Optional)：",
   elution_tube_big: "Elution Tube",
   reagent_tube_big: "Reagent Tube",
   sample_tube_big: "Sample Tube",
   step_list: "Step list",
+  magnetic: "Magnetic",//吸磁参数
+  unload_labware: "Unload labware",//卸耗材
+  well1a: "Well(1 / A)",
+  temp10100: "Temp.(10-110℃)",
+  time999: "Time(0-999min)",
+  add_step: "Add step",//添加步骤
+  bind: "Bind",//结合
+  wash: "Wash",//洗涤
+  elution: "Elution",//洗脱
+  discard: "Discard",//弃磁
+  pause: "Pause",//暂停
+  custom: "Custom",//自定义
+  incubator: "Incubator",//孵育
+  lysis: "Lysis",//裂解
   magnetic: "Magnetic",
   unload_labware: "Unload labware",
   well1a: "Well(1 / A)",
+  well1c: "Well(1 / C)",
   temp10100: "Temp.(10-110℃)",
   time999: "Time(0-999min)",
   add_step: "Add step",
@@ -281,55 +342,54 @@ let translate = {
   custom: "Custom",
   incubator: "Incubator",
   lysis: "Lysis",
-  // hc S
-  protocol: "Protocol", // 程序
-  parameters: "Parameters",//参数
-  run_started_at: "Run started at",//开始时间
-  sample_number: "Sample number",//样本数
-  skip_incubator: "Skip Incubator",//跳过孵育
-  abort: "Abort",// 终止
-  continue: "Continue",// 继续
-  mix_time: "Mix time",// 混合时间
-  mix_speed: "Mix speed",//混合速度
-  mix_height: "Mix height",//混合高度
-  mix_volume: "Mix volume",//混合体积
-  temperature_switch: "Temperature switch",//温度开关
-  heating_setup: "Heating setup",//升温设置
-  heating_sync: "Heating sync",//升温动作同步
-  preheating: "Preheating",//先升温后动作
-  elution_well_preheated_advance_seconds: "Elution well preheated advance seconds",//洗脱孔提前加热时间
-  cooling_setup: "Cooling setup",//降温设置
-  precooling: "Precooling",//先降温后动作
-  cooling_sync: "Cooling sync",//降温动作同步
-  magnet_type: "Magnet type",//吸磁方式
-  yes: "Yes",// 是
-  segments: "Segments",//段数
-  interval_stay_time: "Interval stay time",//每段停留时间
-  cycle: "Cycle", // 循环次数
-  beat_speed: "Beat speed",//吹打速度
-  drying_time: "Drying time",//晾干时间
-  expected_magnetic_total_time: "Expected magnetic total time",//预计吸磁总时间
-  every_magnetic_time: "Every magnetic time",//每段吸磁时间
-  liquid_level_magnetic_time: "Liquid level magnetic time",//液面吸磁时间
-  magnetic_speed: "Magnetic speed",//吸磁速度
-  lowest_magnetic_position: "Lowest magnetic position",//吸磁最低位
-  drying_position: "Drying position",//晾干位置
-  discard_beads: "Discard beads",//弃磁
-  remaining_time: "Remaining time",//剩余时间
-  status: "Status",//状态
-  running: "Running",// 运行中
-  finished: "Finished",// 运行结束
-  source_well: "Source well",//源孔位
-  destination_well: "Destination well",//目标孔位
-  mix_before_aspirating: "Mix before aspirating",//吸液前混合
-  aspirate_position: "Aspirate position",//吸液位置
-  dispense_position: "Dispense position",//注液位置
-  abort_protocol: "Do you want to abort the protocol?",//是否终止运行程序？
-  wait_open_door: "Open the door, please wait...",//开门中请等待……
-  wait_close_door: "Closing the door, please wait...",//关门中请等待……
-  close_the_door: 'Close the door',// 关门
-  open_the_door: 'Open the door',// 开门
-
+  source_well_1c: "Source well(1-C)",
+  destination_well_1c: "Destination well(1-C)",
+  volume_5: "Volume(5-1000μl)",
+  mix_before: "Mix before aspirating(0-10times)",
+  volume_5_2000: "Volume(5-2000μl)",
+  heating_step: "Heating setup",
+  hearting_sync: "Heating sync",
+  elution_warning: "Elution well preheated advance seconds(1-999s):",
+  cool_step: "Cooling setup",
+  cool_sync: "Cooling sync",
+  interval_stay: "Interval stay time(1-999s):",
+  cycle_1_99: "Cycle(1-99)",
+  dry_time: "Drying time(0-99min)",
+  expected_magnetic: "Expected magnetic total time(0-99999s)",
+  every_magnetic: "Every magnetic time(1-999s)",
+  liquid_level: "Liquid level magnetic time(0-999s)",
+  lowest_magnetic: "Lowest magnetic position(0-40%)",
+  dry_time: "Drying time(0-99min)",
+  dry_position: "Drying position(5-50mm)",
+  account_switch:"Do you want to account Switching ?",
+  enter_password_differ:"Entered password differ!",
+  delete_protocol:"Do you want to delete the selected protocol?",
+  users:'Users',
+  upgrade:"Upgrade",
+  error_log:"Error log",
+  sys_info:"System Information",
+  encryption:"Encryption",
+  one_click:"One-Click Restore",
+  software:"Software",
+  firmware:"Firmware",
+  ui:"UI",
+  mix_motion:"Mix motion",
+  temp_control: "Temp. Control",
+  Auxiliary: "Auxiliary",
+  insert_disk:"Insert U disk",
+  select_what:"Select what you want to upgrade",
+  restart_instrument:"Restart the instrument",
+  error_code:"Error code",
+  details:"Details",
+  instrument_info:"Instrument info.",
+  name:"Name",
+  type:"Type",
+  pn_code:"PN code",
+  total_info:"Total info.",
+  total_time: "Total time",
+  well_other: " Well",
+  magnet_type_sleeve: "Sleeve",
+  magnet_type_tip: "Tip",
 };
 
 const en = {

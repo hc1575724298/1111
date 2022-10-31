@@ -2,7 +2,7 @@
   <div class="view-container">
     <!-- 左侧 -->
     <div class="view-step">
-      <div class="step">Step</div>
+      <div class="step">{{$t('language.step')}}</div>
       <div class="every-step">
         <div
           @click="clickEveryStep(step.order)"
@@ -20,8 +20,8 @@
         </div>
       </div>
       <div class="btn">
-        <button @click="clickRun" class="buleBtn">Run</button>
-        <button @click="clickStepRun" class="whiteBtn">Step Run</button>
+        <button @click="clickRun" class="buleBtn">{{$t('language.run')}}</button>
+        <button @click="clickStepRun" class="whiteBtn">{{$t('language.step_run')}}</button>
       </div>
     </div>
     <!-- 右侧 -->
@@ -32,7 +32,7 @@
             :class="['whiteBtn', currentBtn === 1 ? 'buleBtn' : '']"
             @click="clickBasicBtn"
           >
-            Basic
+           {{$t('language.basic')}}
           </button>
           <button
             v-if="
@@ -45,7 +45,7 @@
             :class="['whiteBtn', currentBtn === 0 ? 'buleBtn' : '']"
             @click="clickMageticBtn"
           >
-            Magetic
+          {{$t('language.magnetic')}}
           </button>
         </div>
         <div class="view-info-bottom">
@@ -69,7 +69,7 @@
             v-else-if="activeStepInfo.type === 'unload_labware'"
             class="info-item"
           >
-            Step: <span>{{ activeStepInfo.step_name }}</span>
+          {{$t('language.step')}}: <span>{{ activeStepInfo.step_name }}</span>
           </div>
           <LysisInfo :info="activeStepInfo" :isBasic="currentBtn" v-else />
         </div>
@@ -219,10 +219,11 @@ export default {
   },
   mounted () {
     this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
-       if(notify.Code===0x000C){
+       if(notify.Code===this.Notify.CODE_FZB_DOOR_OPEN){
         this.isShowOpenDoorDialog=false
-        this.$store.commit('protocols/updatedDoorState',1)
-        this.$router.push("/system/run/protocols/sampleSettings");
+        setTimeout(()=>{
+          this.$router.push("/system/run/protocols/sampleSettings");
+        },400)
        }
       })
   },

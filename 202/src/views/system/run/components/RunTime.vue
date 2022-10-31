@@ -22,7 +22,7 @@
         }"></div>
       </div>
     </div>
-    <div class="status">{{$t('language.status')}}：<span>{{status ? $t('language.finished') : $t('language.running')}}</span></div>
+    <div class="status">{{$t('language.status')}}：<span>{{status ? $t('language.finished_run') : $t('language.running')}}</span></div>
   </div>
 </template>
 

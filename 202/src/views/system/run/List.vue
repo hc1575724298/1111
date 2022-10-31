@@ -19,7 +19,7 @@
     >
       <el-table-column
         type="index"
-        :label="$t('language.no')"
+        :label="$t('language.no_num')"
         width="130"
         align="center"
       >
@@ -140,7 +140,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <RunFooter />
+    <RunFooter :isDisabledRunBtn ="isDisabledRunFooterBtn"/>
   </div>
 </template>
 
@@ -148,7 +148,6 @@
 import RunHead from "@/components/RunHead";
 import RunFooter from "@/components/RunFooter";
 import { getAllProtocol ,sortProtocolsList} from "@/api/run";
-import utilsFunction from "@/utils/function";
 export default {
   components: {
     RunHead,
@@ -159,7 +158,8 @@ export default {
       protocolsList: [],
       sort_time: 1, // 1:正序  2：倒叙  3：未选中
       sort_name: 3,
-      sort_user: 3
+      sort_user: 3,
+      isDisabledRunFooterBtn: false
     };
   },
   watch: {
@@ -185,21 +185,30 @@ export default {
       this.$store.commit("protocols/updatedInfo", [row, "list"]);
     },
     handleCartridge(row) {
-      return row.cartridge + " well";
+      return row.cartridge + this.$t('language.well_other');
     },
     handlePrePackaged(row) {
-      return row.pre_packaged ? "yes" : "no";
+      return row.pre_packaged ? this.$t('language.yes') : this.$t('language.no');
     },
     handleupdatedTime(row) {
-      return utilsFunction.changeSecondsToSecondTime(
+      if(this.$store.state.languageCode) {
+        return this.pub.changeSecondsToSecondTime(
             row.updated_at,
             "en-US"
           )
+      }else{
+        return this.pub.changeSecondsToSecondTime(
+            row.updated_at,
+            "zh-CN"
+          )
+      }
+
+
     },
     //时间反转
     changeSort(val) {
       if (val === "time") {
-        const res=this.changeSortStatus(this.sort_name,'updated_at')
+        const res=this.changeSortStatus(this.sort_time,'updated_at')
         this.sort_time = res
         this.sort_name =this.sort_user=3;
       } else if (val === "name") {
@@ -232,6 +241,9 @@ export default {
   async created() {
     await this.getAllProtocol();
     this.clickRow(this.protocolsList[0]);
+    if(!this.protocolsList.length){
+       this.isDisabledRunFooterBtn = true;
+    }
   },
   filters: {
     handleNo(index) {

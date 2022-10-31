@@ -43,7 +43,9 @@
   } from '@/api/setting.js'
   export default {
     components: {
-      CleaningNeedles,ORingsMaintenance,TightnessTest
+      CleaningNeedles,
+      ORingsMaintenance,
+      TightnessTest
     },
     data() {
       return {
@@ -76,7 +78,7 @@
             this.executed_time = res.data.cleaning_piercing_needles_time;
           } else if (this.$store.getters.settingTools == 2) {
             this.executed_time = res.data.tightness_time;
-          }else if (this.$store.getters.settingTools == 3) {
+          } else if (this.$store.getters.settingTools == 3) {
             this.executed_time = res.data.o_rings_maintenance_time;
           }
         })
@@ -136,27 +138,32 @@
     font-size: 26px;
     color: #333333;
   }
-  .setting-tools-button{
+
+  .setting-tools-button {
     float: left;
     width: 100%;
     height: 64px;
   }
-  .tools-button{
+
+  .tools-button {
     margin-top: 27px;
     height: 64px;
     width: 193px;
-    font-size:  24px;
+    font-size: 24px;
     line-height: 64px;
     text-align: center;
   }
-  .reset-icon{
+
+  .reset-icon {
     float: right;
     color: #333333;
     margin-right: 29px;
     border-radius: 6px;
     border: solid 1px #2d60c7;
   }
-  .move-icon,.test-icon{
+
+  .move-icon,
+  .test-icon {
     float: right;
     border-radius: 6px;
     color: white;

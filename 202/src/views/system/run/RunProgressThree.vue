@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <RunProgress :progressNum="3" />
-      <div class="report" v-if="isShowReportbtn">
+      <div class="report" v-if="isShowReportbtn" @click="reportExport">
         <img src="@/images/run/49运行结束导出报告.png" alt="" />
       </div>
     </div>
@@ -32,7 +32,7 @@
         <!-- time -->
         <div v-if="isShowtime">
           <div class="protocol">
-            {{$t('language.run_started_at')}}：<span>{{ startRunTime }}</span>
+            {{$t('language.run_started_at')}}：<span>{{ startRunTime | handleTime}}</span>
           </div>
           <div class="protocol">
             {{$t('language.sample_number')}}：<span>{{
@@ -105,18 +105,18 @@
             <img
               src="@/images/run/42进行中.png"
               alt=""
-              v-else-if="item.order == activeOrder&&stepIdArr.includes(item.id)"
+              v-else-if="item.order === activeOrder&&stepIdArr.includes(item.id)"
             />
             <img v-else-if="!(stepIdArr.includes(item.id))" src="@/images/run/skip-step.png" alt="">
-            <img src="@/images/run/43等待.png" alt="" v-else-if="item.order > activeOrder&&stepIdArr.includes(item.id)" />
+            <img src="@/images/run/43等待.png" alt="" v-else-if="activeOrder===''||(item.order > activeOrder&&stepIdArr.includes(item.id))" />
           </div>
         </div>
         <div class="footer-btn">
           <button v-if="isShowReportbtn" class="pause" @click="clickRunBtn">{{$t('language.run')}}</button>
          <template v-else>
-          <button class="skip-incubator" @click="clickSkipIncubatorBtn">
+          <el-button :disabled="isDisabledSkipIncubator" class="skip-incubator" @click.native="clickSkipIncubatorBtn">
             {{$t('language.skip_incubator')}}
-          </button>
+          </el-button>
           <button class="abort" @click="clickAbortBtn">{{$t('language.abort')}}</button>
           <button class="pause" @click="clickPauseBtn">{{isPause ? $t('language.continue') : $t('language.pause')}} </button>
          </template>
@@ -143,9 +143,10 @@ import {
   getProtocolDetail,
   setRun,
   pauseRun,
-  stopRun,
+  getRunReport,
   goOnRun,
   openDoor,
+  skipIncubator,
   closeDoor
 } from "@/api/run";
 import { mapState as mapProtocolsState } from "vuex";
@@ -184,12 +185,15 @@ export default {
       activeOrder: "", //正在运行的步骤
       remainingTime: "", // 运行剩余时间
       progress: 0, //进度
-      activeStepInfo: {}, // 当前运行步骤的信息
+      activeStepInfo:{}, // 当前运行步骤的信息
       tips: "" ,// 暂停弹框 tips
       stepIdArr:[],// 运行步骤id数组
       isPause: false, // 是否暂停
       fromPath:'' ,
       temperature: [] ,// 运行的实时温度
+      activeIncubatorId: "", // 当前孵育id
+      isDisabledSkipIncubator: true, //是否禁用跳过孵育按钮
+      reportId: "", // 报告导出需要的id
     };
   },
 
@@ -198,7 +202,7 @@ export default {
     this.getProtocolDetail();
     this.setRunApi();
     this.stepIdArr=this.run_step_ids.split(',').map(item=>Number(item));
-    this.stepIdArr.push(0)
+    // this.stepIdArr.push(0) 手动添加手动添加卸载耗材的id
   },
   computed: {
     ...mapProtocolsState("protocols", [
@@ -220,7 +224,7 @@ export default {
         data: { steps }
       } = await getProtocolDetail(this.protocalInfo.id);
       this.stepList = steps;
-
+      this.activeStepInfo = this.stepList[0]
       // 手动添加卸载耗材步骤
       // this.stepList.push({
       //   order: steps.length,
@@ -250,10 +254,8 @@ export default {
       this.isShowList = true;
       this.isShowtime = false;
     },
-    async clickAbortBtn() {
-      console.log("点击Abort");
+    clickAbortBtn() {
       this.isShowAbortDialog = true;
-      // await stopRun();
     },
     async clickPauseBtn() {
       if(this.isPause) {
@@ -264,8 +266,10 @@ export default {
         this.isPause = true
       }
     },
-    clickSkipIncubatorBtn() {
-      console.log("clickSkipIncubatorBtn");
+    async clickSkipIncubatorBtn() {
+      console.log("clickSkipIncubatorBtn"+this.activeIncubatorId);
+      await skipIncubator(this.activeIncubatorId)
+      this.isDisabledSkipIncubator = true
     },
     async clickRunBtn(){
       this.isShowOpenDoorDialog=true
@@ -279,6 +283,10 @@ export default {
         this.$router.push("/system/run/protocols/sampleSettings");
        }
       })
+    },
+    //导出运行报告
+    async reportExport(){
+      await getRunReport(this.reportId.toString())
     }
   },
   mounted() {
@@ -292,6 +300,7 @@ export default {
         }
         this.isShowReportbtn = true;
         this.activeOrder = this.stepList.length;
+        this.reportId = notify.Data
         // 手动添加卸载耗材步骤需加
         // this.activeStepInfo = this.stepList[this.activeOrder - 1];
       }
@@ -301,6 +310,12 @@ export default {
       if (notify.Code === this.Notify.CODE_RUN_COMMAND_START) {
         this.activeOrder = JSON.parse(notify.Data)[1];
         this.activeStepInfo = this.stepList[this.activeOrder];
+        if(this.activeStepInfo.type == 'incubator') {
+           this.activeIncubatorId = this.activeStepInfo.id
+           this.isDisabledSkipIncubator = false
+        }else {
+          this.isDisabledSkipIncubator = true
+        }
       }
     });
     //步骤暂停通知
@@ -465,13 +480,17 @@ div {
 .skip-incubator {
   width: 190px;
   height: 64px;
-  line-height: 64px;
+  line-height: 40px;
   text-align: center;
   background-image: linear-gradient(0deg, #ffffff 0%, #f2f7ff 100%);
   border-radius: 6px;
   border: solid 1px #5a89c7;
   margin-right: 26px;
   color: #666666;
+}
+.skip-incubator >>>span {
+  text-align: center;
+  font-size: 24px;
 }
 .abort {
   width: 190px;

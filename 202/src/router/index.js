@@ -69,26 +69,46 @@ export default new VueRouter({
       component: () => import('@/views/system/user/manage/Manage'),
     }]
   }, {
+    path: '/system/protocols/protocolsManage',
+    name: 'ProtocolsManage',
+    component: () => import('@/views/system/protocols/ProtocolsManage'),
+  },  {
+    path: '/system/protocols/AddProtocol',
+    name: 'AddProtocol',
+    component: () => import('@/views/system/protocols/AddProtocol'),
+  },{
     path: '/system/setting/settingShow',
     name: 'settingShow',
     component: () => import('@/views/system/setting/SettingShow'),
-    // redirect: "/system/setting/settingShow/settingSystem",
+    // redirect: "/system/setting/settingShow/instrument",
     children: [{
       path: 'settingSystem',
       name: 'settingSystem',
       component: () => import('@/views/system/setting/settingOption/SettingSystem'),
-    },{
+    }, {
       path: 'instrument',
       name: 'instrument',
       component: () => import('@/views/system/setting/settingOption/SettingInstrument'),
-    },{
+    }, {
       path: 'settingTools',
       name: 'settingTools',
       component: () => import('@/views/system/setting/settingOption/SettingTools'),
-    },{
+    }, {
       path: 'maintenance',
       name: 'maintenance',
       component: () => import('@/views/system/setting/settingOption/SettingMaintence'),
+    }, {
+      path: 'report',
+      name: 'report',
+      component: () => import('@/views/system/setting/settingOption/SettingReport'),
+    },  {
+      path: 'advanced',
+      name: 'advanced',
+      component: () => import('@/views/system/setting/settingOption/SettingAdvanced'),
+    }, {
+      path: 'help',
+      name: 'help',
+      component: () => import('@/views/system/setting/settingOption/SettingHelp'),
     }]
     }, {
       path: '/system/run/protocols',

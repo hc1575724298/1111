@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="login-back">
+  <div @click='remember_status=false'>
+    <div class="login-back" :style="{background: 'url('+$store.getters.backSrc+') no-repeat'}">
       <!-- 登录框 -->
     </div>
     <div class="login-page">
@@ -12,7 +12,7 @@
         <!-- 账户 -->
         <div class="info-username">
           <input :placeholder="$t('language.username_placeholder')" v-model="user.username" />
-          <div class="remembered" @click="getRemember()"><img src="../../images/login/arrow_down.png"
+          <div class="remembered" @click.stop="getRemember()"><img src="../../images/login/arrow_down.png"
               class="icon-arrow-down" /></div>
         </div>
         <div class="remember_lists" v-if="remember_status">
@@ -30,8 +30,7 @@
         <!-- 是否记住密码 -->
         <div class="is-remember">
           <div class="check" @click="rememberPassword">
-            <img src="../../images/login/remember_selected.png"
-              v-if="is_check==1" class="icon-check">
+            <img src="../../images/login/remember_selected.png" v-if="is_check==1" class="icon-check">
           </div>
           &nbsp;&nbsp;{{$t("language.remember")}}
         </div>
@@ -56,10 +55,12 @@
           password: "",
           remember: 0
         },
-        remember: [{}],
+        remember:null,
         is_check: false,
         remember_status: false,
       }
+    },
+    mounted() {
     },
     methods: {
       rememberPassword() {
@@ -104,7 +105,7 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    background-image: url("../../images/index/start_background.png");
+    background-size: 100% 100% !important;
   }
 
   .login-page {
@@ -211,9 +212,9 @@
     justify-content: center;
     height: 100%;
     width: 50px;
-    border: 0;
     border-radius: 3px;
     background-color: white;
+    border: solid 1px #c2cbda;
   }
 
   .icon-check {
@@ -230,7 +231,7 @@
     border-bottom-right-radius: 4px;
     border: solid 1px #c2cbda;
     box-sizing: border-box;
-    overflow-y: scroll;
+    overflow-y: auto;
     scroll-button: no-button;
   }
 

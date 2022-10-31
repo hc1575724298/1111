@@ -3,76 +3,129 @@
     <div class="aging-div" v-for="(item,index) in agings" :key="index">
       <div class="aging-optional-div">
         <div class="aging-option">
-          <div class="aging-option-icon" @click="selectAging(item)"><img src="../images/setting/list_selected.png"
-              v-if="item.icon_status" /></div>
-          <div style="text-indent: 16px;">{{item.description}}</div>
+          <div class="aging-option-icon" @click="selectAging(item)" v-if="item.id!=9"><img
+              src="../images/setting/list_selected.png" v-if="item.icon_status" /></div>
+          <div :class="{'text-nine':item.id==9}" class="aging-text-div">{{item.description}}
+          </div>
         </div>
-        <div class="cycles-div" v-if="item.id!=9">
+        <div class="cycles-div">
           <div class="cycles-text">{{$t("language.cycles")}}</div>
-          <input type="number" class="cycle-number" />
+          <input type="number" class="cycle-number" v-model="item.value" />
         </div>
-        <div :class="{'test-aging':item.id!=9,'test-all':item.id==9}">
-          <div class="text-button">
+        <div class="test-aging">
+          <div class="text-button" @click="testAging(item)">
             {{$t("language.test")}}
           </div>
         </div>
       </div>
-      <div></div>
-      <div></div>
     </div>
   </div>
 </template>
 
 <script>
+  import {
+    TestAging
+  } from '@/api/setting.js'
   export default {
     data() {
       return {
         agings: [{
           id: 1,
           description: this.$t("language.yaxis"),
-          icon_status: false
+          icon_status: true,
+          value: null,
+          type: "y"
         }, {
           id: 2,
           description: this.$t("language.zaxis"),
-          icon_status: false
+          icon_status: true,
+          value: null,
+          type: "z"
         }, {
           id: 3,
-          description: this.$t("language.load"),
-          icon_status: false
+          description: this.$t("language.load_unload"),
+          icon_status: true,
+          value: null,
+          type: "load_upload_tip"
         }, {
           id: 4,
           description: this.$t("language.lid"),
-          icon_status: false
+          icon_status: true,
+          value: null,
+          type: "load_upload_lid"
         }, {
           id: 5,
           description: this.$t("language.pipettor_aging"),
-          icon_status: false
+          icon_status: true,
+          value: null,
+          type: "pipettor"
         }, {
           id: 6,
           description: this.$t("language.mangnetic_aging"),
-          icon_status: false
+          icon_status: true,
+          value: null,
+          type: "magnetic_rod"
         }, {
           id: 7,
           description: this.$t("language.side_mangnetic"),
-          icon_status: false
+          icon_status: true,
+          value: null,
+          type: "side_magnetic"
         }, {
           id: 8,
           description: this.$t("language.locker"),
-          icon_status: false
+          icon_status: true,
+          value: null,
+          type: "locker_door"
         }, {
           id: 9,
           description: this.$t("language.machine"),
-          icon_status: false
-        }]
+          icon_status: false,
+          value: null,
+          type: "machine"
+        }],
+        selected_Aging: [],
       }
     },
-    mounted() {
-
-    },
+    mounted() {},
     methods: {
       selectAging(item) {
         item.icon_status = !item.icon_status;
+        var selected_lists=[];
+        if(item.icon_status==true){
+          this.selected_Aging.push(item.type)
+        }else if(item.icon_status==false){
+          for(var i=0;i<this.selected_Aging.length;i++){
+            if(this.selected_Aging[i]!=item.type){
+              selected_lists.push(this.selected_Aging[i])
+            }
+          }
+           this.selected_Aging = JSON.parse(JSON.stringify(selected_lists))
+        }
+      },
+      testAging(item) {
+        if(item.id!=9){
+          var test=[]
+          test.push(item.type)
+          TestAging({type:JSON.stringify(test),cycles:item.value}).then((res)=>{
+            if(res.code==0){
+              this.$message({
+                message:'操作成功',
+                type:'success'
+              })
+            }
+          })
+      }else if(item.id==9){
+        TestAging({'type':JSON.stringify(this.selected_Aging),cycles:item.value}).then((res)=>{
+           if(res.code==0){
+             this.$message({
+               message:'操作成功',
+               type:'success'
+             })
+           }
+        })
       }
+    }
     }
   }
 </script>
@@ -145,6 +198,7 @@
     background-color: #ffffff;
     border-radius: 4px;
     border: solid 1px #c2cbda;
+    text-indent: 16px;
   }
 
   .test-aging {
@@ -173,5 +227,13 @@
     height: 56px;
     display: flex;
     justify-content: center;
+  }
+
+  .aging-text-div {
+    text-indent: 16px;
+  }
+
+  .text-nine {
+    text-indent: 0;
   }
 </style>

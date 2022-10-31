@@ -1,5 +1,5 @@
 <template>
- <div>lot界面</div>
+  <div>lot界面</div>
 </template>
 
 <script>

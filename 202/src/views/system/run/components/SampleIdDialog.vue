@@ -1,19 +1,14 @@
 <template>
-  <el-dialog
-<<<<<<< HEAD
+    <el-dialog
     :close-on-click-modal="false"
-=======
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
     class="dialog"
-    title="SampleID"
+    :title="$t('language.sampleID')"
     width="1120px"
     :show-close="false"
     :visible="isShowSampleidDialog"
     @close="handleClose"
-<<<<<<< HEAD
     append-to-body
-=======
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
+    top="5vh"
   >
     <el-table
       class="el-table"
@@ -30,35 +25,34 @@
     >
       <el-table-column
         property="position"
-        label="Position"
+        :label="$t('language.position')"
         width="245"
       ></el-table-column>
-      <el-table-column property="sample_id" label="SampleID" width="350">
+      <el-table-column property="sample_id" :label="$t('language.sampleID')" width="350">
         <template slot-scope="scope">
-          <el-input class="el-input" v-model="scope.row.sample_id"></el-input>
+          <el-input class="el-input" v-model="scope.row.sample_id" @blur="onBlur($event)" @focus="isShowKeyboard=true"></el-input>
         </template>
       </el-table-column>
-      <el-table-column property="note" label="note(optional)">
+      <el-table-column property="note" :label="$t('language.note_optional')">
         <template slot-scope="scope">
-          <el-input class="el-input" v-model="scope.row.note"></el-input>
+          <el-input class="el-input" v-model="scope.row.note" @blur="onBlur($event)"></el-input>
         </template>
       </el-table-column>
     </el-table>
-
     <!-- 按钮 -->
     <span slot="footer" class="dialog-footer">
-<<<<<<< HEAD
       <el-button @click="handleClose" class="cancel">{{$t('language.cancel')}}</el-button>
       <el-button class="ok" @click="clickOk">{{$t('language.ok')}}</el-button>
-=======
-      <el-button @click="handleClose" class="cancel">Cancel</el-button>
-      <el-button class="ok" @click="clickOk">OK</el-button>
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
     </span>
+
+    <div class="keyboard-mask" v-if="isShowKeyboard">
+      <SimpleKeyboard @onChange="onChange" @onKeyPress="onKeyPress" :input="input" ref="keyboard"/>
+    </div>
   </el-dialog>
 </template>
 
 <script>
+import SimpleKeyboard from '@/components/SimpleKeyboard'
 import {
   mapState as mapProtocolsState,
   mapGetters as mapProtocolsGetters
@@ -70,7 +64,6 @@ export default {
       default: false
     }
   },
-
   computed: {
     ...mapProtocolsState("protocols", [
       "selectedTubeList",
@@ -81,24 +74,19 @@ export default {
   },
   data() {
     return {
-<<<<<<< HEAD
-      sampleIdData: []
-=======
       sampleIdData: [],
-      showCount: 0
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
+      input: '',
+      event: null,
+      isShowKeyboard: false
     };
   },
-
+  components:{
+    SimpleKeyboard
+  },
   watch: {
     isShowSampleidDialog(n) {
       if (!n) return;
-<<<<<<< HEAD
       this.sampleIdData = this.selectedTubeList.map((item, index) => ({
-=======
-      console.log("sampleIdDataStore", this.sampleIdDataStore);
-      const data = this.selectedTubeList.map((item, index) => ({
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
         position: item,
         sample_id: this.sampleIdDataStore[index]
           ? this.sampleIdDataStore[index].sample_id
@@ -107,19 +95,33 @@ export default {
           ? this.sampleIdDataStore[index].note
           : ""
       }));
-<<<<<<< HEAD
-=======
-      this.sampleIdData = data;
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
-    }
+    },
+    input (n){
+     this.onBlur(this.event)
+    },
   },
   methods: {
     handleClose() {
+      this.isShowKeyboard = false
       this.$emit("close");
     },
     clickOk() {
       this.$store.commit("protocols/updatedSampleIdInfo", this.sampleIdData);
       this.handleClose();
+    },
+    onBlur(e){
+      this.event =e
+      if(e){
+        e.target.value=this.input
+        e.target.dispatchEvent(new Event('input'))
+      }
+    },
+    onKeyPress(button){
+      console.log('onKeyPress'+ button);
+    },
+    onChange(input){
+      console.log(input);
+      this.input =input
     }
   }
 };
@@ -196,14 +198,22 @@ div {
   font-size: 24px;
   color: #fff;
 }
-<<<<<<< HEAD
 .dialog .el-table >>> .el-table__cell.gutter {
   background-color: #8fb9e3 !important;
   background-color: transparent;
   border-bottom: 1px solid #ebeef5;
   border-bottom-width: 1px !important;
 }
-=======
->>>>>>> 91f7dd1835b78245eba537ed5352d67aa569d630
+
+
+.keyboard-mask {
+  position: absolute;
+  left: -135px;
+  bottom: -480px;
+  width: 1400px;
+}
+.keyboard-mask .hg-theme-default {
+ height: 460px;
+}
 </style>
 <style></style>

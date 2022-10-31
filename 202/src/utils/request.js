@@ -8,12 +8,19 @@ axios.defaults.timeout = 60000; //超时时间
 axios.defaults.withCredentials = false;
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 // create an axios instance
+// const service = axios.create({
+//   baseURL: 'http://127.0.0.1:28888/api', // url = base url + request url
+//   // baseURL: 'http://192.168.50.152:28888/api', // url = base url + request url
+//   timeout: 5000 // request timeout
+// });
+if (process.env.NODE_ENV == 'development') {
+  axios.defaults.baseURL = 'http://127.0.0.1:28888/api';
+} else {
+  axios.defaults.baseURL = '/api';
+}
 const service = axios.create({
-  baseURL: 'http://127.0.0.1:28888/api', // url = base url + request url
-  // baseURL: 'http://192.168.50.152:28888/api', // url = base url + request url
   timeout: 5000 // request timeout
-});
-
+})
 var urlEncode = function(param, key, encode) {
   if (param == null) return '';
   var paramStr = '';
@@ -32,6 +39,7 @@ var urlEncode = function(param, key, encode) {
 // request interceptor
 service.interceptors.request.use(
   config => {
+	  config.headers['Simulate'] = 1;
     // do something before request is sent
     if (store.getters.user.token) {
       // let each request carry token

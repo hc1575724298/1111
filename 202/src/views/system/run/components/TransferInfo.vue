@@ -6,7 +6,7 @@
     <div> <span>{{$t('language.destination_well')}}(1-C):</span>  <span>{{info.destination_well}}</span></div>
     <div> <span>{{$t('language.volume')}}(5-1000μl):</span>  <span>{{info.volume}}</span></div>
     <div> <span>{{$t('language.mix_before_aspirating')}}(0-10times):</span>  <span>{{info.mix_number_before_aspirating}}</span></div>
-    <div> <span>{{$t('language.mix_speed')}}:</span>  <span>{{info.mix_speed}}</span></div>
+    <div> <span>{{$t('language.mix_speed')}}(1-10):</span>  <span>{{info.mix_speed}}</span></div>
     <div> <span>{{$t('language.aspirate_position')}}(0-100mm):</span>  <span>{{info.aspirate_position}}</span></div>
     <div> <span>{{$t('language.dispense_position')}}(0-100mm):</span>  <span>{{info.dispense_position}}</span></div>
   </div>
@@ -56,7 +56,7 @@ mounted(){
   font-size: 26px;
 }
 .info-view div:nth-child(9n) {
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 .info-view div span:nth-child(2) {
   margin-left: 20px;

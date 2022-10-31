@@ -1,5 +1,5 @@
 <template>
-  <div class="start-page">
+  <div class="start-page" :style="{background: 'url('+src+') no-repeat'}">
     <!-- {{$t('language.index', [$t('language.word')])}} -->
     <!-- 过渡球动画 -->
     <img src="../../images/index/company_name.png" class="company-name" />
@@ -15,6 +15,12 @@
   import {
     searchSetting
   } from '@/api/setting.js'
+  import {
+    instrumentGet
+  } from '@/api/setting.js'
+  import {
+    getLightState
+  } from '@/api/system.js'
   export default {
     data() {
       return {
@@ -44,12 +50,14 @@
           code: 1
         }],
         timer: null,
-        circle_count: 7
+        circle_count: 7,
+        src:null
       }
     },
     mounted() {
       this.timer = setInterval(this.changeCircle, 200);
-      this.getSetting()
+      this.getInstrumentSetting()
+      this.getLight()
     },
     methods: {
       changeCircle() {
@@ -71,20 +79,41 @@
           this.$store.commit("setLanguageCode", res.data.language);
           if (res.data.language == 0) {
             this.$i18n.locale = 'zh-CN'
-          }else if(res.data.language == 1){
-             this.$i18n.locale = 'en-US'
+          } else if (res.data.language == 1) {
+            this.$i18n.locale = 'en-US'
           }
+          if(res.data.oem_img==1){
+              this.src = this.$store.getters.setting.oem[0]
+          }else if(res.data.oem_img==2){
+            this.src = this.$store.getters.setting.oem[1]
+          }else if(res.data.oem_img==3){
+            this.src = this.$store.getters.setting.oem[2]
+          }
+          this.src +="?"+Math.random(100000);
+          this.$store.commit('setBackSrc', this.src)
+        })
+      },
+      getInstrumentSetting() {
+        instrumentGet().then((res) => {
+          this.$store.commit('setSetting', res.data)
+          this.getSetting()
+        })
+      },
+      getLight(){
+        getLightState().then((res)=>{
+          console.log(res)
+          this.$store.commit('setLightstatus',res.data)
         })
       }
     }
   }
 </script>
 
-<style scoped="scoped">
+<style  scoped="scoped">
   .start-page {
     width: 100%;
     height: 1200px;
-    background-image: url("../../images/index/start_background.png");
+    background-size: 100% 100% !important;
   }
 
   .company-name {

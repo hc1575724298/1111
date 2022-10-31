@@ -11,7 +11,7 @@
         </div>
         <div class="input-password-again">
           <div class="again-div">{{$t("language.input_again")}}</div>
-          <div class="input-new-password"><input type="password" /></div>
+          <div class="input-new-password"><input type="password" v-model="again_password" /></div>
         </div>
       </div>
       <div class="change-buttons">
@@ -23,37 +23,59 @@
 </template>
 
 <script>
-  import {changePassword} from "@/api/user"
+  import {
+    changePassword
+  } from "@/api/user"
   export default {
-    props:['userPasswordId'],
+    props: ['userPasswordId'],
     data() {
 
       return {
-        userChanged:{
-          user_id:null,
+        again_password: null,
+        userChanged: {
+          user_id: null,
           new_password: null,
         }
       }
     },
-    mounted() {
-
-    },
+    mounted() {},
     methods: {
-        backToManage(){
-          this.$emit('closeChangePassword')
-        },
-        ChangePasswordOk(){
-          this.userChanged.user_id = this.userPasswordId;
-          changePassword(this.userChanged).then((res)=>{
-            if(res.code==0){
-             this.$message({
-               message:'修改成功',
-               type:'success'
-             })
-            }
-             this.$emit('closeChangePassword')
+      backToManage() {
+        this.$emit('closeChangePassword')
+      },
+      ChangePasswordOk() {
+        this.userChanged.user_id = this.userPasswordId.id;
+        if (this.again_password != this.userChanged.new_password) {
+          if (this.$store.getters.languageCode == 1) {
+            this.$message({
+              message: 'Entered password differ!',
+              type: 'error'
+            })
+          } else if (this.$store.getters.languageCode == 0) {
+            this.$message({
+              message: '两次密码输入不一致！',
+              type: 'error'
+            })
+          }
+        } else {
+          changePassword(this.userChanged).then((res) => {
+           if (res.code == 0) {
+             if (this.$store.getters.languageCode == 1) {
+               this.$message({
+                 message: 'Change password successful!',
+                 type: 'success'
+               })
+             } else if (this.$store.getters.languageCode == 0) {
+               this.$message({
+                 message: '密码修改成功！',
+                 type: 'success'
+               })
+             }
+           }
+            this.$emit('closeChangePassword')
           })
         }
+      }
     }
   }
 </script>
@@ -74,6 +96,7 @@
   .change-password-info {
     width: 860px;
     height: 476px;
+    z-index: 1000;
     background-color: rgba(255, 255, 255, 1);
     border-radius: 10px;
   }
@@ -103,18 +126,28 @@
     line-height: 66px;
     color: black;
   }
-.input-password-again{
+
+  .input-password-again {
+    position: relative;
     margin-top: 23px;
-}
+  }
+
+  .input-password-info {
+    position: relative;
+  }
+
   .input-new-password {
-    margin-left: 90px;
+    position: absolute;
+    left: 268px;
     width: 460px;
     height: 66px;
   }
-  .again-div{
-      width: 170.52px;
-      height: 100%;
+
+  .again-div {
+    width: 170.52px;
+    height: 100%;
   }
+
   .input-new-password>input {
     border-radius: 2px;
     height: 100%;
@@ -122,6 +155,7 @@
     text-indent: 20px;
     border: solid 1px rgba(194, 203, 218, 1);
   }
+
   .change-buttons {
     width: 100%;
     height: 58px;
@@ -130,7 +164,7 @@
     margin-top: 130px;
   }
 
-  .change-buttons >div {
+  .change-buttons>div {
     width: 180px;
     height: 58px;
     border-radius: 6px;

@@ -5,7 +5,7 @@
         <img src="../images/system/back.png" class="back-img" />
       </div>
       <div class="setting-name">
-        Setting > {{this.$store.getters.settingOption}}
+        {{Setting}} > {{title_name}}
       </div>
     </div>
     <TimeLight></TimeLight>
@@ -20,14 +20,33 @@
     },
     data() {
       return {
+        title_name: null,
+        Setting:null
       }
     },
     mounted() {
-
+      this.title_name = this.$store.getters.settingOption
+    },
+    watch: {
+      '$store.getters.languageCode': {
+        immediate: true,
+        handler(newval, oldval) {
+          if (newval == 0) {
+            this.title_name = '系统'
+            this.Setting = '设置'
+          }
+           else if (newval == 1) {
+            this.title_name = 'English'
+             this.Setting = 'Setting'
+          }
+        }
+      }
     },
     methods: {
-      backToParent(){
-        this.$router.push({name:"setting"})
+      backToParent() {
+        this.$router.push({
+          name: "setting"
+        })
       }
     }
   }
@@ -61,7 +80,7 @@
     font-size: 28px;
     margin-left: 20px;
     height: 100%;
-    line-height:92px ;
+    line-height: 92px;
     width: fit-content;
     color: white;
   }
