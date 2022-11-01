@@ -277,7 +277,7 @@ let translate = {
   release: "Release",
   compensation: "Compensation",
   return_calibration: "Return calibration",
-  position: "Position:",
+  position: "Position",
   tip_position:"Tip Position:",
   sleeve_position:"Sleeve Position:",
   Magnetic_rod_postion: "Magnetic Rod Postion:",

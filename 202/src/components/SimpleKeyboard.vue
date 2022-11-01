@@ -80,8 +80,7 @@ export default {
       this.$emit("onChange", input);
     },
     onKeyPress(button,$event) {
-      // console.log(button,$event);
-      // this.$emit("onKeyPress", button);
+      this.$emit("onKeyPress", button);
       // 点击关闭
       if (button === '{close}') {
         let keyboard = $event.path[3];
@@ -112,7 +111,7 @@ export default {
             .value;
         // 输入框有默认值时，覆写
         if (value) {
-          this.keyboard.setInput(value);
+          this.keyboard.setInput(value, this.input);
         }
         this.$emit('onKeyPress', button);
     }
@@ -136,9 +135,6 @@ export default {
       this.keyboard.setInput(input);
     },
   },
-  destroyed(){
-    this.keyboard.clearInput()
-  }
 };
 </script>
 
@@ -168,69 +164,4 @@ export default {
   background-color: #fff;
 }
 </style>
-
-<!-- <style>
-  .simple-keyboard {
-    max-width: 850px;
-    padding: 15px;
-    margin: 0 auto;
-    margin-top: 380px;
-    box-shadow: 0 4px 0 #b2b2b2, 0 7px 16px rgba(0,0,0,.6);
-  }
-
-  .hg-theme-default .hg-button.hg-standardBtn{
-    height: 50px;
-    margin: 8px 10px;
-    font-size: 23px;
-    background-color: #fff;
-    border-radius: 8px;
-    cursor: pointer;
-    -webkit-box-shadow: 0 4px 0 #b2b2b2, 0 5px 10px rgba(0,0,0,.7);
-    box-shadow: 0 3px 0 #b2b2b2, 0 4px 6px rgba(0,0,0,.7);
-  }
-
-  .hg-theme-default .hg-button.hg-standardBtn:active {
-    box-shadow: 0 4px 0 #717070, 0 5px 3px rgba(0,0,0,.9);
-    background-color: #efefef;
-  }
-
-
-  .simple-keyboard.hg-layout-default .hg-button.bksp {
-    height: 50px;
-    margin: 8px 10px;
-    font-size: 23px;
-    background-color: #fff;
-    border-radius: 8px;
-    cursor: pointer;
-    -webkit-box-shadow: 0 4px 0 #b2b2b2, 0 5px 10px rgba(0,0,0,.7);
-    box-shadow: 0 3px 0 #b2b2b2, 0 4px 6px rgba(0,0,0,.7);
-    background: #a8001e;
-    color: white;
-  }
-
-  .simple-keyboard.hg-layout-default .hg-button.bksp:active {
-    box-shadow: 0 4px 0 #717070, 0 5px 3px rgba(0,0,0,.9);
-    background-color: #efefef;
-    color: #000000;
-  }
-
-   .simple-keyboard.hg-layout-default .hg-button.enter {
-    height: 50px;
-    margin: 8px 10px;
-    font-size: 23px;
-    background-color: #fff;
-    border-radius: 8px;
-    cursor: pointer;
-    -webkit-box-shadow: 0 4px 0 #b2b2b2, 0 5px 10px rgba(0,0,0,.7);
-    box-shadow: 0 3px 0 #b2b2b2, 0 4px 6px rgba(0,0,0,.7);
-    background: #a8001e;
-    color: white;
-  }
-
-  .simple-keyboard.hg-layout-default .hg-button.enter:active {
-    box-shadow: 0 4px 0 #717070, 0 5px 3px rgba(0,0,0,.9);
-    background-color: #efefef;
-    color: #000000;
-  }
-</style> -->
 

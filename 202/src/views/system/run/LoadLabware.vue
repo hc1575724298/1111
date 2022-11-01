@@ -13,7 +13,7 @@
               <img src="@/images/run/图像 73.png" v-if="protocalInfo.cartridge===5">
             </div>
             <div class="info">
-              <div>{{$t("language.cartridge_rack")}}:<span>{{protocalInfo.cartridge + $t('language.well_other')}} </span></div>
+              <div>{{$t("language.cartridge_rack")}}:<span>{{protocalInfo.cartridge+$t('language.well_other')}}</span></div>
               <div>{{$t("language.well")}}：1-{{protocalInfo.cartridge}}</div>
             </div>
           </div>
@@ -247,7 +247,7 @@ export default {
 
  }
  .info {
-  padding: 23px 20px 0 0;
+  padding-top: 23px;
  }
  .info div {
    margin-bottom: 16px;

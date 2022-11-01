@@ -1,5 +1,5 @@
 <template>
-    <el-dialog
+  <el-dialog
     :close-on-click-modal="false"
     class="dialog"
     :title="$t('language.sampleID')"
@@ -8,7 +8,7 @@
     :visible="isShowSampleidDialog"
     @close="handleClose"
     append-to-body
-    top="5vh"
+    top="3vh"
   >
     <el-table
       class="el-table"
@@ -28,35 +28,52 @@
         :label="$t('language.position')"
         width="245"
       ></el-table-column>
-      <el-table-column property="sample_id" :label="$t('language.sampleID')" width="350">
+      <el-table-column
+        property="sample_id"
+        :label="$t('language.sampleID')"
+        width="350"
+      >
         <template slot-scope="scope">
-          <el-input class="el-input" v-model="scope.row.sample_id" @blur="onBlur($event)" @focus="isShowKeyboard=true"></el-input>
+          <el-input
+            class="el-input"
+            v-model="scope.row.sample_id"
+            @focus="onFocus(scope.$index,'sample_id',$event)"
+          >
+          </el-input>
         </template>
       </el-table-column>
       <el-table-column property="note" :label="$t('language.note_optional')">
         <template slot-scope="scope">
-          <el-input class="el-input" v-model="scope.row.note" @blur="onBlur($event)"></el-input>
+          <el-input
+            class="el-input"
+            v-model="scope.row.note"
+            @focus="onFocus(scope.$index,'note',$event)"
+          >
+          </el-input>
         </template>
       </el-table-column>
     </el-table>
     <!-- 按钮 -->
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleClose" class="cancel">{{$t('language.cancel')}}</el-button>
-      <el-button class="ok" @click="clickOk">{{$t('language.ok')}}</el-button>
+      <el-button @click="handleClose" class="cancel">{{
+        $t("language.cancel")
+      }}</el-button>
+      <el-button class="ok" @click="clickOk">{{ $t("language.ok") }}</el-button>
     </span>
 
     <div class="keyboard-mask" v-if="isShowKeyboard">
-      <SimpleKeyboard @onChange="onChange" @onKeyPress="onKeyPress" :input="input" ref="keyboard"/>
+      <SimpleKeyboard
+        @onChange="onChange"
+        @onKeyPress="onKeyPress"
+        :input="input"
+      />
     </div>
   </el-dialog>
 </template>
 
 <script>
-import SimpleKeyboard from '@/components/SimpleKeyboard'
-import {
-  mapState as mapProtocolsState,
-  mapGetters as mapProtocolsGetters
-} from "vuex";
+import SimpleKeyboard from "@/components/SimpleKeyboard";
+import { mapState as mapProtocolsState } from "vuex";
 export default {
   props: {
     isShowSampleidDialog: {
@@ -69,18 +86,19 @@ export default {
       "selectedTubeList",
       "sampleIdDataStore",
       "showCountSampleidDialog"
-    ]),
-    ...mapProtocolsGetters("protocols", ["sampleIdInfo"])
+    ])
   },
   data() {
     return {
       sampleIdData: [],
-      input: '',
-      event: null,
-      isShowKeyboard: false
+      input: "",
+      isShowKeyboard: true,
+      currentIndex:0,
+      value:'',
+      event: null
     };
   },
-  components:{
+  components: {
     SimpleKeyboard
   },
   watch: {
@@ -96,32 +114,41 @@ export default {
           : ""
       }));
     },
-    input (n){
-     this.onBlur(this.event)
-    },
   },
   methods: {
     handleClose() {
-      this.isShowKeyboard = false
+      this.isShowKeyboard = false;
       this.$emit("close");
     },
     clickOk() {
       this.$store.commit("protocols/updatedSampleIdInfo", this.sampleIdData);
       this.handleClose();
     },
-    onBlur(e){
+    // onBlur(index,value,e) {
+    //   this.event = e;
+    //   if (e) {
+    //     e.target.value =this.input;
+    //     e.target.dispatchEvent(new Event("input"));
+    //   }
+    // },
+    onFocus(index,value,e) {
+      this.isShowKeyboard = true;
+      this.currentIndex = index;
+      this.value = value;
       this.event =e
-      if(e){
-        e.target.value=this.input
-        e.target.dispatchEvent(new Event('input'))
+      if(value === 'sample_id'){
+        this.input = this.sampleIdData[index].sample_id
+      }else {
+        this.input = this.sampleIdData[index].note
       }
     },
-    onKeyPress(button){
-      console.log('onKeyPress'+ button);
-    },
-    onChange(input){
+    onKeyPress(button) {},
+    onChange(input) {
       console.log(input);
-      this.input =input
+      this.input = input
+      this.event.target.value =this.input;
+      this.event.target.dispatchEvent(new Event("input"));
+
     }
   }
 };
@@ -205,15 +232,15 @@ div {
   border-bottom-width: 1px !important;
 }
 
-
 .keyboard-mask {
   position: absolute;
   left: -135px;
-  bottom: -480px;
+  bottom: -508px;
   width: 1400px;
 }
 .keyboard-mask .hg-theme-default {
- height: 460px;
+  height: 460px;
 }
+
 </style>
 <style></style>
