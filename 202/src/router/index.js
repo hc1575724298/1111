@@ -131,12 +131,11 @@ export default new VueRouter({
         name: 'runprogressthree',
         component: () => import('@/views/system/run/RunProgressThree'),
       },
-      {
-        path: 'viewrunstep',
-        name: 'viewrunstep',
-        component: () => import('@/views/system/run/ViewRunStep'),
-      }
-    ]
+      ]
 
+    }, {
+      path: '/system/run/viewrunstep',
+      name: 'viewrunstep',
+      component: () => import('@/views/system/run/ViewRunStep'),
   }]
 })

@@ -1,3 +1,4 @@
+import { openKeyboard, closeKeyboard } from '@/api/run'
 export default {
   //输入限制
   filterNum(num) {
@@ -261,4 +262,15 @@ export default {
     }
     return e;
   },
+
+  //开启系统键盘
+  async openKeyboardApi () {
+    const res = await openKeyboard()
+    console.log(res);
+  },
+  //关闭系统键盘
+  async closeKeyboardApi () {
+    const res = await closeKeyboard()
+    console.log(res);
+  }
 }

@@ -5,7 +5,7 @@ let translate = {
   parameters: "Parameters", //参数
   run_started_at: "Run started at", //开始时间
   sample_number: "Sample number", //样本数
-  skip_incubator: "Skip Incubator", //跳过孵育
+  skip_incubator: "Skip Incubate", //跳过孵育
   abort: "Abort", // 终止
   continue: "Continue", // 继续
   mix_time: "Mix time", // 混合时间
@@ -68,7 +68,7 @@ let translate = {
   elution_volume: 'Elution volume(μl)', //洗脱体积(μl)
   reagent_volume: 'Reagent volume(μl)', //试剂体积(μl)
   sample_volume: 'Sample volume(μl)', //样本体积(μl)
-  worktable_select_sample_positions: 'Worktable：select sample positions', //选择样本位置
+  worktable_select_sample_positions: 'Select sample positions', //选择样本位置
   selected: 'Selected', //已选择
   select_all: 'Select all', //全选
   sampleID: 'SampleID', //样本ID
@@ -83,7 +83,7 @@ let translate = {
   tip_1000ul: '1000ul_tip', //1000ul_吸头
   place_the_labware_in_the_same_positions_with_list_and_click_Run_for_start: 'Place the labware in the same positions with list and click “Run ” for start.', //将耗材按照列表放在对应位置，并点击“运行”。
   back: 'Back', //上一步
-  note_optional: "note(optional)", //说明（可选）
+  note_optional: "Note(Optional)", //说明（可选）
   username_placeholder: "Username",
   password_placeholder: "Password",
   password: "password",
@@ -211,7 +211,7 @@ let translate = {
   inner_height_mm: "Inner height(mm)",
   caps_height_mm: "Cap height(mm)",
   total: "Total：",
-  selected: "Selected：",
+  selected: "Selected",
   save: "Save",
   factory: "Factory",
   new: "New",
@@ -308,7 +308,7 @@ let translate = {
   reagent_volume: "Reagent volume(10-1500μl)",
   sample_volume_5000: "Sample volume(100-5000μl)",
   sample_volume_10: "Sample volume(100-10000μl)",
-  remark_optional: "Remark(Optional)：",
+  remark_optional: "Remark(Optional)",
   elution_tube_big: "Elution Tube",
   reagent_tube_big: "Reagent Tube",
   sample_tube_big: "Sample Tube",
@@ -321,27 +321,14 @@ let translate = {
   add_step: "Add step",//添加步骤
   bind: "Bind",//结合
   wash: "Wash",//洗涤
-  elution: "Elution",//洗脱
+  elution: "Elute",//洗脱
   discard: "Discard",//弃磁
   pause: "Pause",//暂停
   custom: "Custom",//自定义
-  incubator: "Incubator",//孵育
+  incubator: "Incubate",//孵育
   lysis: "Lysis",//裂解
   magnetic: "Magnetic",
-  unload_labware: "Unload labware",
-  well1a: "Well(1 / A)",
   well1c: "Well(1 / C)",
-  temp10100: "Temp.(10-110℃)",
-  time999: "Time(0-999min)",
-  add_step: "Add step",
-  bind: "Bind",
-  wash: "Wash",
-  elution: "Elution",
-  discard: "Discard",
-  pause: "Pause",
-  custom: "Custom",
-  incubator: "Incubator",
-  lysis: "Lysis",
   source_well_1c: "Source well(1-C)",
   destination_well_1c: "Destination well(1-C)",
   volume_5: "Volume(5-1000μl)",
@@ -390,6 +377,9 @@ let translate = {
   well_other: " Well",
   magnet_type_sleeve: "Sleeve",
   magnet_type_tip: "Tip",
+  clean: " Clean",
+  tip_pause: 'Tip',
+  maximum15: "The value contains a maximum of 15 characters."
 };
 
 const en = {

@@ -108,3 +108,27 @@ export function getRunReport (run_ids) {
     }
   })
 }
+
+//获取设置的相关信息
+export function getSettingAll () {
+  return request({
+    url: '/setting/all',
+  })
+}
+
+
+// 关闭键盘
+export function closeKeyboard () {
+  return request({
+    url: '/window/close-keyboard',
+    method: 'POST',
+  })
+}
+
+// 开启键盘
+export function openKeyboard () {
+  return request({
+    url: '/window/open-keyboard',
+    method: 'POST',
+  })
+}

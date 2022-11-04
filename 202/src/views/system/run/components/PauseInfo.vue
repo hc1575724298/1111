@@ -5,7 +5,7 @@
        <span>{{$t('language.step')}}:</span>  <span>{{ info.step_name }}</span>
     </div>
     <div>
-        <span>{{$t('language.tips')}}:</span> <span>{{ info.tips }}</span>
+        <span>{{$t('language.tip_pause')}}:</span> <span>{{ info.tip_pause }}</span>
     </div>
   </div>
 </template>

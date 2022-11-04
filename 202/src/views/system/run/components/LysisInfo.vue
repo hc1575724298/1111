@@ -13,7 +13,7 @@
         <span>{{$t('language.volume')}}(5-1000μl):</span>  <span>{{ info.volume }}</span>
       </div>
       <div>
-        <span>{{$t('language.mix_time')}}:</span> <span>{{ info.mix_time }}</span>
+        <span>{{$t('language.mix_time')}}(1-99min):</span> <span>{{ info.mix_time }}</span>
       </div>
       <div>
         <span>{{$t('language.mix_speed')}}(1-10):</span>  <span>{{ info.mix_speed }}</span>

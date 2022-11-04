@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :close-on-click-modal="false"
-    class="dialog"
+    class="sampleIdDialog"
     :title="$t('language.sampleID')"
     width="1120px"
     :show-close="false"
@@ -35,9 +35,11 @@
       >
         <template slot-scope="scope">
           <el-input
+          :maxlength="15"
             class="el-input"
             v-model="scope.row.sample_id"
-            @focus="onFocus(scope.$index,'sample_id',$event)"
+            @focus="onFocus(scope.$index, 'sample_id', $event)"
+
           >
           </el-input>
         </template>
@@ -45,9 +47,12 @@
       <el-table-column property="note" :label="$t('language.note_optional')">
         <template slot-scope="scope">
           <el-input
+          :title="scope.row.note"
+           :maxlength="15"
             class="el-input"
             v-model="scope.row.note"
-            @focus="onFocus(scope.$index,'note',$event)"
+            @focus="onFocus(scope.$index, 'note', $event)"
+
           >
           </el-input>
         </template>
@@ -63,8 +68,8 @@
 
     <div class="keyboard-mask" v-if="isShowKeyboard">
       <SimpleKeyboard
+        @colseKeyboard="isShowKeyboard = false"
         @onChange="onChange"
-        @onKeyPress="onKeyPress"
         :input="input"
       />
     </div>
@@ -92,9 +97,9 @@ export default {
     return {
       sampleIdData: [],
       input: "",
-      isShowKeyboard: true,
-      currentIndex:0,
-      value:'',
+      isShowKeyboard: false,
+      currentIndex: 0,
+      value: "",
       event: null
     };
   },
@@ -113,7 +118,7 @@ export default {
           ? this.sampleIdDataStore[index].note
           : ""
       }));
-    },
+    }
   },
   methods: {
     handleClose() {
@@ -124,31 +129,24 @@ export default {
       this.$store.commit("protocols/updatedSampleIdInfo", this.sampleIdData);
       this.handleClose();
     },
-    // onBlur(index,value,e) {
-    //   this.event = e;
-    //   if (e) {
-    //     e.target.value =this.input;
-    //     e.target.dispatchEvent(new Event("input"));
-    //   }
-    // },
-    onFocus(index,value,e) {
+    onFocus(index, value, e) {
+      this.pub.openKeyboardApi()
       this.isShowKeyboard = true;
       this.currentIndex = index;
       this.value = value;
-      this.event =e
-      if(value === 'sample_id'){
-        this.input = this.sampleIdData[index].sample_id
-      }else {
-        this.input = this.sampleIdData[index].note
+      this.event = e;
+      if (value === "sample_id") {
+        this.input = this.sampleIdData[index].sample_id;
+      } else {
+        this.input = this.sampleIdData[index].note;
       }
     },
-    onKeyPress(button) {},
     onChange(input) {
       console.log(input);
-      this.input = input
-      this.event.target.value =this.input;
+      if(input.length>15)return this.$message(this.$t('language.maximum15'))
+      this.input = input;
+      this.event.target.value = this.input;
       this.event.target.dispatchEvent(new Event("input"));
-
     }
   }
 };
@@ -158,17 +156,17 @@ export default {
 div {
   box-sizing: border-box !important;
 }
-.dialog >>> .el-dialog__title {
+.sampleIdDialog >>> .el-dialog__title {
   font-size: 26px;
   color: #4171bb;
 }
-.dialog >>> .el-dialog__header {
+.sampleIdDialog >>> .el-dialog__header {
   border-bottom: solid 1px #8fb9e3;
   padding: 17px 0;
   margin: 0 20px;
   box-sizing: border-box;
 }
-.dialog >>> .el-dialog__body {
+.sampleIdDialog >>> .el-dialog__body {
   box-sizing: border-box;
   padding-top: 25px;
 }
@@ -181,7 +179,7 @@ div {
   padding: 0;
   width: 260px;
   height: 38px;
-  font-size: 20px;
+  font-size: 24px;
 }
 .el-table >>> .el-table__cell {
   padding: 10px 0;
@@ -198,7 +196,7 @@ div {
   height: 360px !important;
 }
 /* 按钮 */
-.dialog >>> .el-dialog__footer {
+.sampleIdDialog >>> .el-dialog__footer {
   position: relative;
   height: 105px;
 }
@@ -225,22 +223,25 @@ div {
   font-size: 24px;
   color: #fff;
 }
-.dialog .el-table >>> .el-table__cell.gutter {
+.sampleIdDialog .el-table >>> .el-table__cell.gutter {
   background-color: #8fb9e3 !important;
   background-color: transparent;
   border-bottom: 1px solid #ebeef5;
   border-bottom-width: 1px !important;
 }
 
-.keyboard-mask {
-  position: absolute;
-  left: -135px;
-  bottom: -508px;
-  width: 1400px;
-}
-.keyboard-mask .hg-theme-default {
-  height: 460px;
-}
 
 </style>
-<style></style>
+<style>
+.sampleIdDialog,
+.sampleIdDialog div,
+.sampleIdDialog span,
+.sampleIdDialog table,
+.sampleIdDialog tbody,
+.sampleIdDialog td,
+.sampleIdDialog tr,
+.sampleIdDialog .el-input,
+.sampleIdDialog .el-input input{
+  touch-action: pan-y !important;
+}
+</style>

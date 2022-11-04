@@ -16,12 +16,25 @@ export default {
       "initPathName"
     ])
   },
+  mounted() {
+        // this.screenScale(document.getElementById('app'));
+        // window.onresize=()=>{
+        //   // console.log('浏览器大小变化')
+        //   this.screenScale(document.getElementById('app'));
+        // }
+        this.screenScale(document.getElementsByTagName('body')[0]);
+        window.onresize=()=>{
+          // console.log('浏览器大小变化')
+          this.screenScale(document.getElementsByTagName('body')[0]);
+        }
+  },
+
   watch: {
     $route(to, from) {
       if (to.path === "/system/run" || to.path === "/system/list") {
         this.getDoorState();
         this.$store.commit("protocols/clearRecord", []);
-      } else if (to.path === "/system/run/protocols/viewrunstep") {
+      } else if (to.path === "/system/run/viewrunstep") {
         this.$store.commit("protocols/clearRecord", []);
         this.$store.commit("protocols/updatedInitPathName", this.pathName);
       }
@@ -38,6 +51,32 @@ export default {
       }
   },
   methods: {
+    screenScale(element) {
+          let width = '1920';
+          let height = '1200';
+          let offsetWidth = window.innerWidth;
+          let offsetHeight = window.innerHeight;
+          let top = 0;
+          let left = 0;
+          let scaleX = offsetWidth / width;
+          let scaleY = offsetHeight / height;
+          // let scale = Math.min(scaleX, scaleY);
+          let transform='';
+          top = (offsetHeight - height) / 2;
+          left = (offsetWidth - width) / 2;
+          //核心代码
+          transform = `translate(${left}px, ${top}px) scaleX(${scaleX}) scaleY(${scaleY})`;
+          element.style.width = width + 'px';
+      element.style.height = height + 'px';
+      element.style.transformOrigin = 'center center';
+      element.style.transform = transform;
+      // document.body.style.width=offsetWidth+'px';
+      // document.body.style.height=offsetHeight+'px';
+      element.parentElement.width=offsetWidth+'px';
+      element.parentElement.style.height=offsetHeight+'px';
+    },
+
+
     async getDoorState() {
       const { data } = await getDoorState();
       this.$store.commit("protocols/updatedDoorState", data);
@@ -70,6 +109,7 @@ export default {
   -moz-user-select: none;
   -webkit-touch-callout: none;
   -khtml-user-select: none;
+  touch-action: none;
 }
 
 *::-webkit-scrollbar {
@@ -94,5 +134,9 @@ export default {
   background-color: transparent;
   border-bottom: 1px solid #ebeef5;
   border-bottom-width: 1px !important;
+}
+
+body {
+  padding: 0 !important;
 }
 </style>

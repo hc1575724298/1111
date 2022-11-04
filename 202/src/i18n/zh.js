@@ -166,7 +166,7 @@ let translate = {
   blow: "吹气",
   aspirate_volume: "吸液体积(μl)：",
   dispense_volume: "注液体积(μl)：",
-  tips: "提示",
+  tips: "吸头",
   magnetic_sleeve: "磁棒套",
   cartridege_rack_tips: "试剂条-吸头",
   cartridege_rack_sleeve: "试剂条-磁棒套",
@@ -227,7 +227,7 @@ let translate = {
   reagent_volume: "试剂体积(10-1500μl)",
   sample_volume_5000: "样本体积(100-5000μl)",
   sample_volume_10: "样本体积(100-10000μl)",
-  remark_optional: "备注（可选）：",
+  remark_optional: "备注（可选）",
   elution_tube_big: "洗脱管",
   reagent_tube_big: "试剂管",
   sample_tube_big: "样本管",
@@ -352,7 +352,7 @@ let translate = {
   elution_volume: '洗脱体积(μl)',
   reagent_volume: '试剂体积(μl)',
   sample_volume: '样本体积(μl)',
-  worktable_select_sample_positions: '工作台：选择样本位置',
+  worktable_select_sample_positions: '选择样本位置',
   selected: '已选择',
   select_all: '全选',
   sampleID: '样本ID',
@@ -376,7 +376,8 @@ let translate = {
   well_other: "孔",
   magnet_type_sleeve: "磁套吸磁",
   magnet_type_tip: "吸头吸磁",
-
+  tip_pause: "提示",
+  maximum15: "最多不超过15个字符",
 };
 
 const zh = {

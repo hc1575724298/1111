@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container runProgressThree">
     <div class="header">
       <RunProgress :progressNum="3" />
       <div class="report" v-if="isShowReportbtn" @click="reportExport">
@@ -11,19 +11,22 @@
       <div class="info-left">
         <div class="protocol-title">
           <div class="protocol" v-if="isShowtime">
-            {{$t('language.protocol')}}：<span>{{
+            {{ $t("language.protocol") }}：<span>{{
               $store.state.protocols.protocalInfo.name
             }}</span>
           </div>
           <div v-if="isShowList" class="parameter">
-            {{$t('language.parameters')}}
+            {{ $t("language.parameters") }}
           </div>
           <div class="pic">
             <div @click="clickTime">
               <img src="@/images/run/37.timechecked.png" v-if="isShowtime" />
               <img src="@/images/run/38时间显示未选中 (2).png" v-else />
             </div>
-            <div @click="clickList" v-if="$store.state.user.group !== 'user'">
+            <div
+              @click="clickList"
+              v-if="$store.state.user.group !== 'user' || !encryption"
+            >
               <img src="@/images/run/39列表选中.png" v-if="isShowList" />
               <img src="@/images/run/40列表未选中.png" v-else />
             </div>
@@ -32,19 +35,41 @@
         <!-- time -->
         <div v-if="isShowtime">
           <div class="protocol">
-            {{$t('language.run_started_at')}}：<span>{{ startRunTime | handleTime}}</span>
+            {{ $t("language.run_started_at") }}：<span>{{
+              startRunTime | handleTime
+            }}</span>
           </div>
           <div class="protocol">
-            {{$t('language.sample_number')}}：<span>{{
+            {{ $t("language.sample_number") }}：<span>{{
               $store.state.protocols.selectedTubeList.length
             }}</span>
           </div>
           <!-- 温度 -->
           <div class="protocol temp">
-            T1: <span> <i>{{temperature[0]&&temperature[0].sv1}}</i>°C</span><span><i>{{temperature[0]&&temperature[0].sv2}}</i>°C</span><span><i>{{temperature[0]&&temperature[0].sv3}}</i>°C</span>
+            T1:
+            <span>
+              <i>{{ temperature[0] && temperature[0].sv1 }}</i
+              >°C</span
+            ><span
+              ><i>{{ temperature[0] && temperature[0].sv2 }}</i
+              >°C</span
+            ><span
+              ><i>{{ temperature[0] && temperature[0].sv3 }}</i
+              >°C</span
+            >
           </div>
           <div class="protocol temp">
-            TA: <span> <i>{{temperature[1]&&temperature[1].sv1}}</i>°C</span><span><i>{{temperature[1]&&temperature[1].sv2}}</i>°C</span><span><i>{{temperature[1]&&temperature[1].sv3}}</i>°C</span>
+            TA:
+            <span>
+              <i>{{ temperature[1] && temperature[1].sv1 }}</i
+              >°C</span
+            ><span
+              ><i>{{ temperature[1] && temperature[1].sv2 }}</i
+              >°C</span
+            ><span
+              ><i>{{ temperature[1] && temperature[1].sv3 }}</i
+              >°C</span
+            >
           </div>
           <div class="time">
             <RunTime :time="remainingTime" :progress="progress" />
@@ -73,9 +98,9 @@
             :whitchStyle="'run'"
           />
           <div v-else-if="activeStepInfo.type === 'unload_labware'">
-            <div class="parameter">{{$t('language.basic')}}</div>
+            <div class="parameter">{{ $t("language.basic") }}</div>
             <div class="info">
-              <span class="info-title">{{$t('language.step')}}:</span>
+              <span class="info-title">{{ $t("language.step") }}:</span>
               <span class="info-content">{{
                 stepList[stepList.length - 1].step_name
               }}</span>
@@ -86,7 +111,7 @@
       </div>
       <!-- 右侧 -->
       <div class="info-right">
-        <div class="step">{{$t('language.step')}}</div>
+        <div class="step">{{ $t("language.step") }}</div>
         <div class="items">
           <div class="item" v-for="item in stepList" :key="item.order">
             <div class="stepImg">
@@ -100,26 +125,49 @@
             <img
               src="@/images/run/41完成.png"
               alt=""
-              v-if="item.order < activeOrder&&stepIdArr.includes(item.id)"
+              v-if="item.order < activeOrder && stepIdArr.includes(item.id)"
             />
             <img
               src="@/images/run/42进行中.png"
               alt=""
-              v-else-if="item.order === activeOrder&&stepIdArr.includes(item.id)"
+              v-else-if="
+                item.order === activeOrder && stepIdArr.includes(item.id)
+              "
             />
-            <img v-else-if="!(stepIdArr.includes(item.id))" src="@/images/run/skip-step.png" alt="">
-            <img src="@/images/run/43等待.png" alt="" v-else-if="activeOrder===''||(item.order > activeOrder&&stepIdArr.includes(item.id))" />
+            <img
+              v-else-if="!stepIdArr.includes(item.id)"
+              src="@/images/run/skip-step.png"
+              alt=""
+            />
+            <img
+              src="@/images/run/43等待.png"
+              alt=""
+              v-else-if="
+                activeOrder === '' ||
+                  (item.order > activeOrder && stepIdArr.includes(item.id))
+              "
+            />
           </div>
         </div>
         <div class="footer-btn">
-          <button v-if="isShowReportbtn" class="pause" @click="clickRunBtn">{{$t('language.run')}}</button>
-         <template v-else>
-          <el-button :disabled="isDisabledSkipIncubator" class="skip-incubator" @click.native="clickSkipIncubatorBtn">
-            {{$t('language.skip_incubator')}}
-          </el-button>
-          <button class="abort" @click="clickAbortBtn">{{$t('language.abort')}}</button>
-          <button class="pause" @click="clickPauseBtn">{{isPause ? $t('language.continue') : $t('language.pause')}} </button>
-         </template>
+          <button v-if="isShowReportbtn" class="pause" @click="clickRunBtn">
+            {{ $t("language.run") }}
+          </button>
+          <template v-else>
+            <el-button
+              :disabled="isDisabledSkipIncubator"
+              class="skip-incubator"
+              @click.native="clickSkipIncubatorBtn"
+            >
+              {{ $t("language.skip_incubator") }}
+            </el-button>
+            <button class="abort" @click="clickAbortBtn">
+              {{ $t("language.abort") }}
+            </button>
+            <button class="pause" @click="clickPauseBtn">
+              {{ isPause ? $t("language.continue") : $t("language.pause") }}
+            </button>
+          </template>
         </div>
       </div>
     </div>
@@ -134,7 +182,10 @@
     <!-- 开门弹框 -->
     <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog" />
     <!-- 终止程序弹框 -->
-    <AbortDialog :isShowAbortDialog ="isShowAbortDialog" @close="isShowAbortDialog=false"/>
+    <AbortDialog
+      :isShowAbortDialog="isShowAbortDialog"
+      @close="isShowAbortDialog = false"
+    />
   </div>
 </template>
 
@@ -147,7 +198,7 @@ import {
   goOnRun,
   openDoor,
   skipIncubator,
-  closeDoor
+  getSettingAll
 } from "@/api/run";
 import { mapState as mapProtocolsState } from "vuex";
 import RunProgress from "@/components/RunProgress.vue";
@@ -185,24 +236,26 @@ export default {
       activeOrder: "", //正在运行的步骤
       remainingTime: "", // 运行剩余时间
       progress: 0, //进度
-      activeStepInfo:{}, // 当前运行步骤的信息
-      tips: "" ,// 暂停弹框 tips
-      stepIdArr:[],// 运行步骤id数组
+      activeStepInfo: {}, // 当前运行步骤的信息
+      tips: "", // 暂停弹框 tips
+      stepIdArr: [], // 运行步骤id数组
       isPause: false, // 是否暂停
-      fromPath:'' ,
-      temperature: [] ,// 运行的实时温度
+      fromPath: "",
+      temperature: [], // 运行的实时温度
       activeIncubatorId: "", // 当前孵育id
       isDisabledSkipIncubator: true, //是否禁用跳过孵育按钮
       reportId: "", // 报告导出需要的id
+      encryption: "" // 高级用户是否开启加密
     };
   },
 
   created() {
-    this.fromPath =this.initPathName
+    this.fromPath = this.initPathName;
     this.getProtocolDetail();
     this.setRunApi();
-    this.stepIdArr=this.run_step_ids.split(',').map(item=>Number(item));
+    this.stepIdArr = this.run_step_ids.split(",").map(item => Number(item));
     // this.stepIdArr.push(0) 手动添加手动添加卸载耗材的id
+    this.getSettingAllApi();
   },
   computed: {
     ...mapProtocolsState("protocols", [
@@ -213,9 +266,9 @@ export default {
       "selectedTubeList",
       "sampleIdDataStore",
       "run_step_ids",
-      'initPathName',
-      'startRunTime'
-    ]),
+      "initPathName",
+      "startRunTime"
+    ])
   },
   methods: {
     //获取程序详情
@@ -224,7 +277,7 @@ export default {
         data: { steps }
       } = await getProtocolDetail(this.protocalInfo.id);
       this.stepList = steps;
-      this.activeStepInfo = this.stepList[0]
+      this.activeStepInfo = this.stepList[0];
       // 手动添加卸载耗材步骤
       // this.stepList.push({
       //   order: steps.length,
@@ -258,49 +311,53 @@ export default {
       this.isShowAbortDialog = true;
     },
     async clickPauseBtn() {
-      if(this.isPause) {
-          await goOnRun()
-          this.isPause = false;
-      }else {
+      if (this.isPause) {
+        await goOnRun();
+        this.isPause = false;
+      } else {
         await pauseRun();
-        this.isPause = true
+        this.isPause = true;
       }
     },
     async clickSkipIncubatorBtn() {
-      console.log("clickSkipIncubatorBtn"+this.activeIncubatorId);
-      await skipIncubator(this.activeIncubatorId)
-      this.isDisabledSkipIncubator = true
+      console.log("clickSkipIncubatorBtn" + this.activeIncubatorId);
+      await skipIncubator(this.activeIncubatorId);
+      this.isDisabledSkipIncubator = true;
     },
-    async clickRunBtn(){
-      this.isShowOpenDoorDialog=true
+    async clickRunBtn() {
+      this.isShowOpenDoorDialog = true;
       await openDoor();
       // 开门通知
-     this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
-       if(notify.Code===this.Notify.CODE_FZB_DOOR_OPEN){
-        this.isShowOpenDoorDialog=false
-        this.$store.commit('protocols/updatedDoorState',1)
-        this.$store.commit("protocols/clearRecord", []);
-        this.$router.push("/system/run/protocols/sampleSettings");
-       }
-      })
+      this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, notify => {
+        if (notify.Code === this.Notify.CODE_FZB_DOOR_OPEN) {
+          this.isShowOpenDoorDialog = false;
+          this.$store.commit("protocols/updatedDoorState", 1);
+          this.$store.commit("protocols/clearRecord", []);
+          this.$router.push("/system/run/protocols/sampleSettings");
+        }
+      });
     },
     //导出运行报告
-    async reportExport(){
-      await getRunReport(this.reportId.toString())
+    async reportExport() {
+      await getRunReport(this.reportId.toString());
+    },
+    async getSettingAllApi() {
+      const { data } = await getSettingAll();
+      this.encryption = data.encryption;
     }
   },
   mounted() {
     //程序运行完成
     this.EventBus.on(this.Notify.CODE_RUN_COMPLETE, notify => {
       if (notify.Code === this.Notify.CODE_RUN_COMPLETE) {
-        if(this.fromPath ==='viewrunstep'){
-          this.$store.commit("protocols/updatedInitPathName", 'viewrunstep');
-        }else{
+        if (this.fromPath === "viewrunstep") {
+          this.$store.commit("protocols/updatedInitPathName", "viewrunstep");
+        } else {
           this.$store.commit("protocols/updatedInitPathName", this.pathName);
         }
         this.isShowReportbtn = true;
         this.activeOrder = this.stepList.length;
-        this.reportId = notify.Data
+        this.reportId = notify.Data;
         // 手动添加卸载耗材步骤需加
         // this.activeStepInfo = this.stepList[this.activeOrder - 1];
       }
@@ -310,11 +367,11 @@ export default {
       if (notify.Code === this.Notify.CODE_RUN_COMMAND_START) {
         this.activeOrder = JSON.parse(notify.Data)[1];
         this.activeStepInfo = this.stepList[this.activeOrder];
-        if(this.activeStepInfo.type == 'incubator') {
-           this.activeIncubatorId = this.activeStepInfo.id
-           this.isDisabledSkipIncubator = false
-        }else {
-          this.isDisabledSkipIncubator = true
+        if (this.activeStepInfo.type == "incubator") {
+          this.activeIncubatorId = this.activeStepInfo.id;
+          this.isDisabledSkipIncubator = false;
+        } else {
+          this.isDisabledSkipIncubator = true;
         }
       }
     });
@@ -335,7 +392,7 @@ export default {
     // 运行温度通知
     this.EventBus.on(this.Notify.CODE_RUNNING_TEMP, notify => {
       if (notify.Code === this.Notify.CODE_RUNNING_TEMP) {
-        this.temperature = notify.Data
+        this.temperature = notify.Data;
       }
     });
   },
@@ -462,7 +519,7 @@ div {
   margin-right: 30px;
 }
 .stepImg img {
- transform: scale(.85);
+  transform: scale(0.85);
 }
 .line {
   flex: 1;
@@ -488,7 +545,7 @@ div {
   margin-right: 26px;
   color: #666666;
 }
-.skip-incubator >>>span {
+.skip-incubator >>> span {
   text-align: center;
   font-size: 24px;
 }
@@ -527,5 +584,17 @@ div {
 }
 .header {
   position: relative;
+}
+</style>
+<style>
+.runProgressThree .items,
+.runProgressThree .items div,
+.runProgressThree .items span,
+.runProgressThree .items img ,
+.runProgressThree .info-list,
+.runProgressThree .info-list div,
+.runProgressThree .info-list span
+{
+  touch-action: pan-y !important;
 }
 </style>

@@ -96,7 +96,7 @@ export default {
     }
   },
   computed:{
-    ...mapProtocolsState('protocols',['selectedTubeList','sampleIdDataStore','languageCode']),
+    ...mapProtocolsState('protocols',['selectedTubeList','sampleIdDataStore']),
   },
   methods: {
     //全选按钮
@@ -146,7 +146,7 @@ export default {
       }else {
         this.isDisabledNextBtn = true
         this.$message({
-          message:this.languageCode?'Please select sample positions':'请选择样本位置',
+          message: this.$store.state.languageCode?'Please select sample positions':'请选择样本位置',
           type: 'warning'
         });
       }

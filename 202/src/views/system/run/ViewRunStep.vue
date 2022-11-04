@@ -1,8 +1,10 @@
 <template>
-  <div class="view-container">
+  <div>
+    <UserHead :page_name="protocalInfo.name" :path_router="initPathName"/>
+    <div class="view-container">
     <!-- 左侧 -->
     <div class="view-step">
-      <div class="step">{{$t('language.step')}}</div>
+      <div class="step">{{ $t("language.step") }}</div>
       <div class="every-step">
         <div
           @click="clickEveryStep(step.order)"
@@ -20,8 +22,12 @@
         </div>
       </div>
       <div class="btn">
-        <button @click="clickRun" class="buleBtn">{{$t('language.run')}}</button>
-        <button @click="clickStepRun" class="whiteBtn">{{$t('language.step_run')}}</button>
+        <button @click="clickRun" class="buleBtn">
+          {{ $t("language.run") }}
+        </button>
+        <button @click="clickStepRun" class="whiteBtn">
+          {{ $t("language.step_run") }}
+        </button>
       </div>
     </div>
     <!-- 右侧 -->
@@ -32,7 +38,7 @@
             :class="['whiteBtn', currentBtn === 1 ? 'buleBtn' : '']"
             @click="clickBasicBtn"
           >
-           {{$t('language.basic')}}
+            {{ $t("language.basic") }}
           </button>
           <button
             v-if="
@@ -45,7 +51,7 @@
             :class="['whiteBtn', currentBtn === 0 ? 'buleBtn' : '']"
             @click="clickMageticBtn"
           >
-          {{$t('language.magnetic')}}
+            {{ $t("language.magnetic") }}
           </button>
         </div>
         <div class="view-info-bottom">
@@ -69,7 +75,8 @@
             v-else-if="activeStepInfo.type === 'unload_labware'"
             class="info-item"
           >
-          {{$t('language.step')}}: <span>{{ activeStepInfo.step_name }}</span>
+            {{ $t("language.step") }}:
+            <span>{{ activeStepInfo.step_name }}</span>
           </div>
           <LysisInfo :info="activeStepInfo" :isBasic="currentBtn" v-else />
         </div>
@@ -78,10 +85,12 @@
 
     <OpenDoorDialog :isShowOpenDoorDialog="isShowOpenDoorDialog" />
   </div>
+  </div>
 </template>
 
 <script>
-import { getProtocolDetail, openDoor,closeDoor } from "@/api/run";
+import UserHead from '@/components/UserHead.vue'
+import { getProtocolDetail, openDoor, closeDoor } from "@/api/run";
 import { mapState as mapProtocolsState } from "vuex";
 import IncubatorInfo from "./components/IncubatorInfo.vue";
 import TransferInfo from "./components/TransferInfo.vue";
@@ -107,7 +116,8 @@ export default {
     LysisInfo,
     DiscardInfo,
     PauseInfo,
-    OpenDoorDialog
+    OpenDoorDialog,
+    UserHead
   },
   async created() {
     await this.getProtocolDetail();
@@ -174,18 +184,16 @@ export default {
       this.activeStepInfo = this.steps[order];
     },
     async clickRun() {
-      this.runStepIds = this.steps
-        .map(item => item.id)
-        .join()
+      this.runStepIds = this.steps.map(item => item.id).join();
       this.$store.commit("protocols/updatedStepIds", [
         this.steps[0].id,
         this.runStepIds
       ]);
       this.$store.commit("protocols/updatedInitPathName", "viewrunstep");
-      if(!this.doorState) {
+      if (!this.doorState) {
         this.isShowOpenDoorDialog = true;
         await openDoor();
-      }else {
+      } else {
         this.$router.push("/system/run/protocols/sampleSettings");
       }
     },
@@ -199,16 +207,15 @@ export default {
         .join();
       this.$store.commit("protocols/updatedStepIds", [
         this.activeStepInfo.id,
-        this.runStepIds,
+        this.runStepIds
       ]);
-      this.$store.commit('protocols/updatedInitPathName','viewrunstep')
+      this.$store.commit("protocols/updatedInitPathName", "viewrunstep");
       if (!this.doorState) {
         this.isShowOpenDoorDialog = true;
         await openDoor();
-      }else {
+      } else {
         this.$router.push("/system/run/protocols/sampleSettings");
       }
-
     },
     clickBasicBtn() {
       this.currentBtn = 1;
@@ -217,18 +224,18 @@ export default {
       this.currentBtn = 0;
     }
   },
-  mounted () {
-    this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, (notify) => {
-       if(notify.Code===this.Notify.CODE_FZB_DOOR_OPEN){
-        this.isShowOpenDoorDialog=false
-        setTimeout(()=>{
+  mounted() {
+    this.EventBus.on(this.Notify.CODE_FZB_DOOR_OPEN, notify => {
+      if (notify.Code === this.Notify.CODE_FZB_DOOR_OPEN) {
+        this.isShowOpenDoorDialog = false;
+        setTimeout(() => {
           this.$router.push("/system/run/protocols/sampleSettings");
-        },400)
-       }
-      })
+        }, 400);
+      }
+    });
   },
   destroyed() {
-    this.EventBus.unregisterCallbacksForEvent(this.Notify.CODE_FZB_DOOR_OPEN)
+    this.EventBus.unregisterCallbacksForEvent(this.Notify.CODE_FZB_DOOR_OPEN);
   }
 };
 </script>
@@ -348,5 +355,13 @@ div {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+}
+</style>
+<style>
+.view-container .every-step,
+.view-container .every-step div,
+.view-container .every-step span,
+.view-container .every-step img {
+  touch-action: pan-y !important;
 }
 </style>

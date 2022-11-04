@@ -279,10 +279,17 @@ export default {
 .el-table >>> .cell {
   line-height: 30px;
 }
+.el-table >>>.el-table__cell {
+  padding: 20px 0;
+}
+
 </style>
 <style>
 .run-list .el-table__body tr.current-row > td.el-table__cell {
   background-color: #cee1f5 !important;
 }
 
+.protocols-list ,.protocols-list  div,.protocols-list  span,.protocols-list table,.protocols-list tbody,.protocols-list td,.protocols-list tr{
+    touch-action: pan-y !important;
+  }
 </style>

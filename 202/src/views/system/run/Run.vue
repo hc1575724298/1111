@@ -22,6 +22,7 @@
             <div
               class="protocol-name"
               :class="{ check: isCheckId === item.id }"
+              :title=" item.name"
             >
               {{ item.name }}
             </div>
@@ -39,7 +40,7 @@
         <div>
           <div class="right-title">{{ $t("language.information") }}</div>
           <el-row style="margin-bottom: 28px;">
-            <el-col :span="10">
+            <el-col :span="12">
               <span class="Infomation-title"
                 >{{ $t("language.protocol_name") }}：</span
               >
@@ -64,27 +65,29 @@
               >
               <span class="Infomation-info"
                 >{{
-                  (thisOneProtocal ? thisOneProtocal.cartridge : "") +"&ensp;"+
+                  (thisOneProtocal ? thisOneProtocal.cartridge : "") +
                     $t("language.well_other")
                 }}
               </span>
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 39px;">
-            <el-col :span="10">
+            <el-col :span="12">
               <span class="Infomation-title">{{ $t("language.time") }}：</span>
               <span class="Infomation-info" v-if="thisOneProtocal">{{
                 thisOneProtocal && thisOneProtocal.updated_at | handleTime
               }}</span>
               <span class="Infomation-info" v-else> </span>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="11">
               <span class="Infomation-title"
                 >{{ $t("language.expected_run_time") }}：</span
               >
-              <span class="Infomation-info">{{
+              <span class="Infomation-info">
+                {{
                 thisOneProtocal && thisOneProtocal.expected_run_time
-              }}</span>
+              }}
+              </span>
             </el-col>
           </el-row>
         </div>
@@ -313,4 +316,9 @@ div {
   font-size: 24px;
   color: #333333;
 }
+</style>
+<style>
+.run-favorites-content-left ,.run-favorites-content-left  div,.run-favorites-content-left img{
+    touch-action: pan-y !important;
+  }
 </style>

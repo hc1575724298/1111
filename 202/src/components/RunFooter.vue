@@ -58,7 +58,7 @@ export default {
     this. getProtocolDetail()
     },
     clickPreViewBtn(){
-      this.$router.push ('/system/run/protocols/viewrunstep')
+      this.$router.push ('/system/run/viewrunstep')
     },
     async getProtocolDetail() {
       const {
